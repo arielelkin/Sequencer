@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B0042B7418E5ABC500C3B90E /* libTheAmazingAudioEngine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0042B7118E5ABB700C3B90E /* libTheAmazingAudioEngine.a */; };
 		B038E2E718E36B6D00310F33 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2E618E36B6D00310F33 /* Foundation.framework */; };
 		B038E2E918E36B6D00310F33 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2E818E36B6D00310F33 /* CoreGraphics.framework */; };
 		B038E2EB18E36B6D00310F33 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2EA18E36B6D00310F33 /* UIKit.framework */; };
@@ -22,6 +23,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B0042B7018E5ABB700C3B90E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B0042B6C18E5ABB700C3B90E /* TheAmazingAudioEngine.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4C215CEC1523A7D500D36CAD;
+			remoteInfo = TheAmazingAudioEngine;
+		};
+		B0042B7218E5ABC200C3B90E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B0042B6C18E5ABB700C3B90E /* TheAmazingAudioEngine.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 4C215CEB1523A7D500D36CAD;
+			remoteInfo = TheAmazingAudioEngine;
+		};
 		B038E30318E36B6D00310F33 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B038E2DB18E36B6D00310F33 /* Project object */;
@@ -32,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B0042B6C18E5ABB700C3B90E /* TheAmazingAudioEngine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TheAmazingAudioEngine.xcodeproj; path = Libraries/TheAmazingAudioEngine/TheAmazingAudioEngine.xcodeproj; sourceTree = "<group>"; };
 		B038E2E318E36B6D00310F33 /* AmazingSequencer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AmazingSequencer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B038E2E618E36B6D00310F33 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B038E2E818E36B6D00310F33 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -55,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0042B7418E5ABC500C3B90E /* libTheAmazingAudioEngine.a in Frameworks */,
 				B038E2E918E36B6D00310F33 /* CoreGraphics.framework in Frameworks */,
 				B038E2EB18E36B6D00310F33 /* UIKit.framework in Frameworks */,
 				B038E2E718E36B6D00310F33 /* Foundation.framework in Frameworks */,
@@ -74,9 +91,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B0042B6D18E5ABB700C3B90E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B0042B7118E5ABB700C3B90E /* libTheAmazingAudioEngine.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		B038E2DA18E36B6D00310F33 = {
 			isa = PBXGroup;
 			children = (
+				B0042B6C18E5ABB700C3B90E /* TheAmazingAudioEngine.xcodeproj */,
 				B038E2EC18E36B6D00310F33 /* AmazingSequencer */,
 				B038E30518E36B6D00310F33 /* AmazingSequencerTests */,
 				B038E2E518E36B6D00310F33 /* Frameworks */,
@@ -158,6 +184,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B0042B7318E5ABC200C3B90E /* PBXTargetDependency */,
 			);
 			name = AmazingSequencer;
 			productName = AmazingSequencer;
@@ -206,6 +233,12 @@
 			mainGroup = B038E2DA18E36B6D00310F33;
 			productRefGroup = B038E2E418E36B6D00310F33 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = B0042B6D18E5ABB700C3B90E /* Products */;
+					ProjectRef = B0042B6C18E5ABB700C3B90E /* TheAmazingAudioEngine.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				B038E2E218E36B6D00310F33 /* AmazingSequencer */,
@@ -213,6 +246,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		B0042B7118E5ABB700C3B90E /* libTheAmazingAudioEngine.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libTheAmazingAudioEngine.a;
+			remoteRef = B0042B7018E5ABB700C3B90E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		B038E2E118E36B6D00310F33 /* Resources */ = {
@@ -255,6 +298,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B0042B7318E5ABC200C3B90E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TheAmazingAudioEngine;
+			targetProxy = B0042B7218E5ABC200C3B90E /* PBXContainerItemProxy */;
+		};
 		B038E30418E36B6D00310F33 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B038E2E218E36B6D00310F33 /* AmazingSequencer */;
@@ -359,6 +407,11 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AmazingSequencer/AmazingSequencer-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					Libraries/TheAmazingAudioEngine/TheAmazingAudioEngine/,
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
 				INFOPLIST_FILE = "AmazingSequencer/AmazingSequencer-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -372,6 +425,11 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AmazingSequencer/AmazingSequencer-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					Libraries/TheAmazingAudioEngine/TheAmazingAudioEngine/,
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
 				INFOPLIST_FILE = "AmazingSequencer/AmazingSequencer-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -437,6 +495,7 @@
 				B038E31118E36B6D00310F33 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B038E31218E36B6D00310F33 /* Build configuration list for PBXNativeTarget "AmazingSequencerTests" */ = {
 			isa = XCConfigurationList;
@@ -445,6 +504,7 @@
 				B038E31418E36B6D00310F33 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
