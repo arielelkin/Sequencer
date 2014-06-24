@@ -10,6 +10,7 @@
 		B0042B7418E5ABC500C3B90E /* libTheAmazingAudioEngine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0042B7118E5ABB700C3B90E /* libTheAmazingAudioEngine.a */; };
 		B0042B7618E5ACFC00C3B90E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0042B7518E5ACFC00C3B90E /* Accelerate.framework */; };
 		B0042B7C18E5B07200C3B90E /* guitar.caf in Resources */ = {isa = PBXBuildFile; fileRef = B0042B7B18E5B07200C3B90E /* guitar.caf */; };
+		B0042B7F18E5B20200C3B90E /* SamplePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B0042B7E18E5B20200C3B90E /* SamplePlayer.m */; };
 		B038E2E718E36B6D00310F33 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2E618E36B6D00310F33 /* Foundation.framework */; };
 		B038E2E918E36B6D00310F33 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2E818E36B6D00310F33 /* CoreGraphics.framework */; };
 		B038E2EB18E36B6D00310F33 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2EA18E36B6D00310F33 /* UIKit.framework */; };
@@ -22,6 +23,8 @@
 		B038E30218E36B6D00310F33 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2EA18E36B6D00310F33 /* UIKit.framework */; };
 		B038E30A18E36B6D00310F33 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B038E30818E36B6D00310F33 /* InfoPlist.strings */; };
 		B038E30C18E36B6D00310F33 /* AmazingSequencerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B038E30B18E36B6D00310F33 /* AmazingSequencerTests.m */; };
+		B0F6197818EB21850017EA7A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0F6197618EB21850017EA7A /* ViewController.m */; };
+		B0F6197918EB21850017EA7A /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0F6197718EB21850017EA7A /* ViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +55,8 @@
 		B0042B6C18E5ABB700C3B90E /* TheAmazingAudioEngine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TheAmazingAudioEngine.xcodeproj; path = Libraries/TheAmazingAudioEngine/TheAmazingAudioEngine.xcodeproj; sourceTree = "<group>"; };
 		B0042B7518E5ACFC00C3B90E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		B0042B7B18E5B07200C3B90E /* guitar.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = guitar.caf; sourceTree = "<group>"; };
+		B0042B7D18E5B20200C3B90E /* SamplePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SamplePlayer.h; path = AmazingSequencer/SamplePlayer.h; sourceTree = "<group>"; };
+		B0042B7E18E5B20200C3B90E /* SamplePlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SamplePlayer.m; path = AmazingSequencer/SamplePlayer.m; sourceTree = "<group>"; };
 		B038E2E318E36B6D00310F33 /* AmazingSequencer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AmazingSequencer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B038E2E618E36B6D00310F33 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B038E2E818E36B6D00310F33 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -68,6 +73,9 @@
 		B038E30718E36B6D00310F33 /* AmazingSequencerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AmazingSequencerTests-Info.plist"; sourceTree = "<group>"; };
 		B038E30918E36B6D00310F33 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B038E30B18E36B6D00310F33 /* AmazingSequencerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AmazingSequencerTests.m; sourceTree = "<group>"; };
+		B0F6197518EB21850017EA7A /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = ../ViewController.h; sourceTree = "<group>"; };
+		B0F6197618EB21850017EA7A /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = ../ViewController.m; sourceTree = "<group>"; };
+		B0F6197718EB21850017EA7A /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ViewController.xib; path = ../ViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +115,8 @@
 		B038E2DA18E36B6D00310F33 = {
 			isa = PBXGroup;
 			children = (
+				B0042B7D18E5B20200C3B90E /* SamplePlayer.h */,
+				B0042B7E18E5B20200C3B90E /* SamplePlayer.m */,
 				B0042B7B18E5B07200C3B90E /* guitar.caf */,
 				B0042B6C18E5ABB700C3B90E /* TheAmazingAudioEngine.xcodeproj */,
 				B038E2EC18E36B6D00310F33 /* AmazingSequencer */,
@@ -142,6 +152,9 @@
 			children = (
 				B038E2F518E36B6D00310F33 /* AppDelegate.h */,
 				B038E2F618E36B6D00310F33 /* AppDelegate.m */,
+				B0F6197518EB21850017EA7A /* ViewController.h */,
+				B0F6197618EB21850017EA7A /* ViewController.m */,
+				B0F6197718EB21850017EA7A /* ViewController.xib */,
 				B038E2F818E36B6D00310F33 /* Images.xcassets */,
 				B038E2ED18E36B6D00310F33 /* Supporting Files */,
 			);
@@ -271,6 +284,7 @@
 			files = (
 				B0042B7C18E5B07200C3B90E /* guitar.caf in Resources */,
 				B038E2F118E36B6D00310F33 /* InfoPlist.strings in Resources */,
+				B0F6197918EB21850017EA7A /* ViewController.xib in Resources */,
 				B038E2F918E36B6D00310F33 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -291,6 +305,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B038E2F718E36B6D00310F33 /* AppDelegate.m in Sources */,
+				B0042B7F18E5B20200C3B90E /* SamplePlayer.m in Sources */,
+				B0F6197818EB21850017EA7A /* ViewController.m in Sources */,
 				B038E2F318E36B6D00310F33 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

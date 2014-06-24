@@ -7,7 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AEAudioFilePlayer.h"
 
-@interface SamplePlayer : NSObject
+@interface SamplePlayer : AEAudioFilePlayer <AEAudioTimingReceiver>
+
+-(AEAudioControllerTimingCallback)timingReceiverCallback;
 
 @end
