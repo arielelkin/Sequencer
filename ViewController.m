@@ -10,6 +10,7 @@
 
 #import "AEAudioController.h"
 #import "AEBlockChannel.h"
+#import "MyChannel.h"
 
 #import <mach/mach_time.h>
 
@@ -20,6 +21,7 @@
     AEAudioController *audioController;
     AEBlockChannel *blockChannel;
     AEBlockChannel *audioFileChannel;
+    MyChannel *myChannel;
     bool shouldPlay;
 }
 
@@ -88,15 +90,22 @@
 
     }];
 
-    [audioController addChannels:@[audioFileChannel]];
+//    [audioController addChannels:@[audioFileChannel]];
+
+    NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"guitar" withExtension:@"caf"];
+    myChannel = [MyChannel repeatingAudioFileAt:fileURL audioController:audioController repeatAtBPM:100];
+
+    [audioController addChannels:@[myChannel]];
 }
 
 - (IBAction)play {
-    shouldPlay = true;
+//    shouldPlay = true;
+    [myChannel play];
 }
 
 - (IBAction)stop {
-    shouldPlay = false;
+//    shouldPlay = false;
+    [myChannel stop];
 }
 
 - (void)setupSequencer {
