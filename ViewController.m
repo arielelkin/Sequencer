@@ -20,6 +20,7 @@
     AEAudioController *audioController;
     AEBlockChannel *blockChannel;
     AEBlockChannel *audioFileChannel;
+    bool shouldPlay;
 }
 
 
@@ -60,6 +61,11 @@
 
         static UInt32 playHead;
 
+        if (!shouldPlay) {
+            playHead = 0;
+            return;
+        }
+
         for (int i=0; i<frames; i++) {
 
             for ( int j=0; j<audio->mNumberBuffers; j++ ) {
@@ -83,6 +89,14 @@
     }];
 
     [audioController addChannels:@[audioFileChannel]];
+}
+
+- (IBAction)play {
+    shouldPlay = true;
+}
+
+- (IBAction)stop {
+    shouldPlay = false;
 }
 
 - (void)setupSequencer {
