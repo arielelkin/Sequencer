@@ -64,14 +64,21 @@
             for ( int j=0; j<audio->mNumberBuffers; j++ ) {
 
                 ((float *)audio->mBuffers[j].mData)[i] = ((float *)audioSampleBufferList->mBuffers[j].mData)[totalFrames + i];
+
+                bool shouldLoop = true;
+
+                if (totalFrames >= operation.lengthInFrames) {
+                    if (shouldLoop) {
+                        totalFrames = 0;
+                    }
+                    else {
+                        ((float *)audio->mBuffers[j].mData)[i] = 0;
+                    }
+                }
             }
         }
 
         totalFrames += frames;
-
-        if (totalFrames >= operation.lengthInFrames) {
-            totalFrames = 0;
-        }
 
     }];
 
