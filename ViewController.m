@@ -57,21 +57,21 @@
     //Play the audio file using an AEBlockChannel:
     audioFileChannel = [AEBlockChannel channelWithBlock:^(const AudioTimeStamp *time, UInt32 frames, AudioBufferList *audio) {
 
-        //Approach 1:
+        static UInt32 totalFrames;
+
         for (int i=0; i<frames; i++) {
-            ((float*)audio->mBuffers[0].mData)[i] = ((float *)audioSampleBufferList->mBuffers[0].mData)[i];
-            ((float*)audio->mBuffers[1].mData)[i] = ((float *)audioSampleBufferList->mBuffers[1].mData)[i];
+
+            for ( int j=0; j<audio->mNumberBuffers; j++ ) {
+
+                ((float *)audio->mBuffers[j].mData)[i] = ((float *)audioSampleBufferList->mBuffers[j].mData)[totalFrames + i];
+            }
         }
 
-//        //Approach 3:
-//        for (int i=0; i<frames; i++) {
-//
-//            for ( int j=0; j<audio->mNumberBuffers; j++ ) {
-//
-//                ((float *)audio->mBuffers[j].mData)[i] = ((float *)audioSampleBufferList->mBuffers[j].mData)[i];
-//            }
-//        }
+        totalFrames += frames;
 
+        if (totalFrames >= operation.lengthInFrames) {
+            totalFrames = 0;
+        }
 
     }];
 
