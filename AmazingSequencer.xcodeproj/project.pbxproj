@@ -10,7 +10,6 @@
 		B0042B7418E5ABC500C3B90E /* libTheAmazingAudioEngine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0042B7118E5ABB700C3B90E /* libTheAmazingAudioEngine.a */; };
 		B0042B7618E5ACFC00C3B90E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0042B7518E5ACFC00C3B90E /* Accelerate.framework */; };
 		B0042B7C18E5B07200C3B90E /* guitar.caf in Resources */ = {isa = PBXBuildFile; fileRef = B0042B7B18E5B07200C3B90E /* guitar.caf */; };
-		B0042B7F18E5B20200C3B90E /* SamplePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B0042B7E18E5B20200C3B90E /* SamplePlayer.m */; };
 		B038E2E718E36B6D00310F33 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2E618E36B6D00310F33 /* Foundation.framework */; };
 		B038E2E918E36B6D00310F33 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2E818E36B6D00310F33 /* CoreGraphics.framework */; };
 		B038E2EB18E36B6D00310F33 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2EA18E36B6D00310F33 /* UIKit.framework */; };
@@ -55,8 +54,6 @@
 		B0042B6C18E5ABB700C3B90E /* TheAmazingAudioEngine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TheAmazingAudioEngine.xcodeproj; path = Libraries/TheAmazingAudioEngine/TheAmazingAudioEngine.xcodeproj; sourceTree = "<group>"; };
 		B0042B7518E5ACFC00C3B90E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		B0042B7B18E5B07200C3B90E /* guitar.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = guitar.caf; sourceTree = "<group>"; };
-		B0042B7D18E5B20200C3B90E /* SamplePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SamplePlayer.h; path = AmazingSequencer/SamplePlayer.h; sourceTree = "<group>"; };
-		B0042B7E18E5B20200C3B90E /* SamplePlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SamplePlayer.m; path = AmazingSequencer/SamplePlayer.m; sourceTree = "<group>"; };
 		B038E2E318E36B6D00310F33 /* AmazingSequencer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AmazingSequencer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B038E2E618E36B6D00310F33 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B038E2E818E36B6D00310F33 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -115,8 +112,6 @@
 		B038E2DA18E36B6D00310F33 = {
 			isa = PBXGroup;
 			children = (
-				B0042B7D18E5B20200C3B90E /* SamplePlayer.h */,
-				B0042B7E18E5B20200C3B90E /* SamplePlayer.m */,
 				B0042B7B18E5B07200C3B90E /* guitar.caf */,
 				B0042B6C18E5ABB700C3B90E /* TheAmazingAudioEngine.xcodeproj */,
 				B038E2EC18E36B6D00310F33 /* AmazingSequencer */,
@@ -305,7 +300,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B038E2F718E36B6D00310F33 /* AppDelegate.m in Sources */,
-				B0042B7F18E5B20200C3B90E /* SamplePlayer.m in Sources */,
 				B0F6197818EB21850017EA7A /* ViewController.m in Sources */,
 				B038E2F318E36B6D00310F33 /* main.m in Sources */,
 			);

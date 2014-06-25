@@ -10,7 +10,6 @@
 
 #import "AEAudioController.h"
 #import "AEBlockChannel.h"
-#import "AEAudioFilePlayer.h"
 
 #import <mach/mach_time.h>
 
@@ -20,17 +19,19 @@
 
     AEAudioController *audioController;
     AEBlockChannel *blockChannel;
-    AEAudioFilePlayer *audioFilePlayer;
+    AEBlockChannel *audioFileChannel;
 }
 
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self startSequencer];
+
+    [self setupAudioController];
+
+    [self playAudioFile];
 }
 
-- (void)startSequencer {
-
+- (void)setupAudioController {
     //init audio controller:
     audioController = [[AEAudioController alloc] initWithAudioDescription:[AEAudioController nonInterleavedFloatStereoAudioDescription]];
 
@@ -39,6 +40,46 @@
     if (audioControllerStartError) {
         NSLog(@"Audio controller start error: %@", audioControllerStartError.localizedDescription);
     }
+}
+
+- (void)playAudioFile {
+
+    //Load audio file:
+    AEAudioFileLoaderOperation *operation = [[AEAudioFileLoaderOperation alloc] initWithFileURL:[[NSBundle mainBundle] URLForResource:@"guitar" withExtension:@"caf"] targetAudioDescription:audioController.audioDescription];
+    [operation start];
+    if ( operation.error ) {
+        NSLog(@"load error: %@", operation.error);
+        return;
+    }
+
+    AudioBufferList *audioSampleBufferList = operation.bufferList;
+
+    //Play the audio file using an AEBlockChannel:
+    audioFileChannel = [AEBlockChannel channelWithBlock:^(const AudioTimeStamp *time, UInt32 frames, AudioBufferList *audio) {
+
+        //Approach 1:
+        for (int i=0; i<frames; i++) {
+            ((float*)audio->mBuffers[0].mData)[i] = ((float *)audioSampleBufferList->mBuffers[0].mData)[i];
+            ((float*)audio->mBuffers[1].mData)[i] = ((float *)audioSampleBufferList->mBuffers[1].mData)[i];
+        }
+
+//        //Approach 3:
+//        for (int i=0; i<frames; i++) {
+//
+//            for ( int j=0; j<audio->mNumberBuffers; j++ ) {
+//
+//                ((float *)audio->mBuffers[j].mData)[i] = ((float *)audioSampleBufferList->mBuffers[j].mData)[i];
+//            }
+//        }
+
+
+    }];
+
+    [audioController addChannels:@[audioFileChannel]];
+}
+
+- (void)setupSequencer {
+
 
     //Setup time variables for TECHNIQUE 1:
     const uint64_t kSampleRate = (uint64_t)audioController.audioDescription.mSampleRate;
@@ -56,7 +97,6 @@
     __hostTicksPerFrame = __hostTicksPerSecond / kSampleRate;
 
     blockChannel = [AEBlockChannel channelWithBlock:^(const AudioTimeStamp *inTimeStamp, UInt32 frames, AudioBufferList *audio) {
-
 
         //TECHNIQUE 1
         //USE MACH TIMEBASE:
@@ -78,8 +118,10 @@
             }
         }
 
+
+
         //comment out this return statement to try TECHNIQUE 2:
-        return;
+//        return;
 
 
 
@@ -87,6 +129,7 @@
         //COUNT SAMPLES:
 
         for ( int i=0; i<frames; i++ ) {
+
 
             static uint64_t numSamples;
             numSamples++;
@@ -101,7 +144,7 @@
                 ((float*)audio->mBuffers[1].mData)[i] = 0.1;
             }
 
-            if (numSamples % (kSampleRate) == 0) {
+            if (numSamples % (kSampleRate/3) == 0) {
                 // 1/3 seconds
                 ((float*)audio->mBuffers[0].mData)[i] =
                 ((float*)audio->mBuffers[1].mData)[i] = 0.3;
@@ -111,28 +154,7 @@
 
     }];
 
-    [audioController addChannels:@[blockChannel]];
-
-
-
-    //Work in progress: Sequencing audio files
-
-    NSError *audioFilePlayerErorr;
-    audioFilePlayer = [AEAudioFilePlayer audioFilePlayerWithURL:[[NSBundle mainBundle] URLForResource:@"guitar" withExtension:@"caf"]
-                                                audioController:audioController
-                                                          error:&audioFilePlayerErorr];
-    [audioFilePlayer setChannelIsPlaying:NO];
-    [audioController addChannels:@[audioFilePlayer]];
-
-}
-
-- (IBAction)play {
-    [audioFilePlayer setChannelIsPlaying:YES];
-}
-
-- (IBAction)stop {
-    [audioFilePlayer setCurrentTime:0];
-    [audioFilePlayer setChannelIsPlaying:NO];
+//    [audioController addChannels:@[blockChannel]];
 }
 
 
