@@ -45,7 +45,8 @@
 - (void)playAudioFile {
 
     //Load audio file:
-    AEAudioFileLoaderOperation *operation = [[AEAudioFileLoaderOperation alloc] initWithFileURL:[[NSBundle mainBundle] URLForResource:@"guitar" withExtension:@"caf"] targetAudioDescription:audioController.audioDescription];
+    AEAudioFileLoaderOperation *operation = [[AEAudioFileLoaderOperation alloc] initWithFileURL:[[NSBundle mainBundle] URLForResource:@"guitar" withExtension:@"caf"]
+                                                                         targetAudioDescription:audioController.audioDescription];
     [operation start];
     if ( operation.error ) {
         NSLog(@"load error: %@", operation.error);
@@ -57,28 +58,27 @@
     //Play the audio file using an AEBlockChannel:
     audioFileChannel = [AEBlockChannel channelWithBlock:^(const AudioTimeStamp *time, UInt32 frames, AudioBufferList *audio) {
 
-        static UInt32 totalFrames;
+        static UInt32 playHead;
 
         for (int i=0; i<frames; i++) {
 
             for ( int j=0; j<audio->mNumberBuffers; j++ ) {
 
-                ((float *)audio->mBuffers[j].mData)[i] = ((float *)audioSampleBufferList->mBuffers[j].mData)[totalFrames + i];
-
                 bool shouldLoop = true;
 
-                if (totalFrames >= operation.lengthInFrames) {
-                    if (shouldLoop) {
-                        totalFrames = 0;
-                    }
-                    else {
-                        ((float *)audio->mBuffers[j].mData)[i] = 0;
-                    }
+                if (playHead < operation.lengthInFrames) {
+                    ((float *)audio->mBuffers[j].mData)[i] = ((float *)audioSampleBufferList->mBuffers[j].mData)[playHead + i];
+                }
+                else if (shouldLoop) {
+                    playHead = 0;
+                }
+                else {
+                    ((float *)audio->mBuffers[j].mData)[i] = 0;
                 }
             }
         }
 
-        totalFrames += frames;
+        playHead += frames;
 
     }];
 
