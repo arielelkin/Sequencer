@@ -13,7 +13,4 @@
 
 + (instancetype)repeatingAudioFileAt:(NSURL *)url audioController:(AEAudioController*)audioController repeatAtBPM:(UInt64)bpm;
 
-- (void)play;
-- (void)stop;
-
 @end
