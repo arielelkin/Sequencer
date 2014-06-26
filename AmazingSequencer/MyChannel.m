@@ -19,8 +19,6 @@ static uint64_t kSampleRate;
 @implementation MyChannel {
     AudioBufferList *audioSampleBufferList;
     UInt32 lengthInFrames;
-
-    bool shouldPlay;
 }
 
 + (instancetype)repeatingAudioFileAt:(NSURL *)url audioController:(AEAudioController*)audioController repeatAtBPM:(UInt64)bpm {
@@ -37,8 +35,6 @@ static uint64_t kSampleRate;
 
     channel->audioSampleBufferList = operation.bufferList;
     channel->lengthInFrames = operation.lengthInFrames;
-
-    channel->shouldPlay = true;
 
 
     //Setup timing:
@@ -58,13 +54,6 @@ static OSStatus renderCallback(__unsafe_unretained MyChannel *THIS,
                                UInt32 frames,
                                AudioBufferList *audio) {
 
-    static UInt32 playHead;
-
-    if (!THIS->shouldPlay) {
-        playHead = 0;
-        return noErr;
-    }
-
     static UInt64 _playbackStartTime;
     if ( !_playbackStartTime ) {
         _playbackStartTime = inTimeStamp->mHostTime;
@@ -73,26 +62,25 @@ static OSStatus renderCallback(__unsafe_unretained MyChannel *THIS,
     uint64_t bufferStartPlaybackPosition = inTimeStamp->mHostTime - _playbackStartTime;
     uint64_t bufferEndPlaybackPosition = bufferStartPlaybackPosition + (frames * __hostTicksPerFrame);
 
+    static UInt32 playHead;
+
     if ( bufferEndPlaybackPosition % (uint64_t)__hostTicksPerSecond < bufferStartPlaybackPosition % (uint64_t)__hostTicksPerSecond ) {
-
-        // We have crossed a second boundary in this buffer
         playHead = 0;
+    }
 
-        int framesToBoundary = (__hostTicksPerSecond - (bufferStartPlaybackPosition % (uint64_t)__hostTicksPerSecond)) / __hostTicksPerFrame;
+    for ( int i=0; i<frames; i++ ) {
+        for ( int j=0; j<audio->mNumberBuffers; j++ ) {
 
-        for ( int i=0; i<framesToBoundary; i++ ) {
-            for ( int j=0; j<audio->mNumberBuffers; j++ ) {
-
-                if (playHead < THIS->lengthInFrames) {
-                    ((float *)audio->mBuffers[j].mData)[i] = ((float *)THIS->audioSampleBufferList->mBuffers[j].mData)[playHead + i];
-                }
-                else {
-                    ((float *)audio->mBuffers[j].mData)[i] = 0;
-                }
+            if (playHead < THIS->lengthInFrames) {
+                ((float *)audio->mBuffers[j].mData)[i] = ((float *)THIS->audioSampleBufferList->mBuffers[j].mData)[playHead + i];
+            }
+            else {
+                ((float *)audio->mBuffers[j].mData)[i] = 0;
             }
         }
-        playHead += framesToBoundary;
     }
+
+    playHead += frames;
 
     return noErr;
 }
