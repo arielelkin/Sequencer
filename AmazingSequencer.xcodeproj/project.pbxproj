@@ -21,8 +21,11 @@
 		B038E30218E36B6D00310F33 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2EA18E36B6D00310F33 /* UIKit.framework */; };
 		B038E30A18E36B6D00310F33 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B038E30818E36B6D00310F33 /* InfoPlist.strings */; };
 		B038E30C18E36B6D00310F33 /* AmazingSequencerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B038E30B18E36B6D00310F33 /* AmazingSequencerTests.m */; };
-		B082D999195B8A6A009507CF /* MyChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = B082D998195B8A6A009507CF /* MyChannel.m */; };
-		B09234191A9644C1002EA90A /* audio.caf in Resources */ = {isa = PBXBuildFile; fileRef = B09234181A9644C1002EA90A /* audio.caf */; };
+		B082D999195B8A6A009507CF /* SequencerChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = B082D998195B8A6A009507CF /* SequencerChannel.m */; };
+		B092341F1A964A7E002EA90A /* woodblock.caf in Resources */ = {isa = PBXBuildFile; fileRef = B092341B1A964A7E002EA90A /* woodblock.caf */; };
+		B09234201A964A7E002EA90A /* crick.caf in Resources */ = {isa = PBXBuildFile; fileRef = B092341C1A964A7E002EA90A /* crick.caf */; };
+		B09234211A964A7E002EA90A /* hihat.caf in Resources */ = {isa = PBXBuildFile; fileRef = B092341D1A964A7E002EA90A /* hihat.caf */; };
+		B09234221A964A7E002EA90A /* kick.caf in Resources */ = {isa = PBXBuildFile; fileRef = B092341E1A964A7E002EA90A /* kick.caf */; };
 		B0F6197818EB21850017EA7A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0F6197618EB21850017EA7A /* ViewController.m */; };
 		B0F6197918EB21850017EA7A /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0F6197718EB21850017EA7A /* ViewController.xib */; };
 /* End PBXBuildFile section */
@@ -70,9 +73,12 @@
 		B038E30718E36B6D00310F33 /* AmazingSequencerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AmazingSequencerTests-Info.plist"; sourceTree = "<group>"; };
 		B038E30918E36B6D00310F33 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B038E30B18E36B6D00310F33 /* AmazingSequencerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AmazingSequencerTests.m; sourceTree = "<group>"; };
-		B082D997195B8A6A009507CF /* MyChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyChannel.h; sourceTree = "<group>"; };
-		B082D998195B8A6A009507CF /* MyChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyChannel.m; sourceTree = "<group>"; };
-		B09234181A9644C1002EA90A /* audio.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = audio.caf; sourceTree = "<group>"; };
+		B082D997195B8A6A009507CF /* SequencerChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerChannel.h; sourceTree = "<group>"; };
+		B082D998195B8A6A009507CF /* SequencerChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerChannel.m; sourceTree = "<group>"; };
+		B092341B1A964A7E002EA90A /* woodblock.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = woodblock.caf; sourceTree = "<group>"; };
+		B092341C1A964A7E002EA90A /* crick.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = crick.caf; sourceTree = "<group>"; };
+		B092341D1A964A7E002EA90A /* hihat.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = hihat.caf; sourceTree = "<group>"; };
+		B092341E1A964A7E002EA90A /* kick.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = kick.caf; sourceTree = "<group>"; };
 		B0F6197518EB21850017EA7A /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = ../ViewController.h; sourceTree = "<group>"; };
 		B0F6197618EB21850017EA7A /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = ../ViewController.m; sourceTree = "<group>"; };
 		B0F6197718EB21850017EA7A /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ViewController.xib; path = ../ViewController.xib; sourceTree = "<group>"; };
@@ -115,7 +121,7 @@
 		B038E2DA18E36B6D00310F33 = {
 			isa = PBXGroup;
 			children = (
-				B09234181A9644C1002EA90A /* audio.caf */,
+				B092341A1A964A7E002EA90A /* Sounds */,
 				B0042B6C18E5ABB700C3B90E /* TheAmazingAudioEngine.xcodeproj */,
 				B038E2EC18E36B6D00310F33 /* AmazingSequencer */,
 				B038E30518E36B6D00310F33 /* AmazingSequencerTests */,
@@ -153,8 +159,8 @@
 				B0F6197518EB21850017EA7A /* ViewController.h */,
 				B0F6197618EB21850017EA7A /* ViewController.m */,
 				B0F6197718EB21850017EA7A /* ViewController.xib */,
-				B082D997195B8A6A009507CF /* MyChannel.h */,
-				B082D998195B8A6A009507CF /* MyChannel.m */,
+				B082D997195B8A6A009507CF /* SequencerChannel.h */,
+				B082D998195B8A6A009507CF /* SequencerChannel.m */,
 				B038E2F818E36B6D00310F33 /* Images.xcassets */,
 				B038E2ED18E36B6D00310F33 /* Supporting Files */,
 			);
@@ -188,6 +194,17 @@
 				B038E30818E36B6D00310F33 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B092341A1A964A7E002EA90A /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				B092341B1A964A7E002EA90A /* woodblock.caf */,
+				B092341C1A964A7E002EA90A /* crick.caf */,
+				B092341D1A964A7E002EA90A /* hihat.caf */,
+				B092341E1A964A7E002EA90A /* kick.caf */,
+			);
+			path = Sounds;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -282,10 +299,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B09234191A9644C1002EA90A /* audio.caf in Resources */,
+				B092341F1A964A7E002EA90A /* woodblock.caf in Resources */,
+				B09234211A964A7E002EA90A /* hihat.caf in Resources */,
 				B038E2F118E36B6D00310F33 /* InfoPlist.strings in Resources */,
+				B09234221A964A7E002EA90A /* kick.caf in Resources */,
 				B0F6197918EB21850017EA7A /* ViewController.xib in Resources */,
 				B038E2F918E36B6D00310F33 /* Images.xcassets in Resources */,
+				B09234201A964A7E002EA90A /* crick.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,7 +325,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B038E2F718E36B6D00310F33 /* AppDelegate.m in Sources */,
-				B082D999195B8A6A009507CF /* MyChannel.m in Sources */,
+				B082D999195B8A6A009507CF /* SequencerChannel.m in Sources */,
 				B0F6197818EB21850017EA7A /* ViewController.m in Sources */,
 				B038E2F318E36B6D00310F33 /* main.m in Sources */,
 			);

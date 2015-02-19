@@ -9,20 +9,18 @@
 #import "ViewController.h"
 
 #import "AEAudioController.h"
-#import "AEBlockChannel.h"
-#import "MyChannel.h"
+#import "SequencerChannel.h"
 
-#import <mach/mach_time.h>
 
 @import AVFoundation;
 
 @implementation ViewController {
 
     AEAudioController *audioController;
-    AEBlockChannel *blockChannel;
-    AEBlockChannel *audioFileChannel;
-    MyChannel *myChannel;
-    bool shouldPlay;
+
+    SequencerChannel *woodblockChannel;
+    SequencerChannel *crickChannel;
+
 }
 
 
@@ -31,10 +29,17 @@
 
     [self setupAudioController];
 
-    NSURL *fileURL = [[NSBundle mainBundle] URLForResource:@"guitar" withExtension:@"caf"];
-    myChannel = [MyChannel repeatingAudioFileAt:fileURL audioController:audioController repeatAtBPM:60];
-    [audioController addChannels:@[myChannel]];
+    [self setupSequencer];
+}
 
+- (void)setupSequencer {
+    NSURL *woodblockURL = [[NSBundle mainBundle] URLForResource:@"woodblock" withExtension:@"caf"];
+    woodblockChannel = [SequencerChannel sequencerChannelWithAudioFileAt:woodblockURL audioController:audioController repeatAtBPM:60];
+    [audioController addChannels:@[woodblockChannel]];
+
+//    NSURL *crickURL = [[NSBundle mainBundle] URLForResource:@"hihat" withExtension:@"caf"];
+//    crickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:crickURL audioController:audioController repeatAtBPM:120];
+//    [audioController addChannels:@[crickChannel]];
 }
 
 - (void)setupAudioController {
@@ -47,62 +52,5 @@
         NSLog(@"Audio controller start error: %@", audioControllerStartError.localizedDescription);
     }
 }
-
-- (void)playAudioFile {
-
-    //Load audio file:
-    AEAudioFileLoaderOperation *operation = [[AEAudioFileLoaderOperation alloc] initWithFileURL:[[NSBundle mainBundle] URLForResource:@"guitar" withExtension:@"caf"]
-                                                                         targetAudioDescription:audioController.audioDescription];
-    [operation start];
-    if ( operation.error ) {
-        NSLog(@"load error: %@", operation.error);
-        return;
-    }
-
-    AudioBufferList *audioSampleBufferList = operation.bufferList;
-
-    //Play the audio file using an AEBlockChannel:
-    audioFileChannel = [AEBlockChannel channelWithBlock:^(const AudioTimeStamp *time, UInt32 frames, AudioBufferList *audio) {
-
-        static UInt32 playHead;
-
-        if (!shouldPlay) {
-            playHead = 0;
-            return;
-        }
-
-        for (int i=0; i<frames; i++) {
-
-            for ( int j=0; j<audio->mNumberBuffers; j++ ) {
-
-                bool shouldLoop = true;
-
-                if (playHead < operation.lengthInFrames) {
-                    ((float *)audio->mBuffers[j].mData)[i] = ((float *)audioSampleBufferList->mBuffers[j].mData)[playHead + i];
-                }
-                else if (shouldLoop) {
-                    playHead = 0;
-                }
-                else {
-                    ((float *)audio->mBuffers[j].mData)[i] = 0;
-                }
-            }
-        }
-
-        playHead += frames;
-
-    }];
-
-    [audioController addChannels:@[audioFileChannel]];
-}
-
-- (IBAction)play {
-//    shouldPlay = true;
-}
-
-- (IBAction)stop {
-//    shouldPlay = false;
-}
-
 
 @end
