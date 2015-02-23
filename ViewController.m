@@ -28,7 +28,6 @@
     [super viewDidAppear:animated];
 
     [self setupAudioController];
-
     [self setupSequencer];
 }
 
