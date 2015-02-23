@@ -10,7 +10,7 @@
 
 #import "AEAudioController.h"
 #import "SequencerChannel.h"
-
+#import "TimedChannel.h"
 
 @import AVFoundation;
 
@@ -21,6 +21,8 @@
     SequencerChannel *woodblockChannel;
     SequencerChannel *crickChannel;
 
+    TimedChannel *timedChannel;
+
 }
 
 
@@ -29,7 +31,9 @@
 
     [self setupAudioController];
 
-    [self setupSequencer];
+//    [self setupSequencer];
+
+    [self setupTimedChannel];
 }
 
 - (void)setupSequencer {
@@ -40,6 +44,12 @@
 //    NSURL *crickURL = [[NSBundle mainBundle] URLForResource:@"hihat" withExtension:@"caf"];
 //    crickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:crickURL audioController:audioController repeatAtBPM:120];
 //    [audioController addChannels:@[crickChannel]];
+}
+
+- (void)setupTimedChannel {
+    timedChannel = [TimedChannel repeatAtTime:30];
+    [audioController addTimingReceiver:timedChannel];
+
 }
 
 - (void)setupAudioController {
