@@ -35,11 +35,11 @@ static void timingCallback (__unsafe_unretained id    receiver,
 
     UInt64 currentTimeInTicks = time->mHostTime;
 
-    UInt64 currentTimeInNanoSeconds = currentTimeInTicks * (sTimebaseInfo.numer / sTimebaseInfo.denom);
+    double currentTimeInNanoSeconds = currentTimeInTicks * (sTimebaseInfo.numer / sTimebaseInfo.denom);
 
-    UInt64 currentTimeInSeconds = currentTimeInNanoSeconds / 1000000000;
+    double currentTimeInSeconds = currentTimeInNanoSeconds / 1000000000;
 
-    printf("%llu\n", currentTimeInSeconds);
+    printf("%f\n", currentTimeInSeconds);
 
 }
 
