@@ -10,6 +10,7 @@
 		7F01CB29EC865BEB024DE7C8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A55AF71D618F3855EAB7733A /* libPods.a */; };
 		B0042B7618E5ACFC00C3B90E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0042B7518E5ACFC00C3B90E /* Accelerate.framework */; };
 		B011C5861A9BCDD400689F00 /* TimedChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = B011C5851A9BCDD400689F00 /* TimedChannel.m */; };
+		B011C58F1A9BF96D00689F00 /* Beat.m in Sources */ = {isa = PBXBuildFile; fileRef = B011C58D1A9BF96D00689F00 /* Beat.m */; };
 		B038E2E718E36B6D00310F33 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2E618E36B6D00310F33 /* Foundation.framework */; };
 		B038E2E918E36B6D00310F33 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2E818E36B6D00310F33 /* CoreGraphics.framework */; };
 		B038E2EB18E36B6D00310F33 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2EA18E36B6D00310F33 /* UIKit.framework */; };
@@ -48,6 +49,8 @@
 		B0042B7518E5ACFC00C3B90E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		B011C5841A9BCDD400689F00 /* TimedChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimedChannel.h; sourceTree = "<group>"; };
 		B011C5851A9BCDD400689F00 /* TimedChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimedChannel.m; sourceTree = "<group>"; };
+		B011C58D1A9BF96D00689F00 /* Beat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Beat.m; sourceTree = "<group>"; };
+		B011C58E1A9BF96D00689F00 /* Beat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Beat.h; sourceTree = "<group>"; };
 		B038E2E318E36B6D00310F33 /* AmazingSequencer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AmazingSequencer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B038E2E618E36B6D00310F33 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B038E2E818E36B6D00310F33 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -156,6 +159,8 @@
 				B082D998195B8A6A009507CF /* SequencerChannel.m */,
 				B011C5841A9BCDD400689F00 /* TimedChannel.h */,
 				B011C5851A9BCDD400689F00 /* TimedChannel.m */,
+				B011C58E1A9BF96D00689F00 /* Beat.h */,
+				B011C58D1A9BF96D00689F00 /* Beat.m */,
 				B038E2F818E36B6D00310F33 /* Images.xcassets */,
 				B038E2ED18E36B6D00310F33 /* Supporting Files */,
 			);
@@ -340,6 +345,7 @@
 				B011C5861A9BCDD400689F00 /* TimedChannel.m in Sources */,
 				B038E2F718E36B6D00310F33 /* AppDelegate.m in Sources */,
 				B082D999195B8A6A009507CF /* SequencerChannel.m in Sources */,
+				B011C58F1A9BF96D00689F00 /* Beat.m in Sources */,
 				B0F6197818EB21850017EA7A /* ViewController.m in Sources */,
 				B038E2F318E36B6D00310F33 /* main.m in Sources */,
 			);

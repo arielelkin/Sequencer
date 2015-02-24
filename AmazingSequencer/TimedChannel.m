@@ -13,7 +13,9 @@ static mach_timebase_info_data_t sTimebaseInfo;
 
 @implementation TimedChannel
 
-+ (instancetype)repeatAtTime:(float)time {
++ (instancetype)timedChannelWithAudioFile:(NSURL *)url
+                           beatsPerMinute:(double)bpm
+                                 sequence:(NSMutableArray *)beats{
 
     TimedChannel *channel = [[self alloc] init];
 
@@ -39,7 +41,7 @@ static void timingCallback (__unsafe_unretained id    receiver,
 
     double currentTimeInSeconds = currentTimeInNanoSeconds / 1000000000;
 
-    printf("%f\n", currentTimeInSeconds);
+    printf("currentTimeInSeconds: %f\n", currentTimeInSeconds);
 
 }
 

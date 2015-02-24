@@ -11,6 +11,7 @@
 #import "AEAudioController.h"
 #import "SequencerChannel.h"
 #import "TimedChannel.h"
+#import "Beat.h"
 
 @import AVFoundation;
 
@@ -47,7 +48,52 @@
 }
 
 - (void)setupTimedChannel {
-    timedChannel = [TimedChannel repeatAtTime:30];
+
+    //Play a sound every 1/4 note:
+    NSMutableArray *mySequence = [NSMutableArray array];
+
+    [mySequence addObject:[Beat beatWithOnset:0]];
+    
+    [mySequence addObject:[Beat beatWithOnset:0.25
+                                        velocity:0.8]];
+
+    [mySequence addObject:[Beat beatWithOnset:0.5]];
+
+    [mySequence addObject:[Beat beatWithOnset:0.75
+                                        velocity:0.8]];
+
+
+
+    //Play sound on first and second 1/8 notes
+    //silence for one 1/8 note, then play sound
+    //on fourth and fifth 1/8 notes.
+    NSMutableArray *beatsSecondBar = [NSMutableArray array];
+
+    [beatsSecondBar addObject:[Beat beatWithOnset:1]];
+
+    [beatsSecondBar addObject:[Beat beatWithOnset:1.125
+                                         velocity:0.8]];
+
+    [beatsSecondBar addObject:[Beat beatWithOnset:1.5]];
+
+    [beatsSecondBar addObject:[Beat beatWithOnset:1.625
+                                         velocity:0.8]];
+
+    //Play a typical waltz:
+    __unused NSMutableArray *waltz = [NSMutableArray array];
+
+    [waltz addObject:[Beat beatWithOnset:0]];
+    [waltz addObject:[Beat beatWithOnset:1/3
+                                velocity:0.8]];
+    [waltz addObject:[Beat beatWithOnset:2/3
+                                velocity:0.8]];
+
+    [mySequence addObjectsFromArray:beatsSecondBar];
+
+    timedChannel = [TimedChannel timedChannelWithAudioFile:nil
+                                            beatsPerMinute:60
+                                                  sequence:mySequence];
+
     [audioController addTimingReceiver:timedChannel];
 
 }
