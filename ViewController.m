@@ -32,14 +32,14 @@
 
     [self setupAudioController];
 
-//    [self setupSequencer];
+    [self setupSequencer];
 
-    [self setupTimedChannel];
+//    [self setupTimedChannel];
 }
 
 - (void)setupSequencer {
     NSURL *woodblockURL = [[NSBundle mainBundle] URLForResource:@"woodblock" withExtension:@"caf"];
-    woodblockChannel = [SequencerChannel sequencerChannelWithAudioFileAt:woodblockURL audioController:audioController repeatAtBPM:60];
+    woodblockChannel = [SequencerChannel sequencerChannelWithAudioFileAt:woodblockURL audioController:audioController repeatAtBPM:120];
     [audioController addChannels:@[woodblockChannel]];
 
 //    NSURL *crickURL = [[NSBundle mainBundle] URLForResource:@"hihat" withExtension:@"caf"];
