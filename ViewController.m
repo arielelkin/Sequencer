@@ -10,6 +10,9 @@
 
 #import "AEAudioController.h"
 #import "SequencerChannel.h"
+#import "SequencerChannel1.h"
+#import "SequencerChannel2.h"
+#import "SequencerChannel3.h"
 #import "TimedChannel.h"
 #import "Beat.h"
 
@@ -23,7 +26,6 @@
     SequencerChannel *crickChannel;
 
     TimedChannel *timedChannel;
-
 }
 
 
@@ -38,13 +40,31 @@
 }
 
 - (void)setupSequencer {
-    NSURL *woodblockURL = [[NSBundle mainBundle] URLForResource:@"woodblock" withExtension:@"caf"];
-    woodblockChannel = [SequencerChannel sequencerChannelWithAudioFileAt:woodblockURL audioController:audioController repeatAtBPM:120];
-    [audioController addChannels:@[woodblockChannel]];
-
-//    NSURL *crickURL = [[NSBundle mainBundle] URLForResource:@"hihat" withExtension:@"caf"];
-//    crickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:crickURL audioController:audioController repeatAtBPM:120];
-//    [audioController addChannels:@[crickChannel]];
+    
+    NSURL *sampleURL = [[NSBundle mainBundle] URLForResource:@"woodblock" withExtension:@"caf"];
+    
+    // SequencerChannel Test
+    // Original test by Ariel.
+//    woodblockChannel = [SequencerChannel sequencerChannelWithAudioFileAt:sampleURL audioController:audioController repeatAtBPM:120];
+//    [audioController addChannels:@[woodblockChannel]];
+    
+    // SequencerChannel1 Test
+    // Playing a sound at a given BPM, using frames for timing.
+    SequencerChannel1 *channel1 = [SequencerChannel1 sequencerChannelWithAudioFileAt:sampleURL audioController:audioController repeatAtBPM:120];
+    [audioController addChannels:@[channel1]];
+    
+    // SequencerChannel3 Test
+    // Playing a pattern.
+//    NSMutableArray *mySequence = [NSMutableArray array];
+//    [mySequence addObject:[Beat beatWithOnset:0]];
+//    [mySequence addObject:[Beat beatWithOnset:0.25]];
+//    [mySequence addObject:[Beat beatWithOnset:0.5]];
+//    [mySequence addObject:[Beat beatWithOnset:0.75]];
+//    SequencerChannel3 *woodblockChannel3 = [SequencerChannel3 sequencerChannelWithAudioFileAt:woodblockURL
+//                                                                               audioController:audioController
+//                                                                                   withPattern:mySequence
+//                                                                                         atBPM:120];
+//    [audioController addChannels:@[woodblockChannel3]];
 }
 
 - (void)setupTimedChannel {

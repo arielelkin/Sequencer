@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2106FA651A9F4D6C00524383 /* SequencerChannel1.m in Sources */ = {isa = PBXBuildFile; fileRef = 2106FA641A9F4D6C00524383 /* SequencerChannel1.m */; };
+		2106FA681A9F4D7B00524383 /* SequencerChannel2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2106FA671A9F4D7B00524383 /* SequencerChannel2.m */; };
+		2106FA6B1A9F580000524383 /* SequencerChannel3.m in Sources */ = {isa = PBXBuildFile; fileRef = 2106FA6A1A9F580000524383 /* SequencerChannel3.m */; };
 		7F01CB29EC865BEB024DE7C8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A55AF71D618F3855EAB7733A /* libPods.a */; };
 		B0042B7618E5ACFC00C3B90E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0042B7518E5ACFC00C3B90E /* Accelerate.framework */; };
 		B011C5861A9BCDD400689F00 /* TimedChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = B011C5851A9BCDD400689F00 /* TimedChannel.m */; };
@@ -44,6 +47,12 @@
 
 /* Begin PBXFileReference section */
 		11ADFAB611885F2034D9CDF3 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		2106FA631A9F4D6C00524383 /* SequencerChannel1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerChannel1.h; sourceTree = "<group>"; };
+		2106FA641A9F4D6C00524383 /* SequencerChannel1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerChannel1.m; sourceTree = "<group>"; };
+		2106FA661A9F4D7B00524383 /* SequencerChannel2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerChannel2.h; sourceTree = "<group>"; };
+		2106FA671A9F4D7B00524383 /* SequencerChannel2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerChannel2.m; sourceTree = "<group>"; };
+		2106FA691A9F580000524383 /* SequencerChannel3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerChannel3.h; sourceTree = "<group>"; };
+		2106FA6A1A9F580000524383 /* SequencerChannel3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerChannel3.m; sourceTree = "<group>"; };
 		5DAD5A568E1A7BD466D3C332 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		A55AF71D618F3855EAB7733A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0042B7518E5ACFC00C3B90E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
@@ -157,6 +166,12 @@
 				B0F6197718EB21850017EA7A /* ViewController.xib */,
 				B082D997195B8A6A009507CF /* SequencerChannel.h */,
 				B082D998195B8A6A009507CF /* SequencerChannel.m */,
+				2106FA631A9F4D6C00524383 /* SequencerChannel1.h */,
+				2106FA641A9F4D6C00524383 /* SequencerChannel1.m */,
+				2106FA661A9F4D7B00524383 /* SequencerChannel2.h */,
+				2106FA671A9F4D7B00524383 /* SequencerChannel2.m */,
+				2106FA691A9F580000524383 /* SequencerChannel3.h */,
+				2106FA6A1A9F580000524383 /* SequencerChannel3.m */,
 				B011C5841A9BCDD400689F00 /* TimedChannel.h */,
 				B011C5851A9BCDD400689F00 /* TimedChannel.m */,
 				B011C58E1A9BF96D00689F00 /* Beat.h */,
@@ -345,6 +360,9 @@
 				B011C5861A9BCDD400689F00 /* TimedChannel.m in Sources */,
 				B038E2F718E36B6D00310F33 /* AppDelegate.m in Sources */,
 				B082D999195B8A6A009507CF /* SequencerChannel.m in Sources */,
+				2106FA651A9F4D6C00524383 /* SequencerChannel1.m in Sources */,
+				2106FA681A9F4D7B00524383 /* SequencerChannel2.m in Sources */,
+				2106FA6B1A9F580000524383 /* SequencerChannel3.m in Sources */,
 				B011C58F1A9BF96D00689F00 /* Beat.m in Sources */,
 				B0F6197818EB21850017EA7A /* ViewController.m in Sources */,
 				B038E2F318E36B6D00310F33 /* main.m in Sources */,
