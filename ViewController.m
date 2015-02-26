@@ -57,7 +57,7 @@
     
     // SequencerChannel2 Test
     // Playing a sound at a given BPM, using mach_time() for timing.
-    SequencerChannel2 *channel2 = [SequencerChannel2 sequencerChannelWithAudioFileAt:sampleURL audioController:audioController repeatAtBPM:60];
+    SequencerChannel2 *channel2 = [SequencerChannel2 sequencerChannelWithAudioFileAt:sampleURL audioController:audioController repeatAtBPM:1920];
     [audioController addChannels:@[channel2]];
     
     // SequencerChannel3 Test
