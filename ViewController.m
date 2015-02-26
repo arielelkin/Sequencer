@@ -42,6 +42,8 @@
 - (void)setupSequencer {
     
     NSURL *sampleURL = [[NSBundle mainBundle] URLForResource:@"woodblock" withExtension:@"caf"];
+    NSURL *sampleURL1 = [[NSBundle mainBundle] URLForResource:@"hihat" withExtension:@"caf"];
+    NSURL *sampleURL2 = [[NSBundle mainBundle] URLForResource:@"crick" withExtension:@"caf"];
     
     /* PICK ONE, COMMENT THE REST */
     
@@ -57,21 +59,38 @@
     
     // SequencerChannel2 Test
     // Playing a sound at a given BPM, using mach_time() for timing.
-    SequencerChannel2 *channel2 = [SequencerChannel2 sequencerChannelWithAudioFileAt:sampleURL audioController:audioController repeatAtBPM:1920];
-    [audioController addChannels:@[channel2]];
+//    SequencerChannel2 *channel2 = [SequencerChannel2 sequencerChannelWithAudioFileAt:sampleURL audioController:audioController repeatAtBPM:120];
+//    [audioController addChannels:@[channel2]];
     
     // SequencerChannel3 Test
     // Playing a pattern.
-//    NSMutableArray *mySequence = [NSMutableArray array];
-//    [mySequence addObject:[Beat beatWithOnset:0]];
-//    [mySequence addObject:[Beat beatWithOnset:0.25]];
-//    [mySequence addObject:[Beat beatWithOnset:0.5]];
-//    [mySequence addObject:[Beat beatWithOnset:0.75]];
-//    SequencerChannel3 *woodblockChannel3 = [SequencerChannel3 sequencerChannelWithAudioFileAt:woodblockURL
-//                                                                               audioController:audioController
-//                                                                                   withPattern:mySequence
-//                                                                                         atBPM:120];
-//    [audioController addChannels:@[woodblockChannel3]];
+    int bpm = 120;
+    NSMutableArray *mySequence = [NSMutableArray array];
+    [mySequence addObject:[Beat beatWithOnset:0   velocity:1]];
+    [mySequence addObject:[Beat beatWithOnset:0.5 velocity:1]];
+    SequencerChannel3 *woodblockChannel3a = [SequencerChannel3 sequencerChannelWithAudioFileAt:sampleURL
+                                                                               audioController:audioController
+                                                                                   withPattern:mySequence
+                                                                                         atBPM:bpm];
+    [audioController addChannels:@[woodblockChannel3a]];
+    NSMutableArray *mySequence1 = [NSMutableArray array];
+    [mySequence1 addObject:[Beat beatWithOnset:0 velocity:1]]; // Weird things happen if a channel doesn't have a note at zero.
+    [mySequence1 addObject:[Beat beatWithOnset:0.25 velocity:1]];
+    [mySequence1 addObject:[Beat beatWithOnset:0.75 velocity:1]];
+    [mySequence1 addObject:[Beat beatWithOnset:0.875 velocity:1]];
+    SequencerChannel3 *woodblockChannel3b = [SequencerChannel3 sequencerChannelWithAudioFileAt:sampleURL1
+                                                                              audioController:audioController
+                                                                                  withPattern:mySequence1
+                                                                                        atBPM:bpm];
+    [audioController addChannels:@[woodblockChannel3b]];
+    NSMutableArray *mySequence2 = [NSMutableArray array];
+    [mySequence2 addObject:[Beat beatWithOnset:0 velocity:1]]; // Weird things happen if a channel doesn't have a note at zero.
+    [mySequence2 addObject:[Beat beatWithOnset:0.875 velocity:1]];
+    SequencerChannel3 *woodblockChannel3c = [SequencerChannel3 sequencerChannelWithAudioFileAt:sampleURL2
+                                                                               audioController:audioController
+                                                                                   withPattern:mySequence2
+                                                                                         atBPM:bpm];
+    [audioController addChannels:@[woodblockChannel3c]];
 }
 
 - (void)setupTimedChannel {
