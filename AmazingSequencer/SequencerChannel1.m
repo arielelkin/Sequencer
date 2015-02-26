@@ -14,8 +14,13 @@ static uint64_t kSampleRate;
 
 /*
  NOTES:
+ 
  This is an initial experiment by Li, in which a sound can be reproduced at any BPM, without clipping.
  Frames are used instead of clock ticks. Appears accurate tho.
+ 
+ Measuring time using frames is easy but could produce timing errors if there is any sort of lag. If so,
+ time could pass without the audio card requiring audio frames, and hence timing data could accumulate error
+ and innacuracies.
  */
 @implementation SequencerChannel1 {
     AudioBufferList *audioSampleBufferList;
@@ -39,7 +44,7 @@ static uint64_t kSampleRate;
     
     kSampleRate = (uint64_t)audioController.audioDescription.mSampleRate;
     
-    // Calculate the frames per beat at this BPM.
+    // Timing calculations.
     double beatsPerSecond = (double)bpm / 60.0f;
     __framesPerBeat = (UInt32)(kSampleRate / beatsPerSecond);
     NSLog(@"_framesPerBeat: %f", __framesPerBeat);
@@ -74,19 +79,6 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel1 *THIS,
     }
     NSLog(@"_sampleFrameIndex: %llu", _sampleFrameIndex);
     
-    // This is just a log to demonstrate how the frames method can fail.
-    /*
-     
-     Frames cannot be used to measure time. 
-     For example, if something causes the system to lag for N frames, that lag actually elapsed
-     in time, and this method ignores the time elapsed. A proper method should carry out 
-     calculations according to time, not elapsed frames.
-     
-     */
-//    for(i = 0; i < 10; i++) {
-//        NSLog(@"HODOR!");
-//    }
-    
     // Determines when a new sample should be played.
     // Can set _sampleIsPlaying to true, but not to false.
     static BOOL _sampleIsPlaying;
@@ -102,6 +94,7 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel1 *THIS,
         for( int j=0; j<audio->mNumberBuffers; j++ ) {
             if(_sampleIsPlaying) {
                 // Write sample to buffer.
+                // TODO: WARNING: This could cause an error if the sample can't fill the buffer?
                 ((float *)audio->mBuffers[j].mData)[i] = ((float *)THIS->audioSampleBufferList->mBuffers[j].mData)[_sampleFrameIndex];
                 // Advance index and reset if necessary.
                 _sampleFrameIndex++;

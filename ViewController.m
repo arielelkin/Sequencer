@@ -43,6 +43,8 @@
     
     NSURL *sampleURL = [[NSBundle mainBundle] URLForResource:@"woodblock" withExtension:@"caf"];
     
+    /* PICK ONE, COMMENT THE REST */
+    
     // SequencerChannel Test
     // Original test by Ariel.
 //    woodblockChannel = [SequencerChannel sequencerChannelWithAudioFileAt:sampleURL audioController:audioController repeatAtBPM:120];
@@ -50,8 +52,13 @@
     
     // SequencerChannel1 Test
     // Playing a sound at a given BPM, using frames for timing.
-    SequencerChannel1 *channel1 = [SequencerChannel1 sequencerChannelWithAudioFileAt:sampleURL audioController:audioController repeatAtBPM:120];
-    [audioController addChannels:@[channel1]];
+//    SequencerChannel1 *channel1 = [SequencerChannel1 sequencerChannelWithAudioFileAt:sampleURL audioController:audioController repeatAtBPM:120];
+//    [audioController addChannels:@[channel1]];
+    
+    // SequencerChannel2 Test
+    // Playing a sound at a given BPM, using mach_time() for timing.
+    SequencerChannel2 *channel2 = [SequencerChannel2 sequencerChannelWithAudioFileAt:sampleURL audioController:audioController repeatAtBPM:60];
+    [audioController addChannels:@[channel2]];
     
     // SequencerChannel3 Test
     // Playing a pattern.
