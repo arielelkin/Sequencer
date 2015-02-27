@@ -1,9 +1,9 @@
 //
-//  MyChannel.m
+//  SequencerChannel3.m
 //  AmazingSequencer
 //
-//  Created by Ariel Elkin on 25/06/2014.
-//  Copyright (c) 2014 Ariel Elkin. All rights reserved.
+//  Created by Alejandro Santander on 26/02/2015.
+//  Copyright (c) 2015 Ariel Elkin. All rights reserved.
 //
 
 #import "SequencerChannel.h"
@@ -11,45 +11,62 @@
 
 #import <mach/mach_time.h>
 
-static double __secondsPerHostTick = 0.0;
-static double __hostTicksPerSecond = 0.0;
-static double __hostTicksPerFrame = 0.0;
-static uint64_t kSampleRate;
-
 /*
  NOTES:
- This is the original experiment by Ariel, which plays a sound every second.
- Note that if the sample is longer than then audio request buffer, this method produces clipping.
+ This experiment accepts an array of beats as a pattern instead of a bpm.
+ It uses tick logic as developed in SequenceChannel2.
+ 
  */
 @implementation SequencerChannel {
-    AudioBufferList *audioSampleBufferList;
-    UInt32 lengthInFrames;
+    AudioBufferList *_audioSampleBufferList;
+    UInt32 _sampleLengthInFrames;
+    NSMutableArray* _beats;
+    int _sampleRate;
+    mach_timebase_info_data_t _timebaseInfo;
+    // TODO: cant have objc calls in renderCallback()
+    SequencerBeat *_activeBeat;
+    double _secondsPerMeasure;
+    UInt64 _sampleFrameIndex; // Keeps track of the next frame to read on the sample.
+    UInt64 _lastPlayedBeatIndex; // Keeps track of the last time a measure/pattern started.
+    UInt64 _lastMeasureStartTime; // Keeps track of the next pattern beat to play.
+    UInt64 _sampleIsPlaying; // Keeps track if a sample is playing or not.
 }
 
-+ (instancetype)sequencerChannelWithAudioFileAt:(NSURL *)url audioController:(AEAudioController*)audioController repeatAtBPM:(UInt64)bpm {
-
++ (instancetype)sequencerChannelWithAudioFileAt:(NSURL *)url
+                                audioController:(AEAudioController*)audioController
+                                    withPattern:(NSMutableArray*)beats // of Beat
+                                   withDuration:(int)numBeats
+                                          atBPM:(UInt64)bpm {
+    
     SequencerChannel *channel = [[self alloc] init];
-
-    //Load audio file:
+    
+    channel->_beats = beats;
+    
+    // Load audio file.
     AEAudioFileLoaderOperation *operation = [[AEAudioFileLoaderOperation alloc] initWithFileURL:url targetAudioDescription:audioController.audioDescription];
     [operation start];
     if ( operation.error ) {
         NSLog(@"load error: %@", operation.error);
         return nil;
     }
-    channel->audioSampleBufferList = operation.bufferList;
-    channel->lengthInFrames = operation.lengthInFrames;
-    NSLog(@"sample length in frames: %d", (unsigned int)operation.lengthInFrames);
-
-    //Set the interval at which we'll play the file.
-    //In this case, every second (i.e. at 60 BPM)
-
-    kSampleRate = (uint64_t)audioController.audioDescription.mSampleRate;
-    mach_timebase_info_data_t tinfo;
-    mach_timebase_info(&tinfo);
-    __secondsPerHostTick = ((double)tinfo.numer / tinfo.denom) * 1.0e-9;
-    __hostTicksPerSecond = 1.0 / __secondsPerHostTick;
-    __hostTicksPerFrame = __hostTicksPerSecond / kSampleRate;
+    channel->_audioSampleBufferList = operation.bufferList;
+    channel->_sampleLengthInFrames = operation.lengthInFrames;
+    
+    // Init consistent vars.
+    channel->_sampleFrameIndex = 0;
+    channel->_lastPlayedBeatIndex = 0;
+    channel->_lastMeasureStartTime = 0;
+    channel->_sampleIsPlaying = NO;
+    
+    // Translate NSMutableArray of Beats to c arrays.
+    // (used in renderCallback, which cant have Obj-c code)
+    // TODO: cant have objc calls in renderCallback()
+    
+    // Timing calculations.
+    channel->_sampleRate = audioController.audioDescription.mSampleRate;
+    mach_timebase_info(&channel->_timebaseInfo);
+    double secondsPerBeat = 60.0f / bpm;
+    channel->_secondsPerMeasure = numBeats * secondsPerBeat; // hardcoded - assumes there are 4 beats in 1 measure
     
     return channel;
 }
@@ -60,37 +77,51 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
                                UInt32 frames,
                                AudioBufferList *audio) {
     
-    static UInt64 _playbackStartTime;
-    if ( !_playbackStartTime ) {
-        _playbackStartTime = inTimeStamp->mHostTime;
+    // Calculates the time elapsed since the last time a measure/pattern started.
+    if(THIS->_lastMeasureStartTime == 0) THIS->_lastMeasureStartTime = inTimeStamp->mHostTime;
+    uint64_t elapsedSinceStartTime = inTimeStamp->mHostTime - THIS->_lastMeasureStartTime;
+    // TODO: does _timebaseInfo.numer count as an objc call?
+    // TODO: do we have a way to throughly test if we are doing NONOes here? i.e. a warning that says "hey you're using objc here!"?
+    double elapsedSinceStartTimeNanoSeconds = elapsedSinceStartTime * (THIS->_timebaseInfo.numer / THIS->_timebaseInfo.denom);
+    double elapsedSinceStartTimeSeconds = elapsedSinceStartTimeNanoSeconds / 1000000000;
+    if(elapsedSinceStartTimeSeconds > THIS->_secondsPerMeasure) { // reset?
+        THIS->_lastMeasureStartTime = inTimeStamp->mHostTime;
+        THIS->_lastPlayedBeatIndex = 0;
+        return noErr;
     }
     
-    // Figure out where we are in time:
-    uint64_t bufferStartPlaybackPosition = inTimeStamp->mHostTime - _playbackStartTime;
-    uint64_t bufferEndPlaybackPosition = bufferStartPlaybackPosition + (frames * __hostTicksPerFrame);
-
-    static UInt32 playHead;
-
-    //If it's time for the audio to start playing, set the playhead to 0
-    //so that the buffers are being filled at the start:
-    if ( bufferEndPlaybackPosition % (uint64_t)__hostTicksPerSecond < bufferStartPlaybackPosition % (uint64_t)__hostTicksPerSecond ) {
-        playHead = 0;
-    }
-
-    //Fill buffers with audio if we are supposed to be
-    //playing audio, don't  otherwise:
-    for ( int i=0; i<frames; i++ ) {
-        for ( int j=0; j<audio->mNumberBuffers; j++ ) {
-            if (playHead < THIS->lengthInFrames) {
-                ((float *)audio->mBuffers[j].mData)[i] = ((float *)THIS->audioSampleBufferList->mBuffers[j].mData)[playHead + i];
-            }
-            else {
-                ((float *)audio->mBuffers[j].mData)[i] = 0;
-            }
+    // Determine if a new sample should be triggered.
+    // This set _sampleIsPlaying to true, but not to false.
+    if(THIS->_lastPlayedBeatIndex < THIS->_beats.count) {
+        THIS->_activeBeat = THIS->_beats[(int)THIS->_lastPlayedBeatIndex];
+        double beatTime = THIS->_secondsPerMeasure * THIS->_activeBeat.onset;
+        double delta = elapsedSinceStartTimeSeconds - beatTime;
+        if(delta > 0) { // A beat cannot be missed by combining this with _lastPlayedBeatIndex
+            THIS->_sampleIsPlaying = YES;
+            THIS->_sampleFrameIndex = 0;
+            THIS->_lastPlayedBeatIndex++;
         }
     }
-
-    playHead += frames;
+    
+    // Can skip writing? (buffer already has zeroes)
+    if(THIS->_sampleIsPlaying == NO) return noErr;
+    
+    // Sweep the audio buffer frames and fill with sample frames if appropriate.
+    for(int i = 0; i < frames; i++) {
+        
+        // Writes the same samples on left and right channels.
+        for(int j = 0; j < audio->mNumberBuffers; j++) {
+            // TODO: cant have objc calls in renderCallback()
+            ((float *)audio->mBuffers[j].mData)[i] = THIS->_activeBeat.velocity * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
+        }
+        
+        // Advance sample frame.
+        THIS->_sampleFrameIndex++;
+        if(THIS->_sampleFrameIndex > THIS->_sampleLengthInFrames) {
+            THIS->_sampleIsPlaying = NO;
+            break;
+        }
+    }
     
     return noErr;
 }
@@ -99,16 +130,19 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
     return &renderCallback;
 }
 
-
-#pragma mark -
-#pragma mark TODO
-
-- (void) stopPlayback {
-}
-
-
-- (void) repeatAtBPM:(UInt64)newBPM {
-}
-
-
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

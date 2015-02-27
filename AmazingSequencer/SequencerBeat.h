@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Beat : NSObject
+@interface SequencerBeat : NSObject
 
 + (instancetype)beatWithOnset:(float)onset
                      velocity:(float)velocity;

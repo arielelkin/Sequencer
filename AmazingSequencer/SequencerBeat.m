@@ -6,13 +6,13 @@
 //  Copyright (c) 2015 Ariel Elkin. All rights reserved.
 //
 
-#import "Beat.h"
+#import "SequencerBeat.h"
 
-@implementation Beat
+@implementation SequencerBeat
 
 + (instancetype)beatWithOnset:(float)onset
                      velocity:(float)velocity {
-    Beat *beat = [[self alloc] init];
+    SequencerBeat *beat = [[self alloc] init];
     beat.onset = onset;
     beat.velocity = velocity;
     return beat;

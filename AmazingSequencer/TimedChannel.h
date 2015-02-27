@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AEAudioController.h"
-#import "Beat.h"
+#import "SequencerBeat.h"
 
 @interface TimedChannel : NSObject <AEAudioTimingReceiver>
 

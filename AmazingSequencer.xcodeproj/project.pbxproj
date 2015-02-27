@@ -9,11 +9,11 @@
 /* Begin PBXBuildFile section */
 		2106FA651A9F4D6C00524383 /* SequencerChannel1.m in Sources */ = {isa = PBXBuildFile; fileRef = 2106FA641A9F4D6C00524383 /* SequencerChannel1.m */; };
 		2106FA681A9F4D7B00524383 /* SequencerChannel2.m in Sources */ = {isa = PBXBuildFile; fileRef = 2106FA671A9F4D7B00524383 /* SequencerChannel2.m */; };
-		2106FA6B1A9F580000524383 /* SequencerChannel3.m in Sources */ = {isa = PBXBuildFile; fileRef = 2106FA6A1A9F580000524383 /* SequencerChannel3.m */; };
+		2106FA6B1A9F580000524383 /* SequencerChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2106FA6A1A9F580000524383 /* SequencerChannel.m */; };
 		7F01CB29EC865BEB024DE7C8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A55AF71D618F3855EAB7733A /* libPods.a */; };
 		B0042B7618E5ACFC00C3B90E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0042B7518E5ACFC00C3B90E /* Accelerate.framework */; };
 		B011C5861A9BCDD400689F00 /* TimedChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = B011C5851A9BCDD400689F00 /* TimedChannel.m */; };
-		B011C58F1A9BF96D00689F00 /* Beat.m in Sources */ = {isa = PBXBuildFile; fileRef = B011C58D1A9BF96D00689F00 /* Beat.m */; };
+		B011C58F1A9BF96D00689F00 /* SequencerBeat.m in Sources */ = {isa = PBXBuildFile; fileRef = B011C58D1A9BF96D00689F00 /* SequencerBeat.m */; };
 		B038E2E718E36B6D00310F33 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2E618E36B6D00310F33 /* Foundation.framework */; };
 		B038E2E918E36B6D00310F33 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2E818E36B6D00310F33 /* CoreGraphics.framework */; };
 		B038E2EB18E36B6D00310F33 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2EA18E36B6D00310F33 /* UIKit.framework */; };
@@ -26,7 +26,7 @@
 		B038E30218E36B6D00310F33 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2EA18E36B6D00310F33 /* UIKit.framework */; };
 		B038E30A18E36B6D00310F33 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B038E30818E36B6D00310F33 /* InfoPlist.strings */; };
 		B038E30C18E36B6D00310F33 /* AmazingSequencerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B038E30B18E36B6D00310F33 /* AmazingSequencerTests.m */; };
-		B082D999195B8A6A009507CF /* SequencerChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = B082D998195B8A6A009507CF /* SequencerChannel.m */; };
+		B082D999195B8A6A009507CF /* SequencerChannel0.m in Sources */ = {isa = PBXBuildFile; fileRef = B082D998195B8A6A009507CF /* SequencerChannel0.m */; };
 		B092341F1A964A7E002EA90A /* woodblock.caf in Resources */ = {isa = PBXBuildFile; fileRef = B092341B1A964A7E002EA90A /* woodblock.caf */; };
 		B09234201A964A7E002EA90A /* crick.caf in Resources */ = {isa = PBXBuildFile; fileRef = B092341C1A964A7E002EA90A /* crick.caf */; };
 		B09234211A964A7E002EA90A /* hihat.caf in Resources */ = {isa = PBXBuildFile; fileRef = B092341D1A964A7E002EA90A /* hihat.caf */; };
@@ -51,15 +51,15 @@
 		2106FA641A9F4D6C00524383 /* SequencerChannel1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerChannel1.m; sourceTree = "<group>"; };
 		2106FA661A9F4D7B00524383 /* SequencerChannel2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerChannel2.h; sourceTree = "<group>"; };
 		2106FA671A9F4D7B00524383 /* SequencerChannel2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerChannel2.m; sourceTree = "<group>"; };
-		2106FA691A9F580000524383 /* SequencerChannel3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerChannel3.h; sourceTree = "<group>"; };
-		2106FA6A1A9F580000524383 /* SequencerChannel3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerChannel3.m; sourceTree = "<group>"; };
+		2106FA691A9F580000524383 /* SequencerChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerChannel.h; sourceTree = "<group>"; };
+		2106FA6A1A9F580000524383 /* SequencerChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerChannel.m; sourceTree = "<group>"; };
 		5DAD5A568E1A7BD466D3C332 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		A55AF71D618F3855EAB7733A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0042B7518E5ACFC00C3B90E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		B011C5841A9BCDD400689F00 /* TimedChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimedChannel.h; sourceTree = "<group>"; };
 		B011C5851A9BCDD400689F00 /* TimedChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimedChannel.m; sourceTree = "<group>"; };
-		B011C58D1A9BF96D00689F00 /* Beat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Beat.m; sourceTree = "<group>"; };
-		B011C58E1A9BF96D00689F00 /* Beat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Beat.h; sourceTree = "<group>"; };
+		B011C58D1A9BF96D00689F00 /* SequencerBeat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerBeat.m; sourceTree = "<group>"; };
+		B011C58E1A9BF96D00689F00 /* SequencerBeat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerBeat.h; sourceTree = "<group>"; };
 		B038E2E318E36B6D00310F33 /* AmazingSequencer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AmazingSequencer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B038E2E618E36B6D00310F33 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B038E2E818E36B6D00310F33 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -76,8 +76,8 @@
 		B038E30718E36B6D00310F33 /* AmazingSequencerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AmazingSequencerTests-Info.plist"; sourceTree = "<group>"; };
 		B038E30918E36B6D00310F33 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B038E30B18E36B6D00310F33 /* AmazingSequencerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AmazingSequencerTests.m; sourceTree = "<group>"; };
-		B082D997195B8A6A009507CF /* SequencerChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerChannel.h; sourceTree = "<group>"; };
-		B082D998195B8A6A009507CF /* SequencerChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerChannel.m; sourceTree = "<group>"; };
+		B082D997195B8A6A009507CF /* SequencerChannel0.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerChannel0.h; sourceTree = "<group>"; };
+		B082D998195B8A6A009507CF /* SequencerChannel0.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerChannel0.m; sourceTree = "<group>"; };
 		B092341B1A964A7E002EA90A /* woodblock.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = woodblock.caf; sourceTree = "<group>"; };
 		B092341C1A964A7E002EA90A /* crick.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = crick.caf; sourceTree = "<group>"; };
 		B092341D1A964A7E002EA90A /* hihat.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = hihat.caf; sourceTree = "<group>"; };
@@ -113,6 +113,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		212902491AA0B34F005B2F9C /* Deprecated */ = {
+			isa = PBXGroup;
+			children = (
+				B011C5841A9BCDD400689F00 /* TimedChannel.h */,
+				B011C5851A9BCDD400689F00 /* TimedChannel.m */,
+				B082D997195B8A6A009507CF /* SequencerChannel0.h */,
+				B082D998195B8A6A009507CF /* SequencerChannel0.m */,
+				2106FA631A9F4D6C00524383 /* SequencerChannel1.h */,
+				2106FA641A9F4D6C00524383 /* SequencerChannel1.m */,
+				2106FA661A9F4D7B00524383 /* SequencerChannel2.h */,
+				2106FA671A9F4D7B00524383 /* SequencerChannel2.m */,
+			);
+			name = Deprecated;
+			sourceTree = "<group>";
+		};
 		9F89F1DB82538BA0D1CD8624 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -159,23 +174,16 @@
 		B038E2EC18E36B6D00310F33 /* AmazingSequencer */ = {
 			isa = PBXGroup;
 			children = (
+				212902491AA0B34F005B2F9C /* Deprecated */,
 				B038E2F518E36B6D00310F33 /* AppDelegate.h */,
 				B038E2F618E36B6D00310F33 /* AppDelegate.m */,
 				B0F6197518EB21850017EA7A /* ViewController.h */,
 				B0F6197618EB21850017EA7A /* ViewController.m */,
 				B0F6197718EB21850017EA7A /* ViewController.xib */,
-				B082D997195B8A6A009507CF /* SequencerChannel.h */,
-				B082D998195B8A6A009507CF /* SequencerChannel.m */,
-				2106FA631A9F4D6C00524383 /* SequencerChannel1.h */,
-				2106FA641A9F4D6C00524383 /* SequencerChannel1.m */,
-				2106FA661A9F4D7B00524383 /* SequencerChannel2.h */,
-				2106FA671A9F4D7B00524383 /* SequencerChannel2.m */,
-				2106FA691A9F580000524383 /* SequencerChannel3.h */,
-				2106FA6A1A9F580000524383 /* SequencerChannel3.m */,
-				B011C5841A9BCDD400689F00 /* TimedChannel.h */,
-				B011C5851A9BCDD400689F00 /* TimedChannel.m */,
-				B011C58E1A9BF96D00689F00 /* Beat.h */,
-				B011C58D1A9BF96D00689F00 /* Beat.m */,
+				2106FA691A9F580000524383 /* SequencerChannel.h */,
+				2106FA6A1A9F580000524383 /* SequencerChannel.m */,
+				B011C58E1A9BF96D00689F00 /* SequencerBeat.h */,
+				B011C58D1A9BF96D00689F00 /* SequencerBeat.m */,
 				B038E2F818E36B6D00310F33 /* Images.xcassets */,
 				B038E2ED18E36B6D00310F33 /* Supporting Files */,
 			);
@@ -359,11 +367,11 @@
 			files = (
 				B011C5861A9BCDD400689F00 /* TimedChannel.m in Sources */,
 				B038E2F718E36B6D00310F33 /* AppDelegate.m in Sources */,
-				B082D999195B8A6A009507CF /* SequencerChannel.m in Sources */,
+				B082D999195B8A6A009507CF /* SequencerChannel0.m in Sources */,
 				2106FA651A9F4D6C00524383 /* SequencerChannel1.m in Sources */,
 				2106FA681A9F4D7B00524383 /* SequencerChannel2.m in Sources */,
-				2106FA6B1A9F580000524383 /* SequencerChannel3.m in Sources */,
-				B011C58F1A9BF96D00689F00 /* Beat.m in Sources */,
+				2106FA6B1A9F580000524383 /* SequencerChannel.m in Sources */,
+				B011C58F1A9BF96D00689F00 /* SequencerBeat.m in Sources */,
 				B0F6197818EB21850017EA7A /* ViewController.m in Sources */,
 				B038E2F318E36B6D00310F33 /* main.m in Sources */,
 			);
