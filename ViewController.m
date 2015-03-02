@@ -22,11 +22,11 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self setupAudioController];
-//    [self setupSequencer];
+    [self setupSequencer];
 
 //    [self setupDumbMetronome];
 //    [self setupWithInvalidBeats];
-    [self setupMetronome];
+//    [self setupMetronome];
 }
 
 - (void)setupMetronome {

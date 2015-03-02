@@ -23,8 +23,6 @@
     NSMutableArray* _beats;
     int _sampleRate;
     mach_timebase_info_data_t _timebaseInfo;
-    // TODO: cant have objc calls in renderCallback()
-    SequencerBeat *_activeBeat;
     double _secondsPerMeasure;
     UInt64 _sampleFrameIndex; // Keeps track of the next frame to read on the sample.
     UInt64 _lastPlayedBeatIndex; // Keeps track of the last time a measure/pattern started.
@@ -38,7 +36,7 @@
                                 audioController:(AEAudioController*)audioController
                                     withPattern:(NSMutableArray*)beats // of Beat
                                           atBPM:(double)bpm {
-    
+
     return [self sequencerChannelWithAudioFileAt:url
                                  audioController:audioController withPattern:beats
                                     withDuration:4
@@ -118,8 +116,7 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
     // Calculates the time elapsed since the last time a measure/pattern started.
     if(THIS->_lastMeasureStartTime == 0) THIS->_lastMeasureStartTime = inTimeStamp->mHostTime;
     uint64_t elapsedSinceStartTime = inTimeStamp->mHostTime - THIS->_lastMeasureStartTime;
-    // TODO: does _timebaseInfo.numer count as an objc call?
-    // TODO: do we have a way to throughly test if we are doing NONOes here? i.e. a warning that says "hey you're using objc here!"?
+
     double elapsedSinceStartTimeNanoSeconds = elapsedSinceStartTime * (THIS->_timebaseInfo.numer / THIS->_timebaseInfo.denom);
     double elapsedSinceStartTimeSeconds = elapsedSinceStartTimeNanoSeconds / 1000000000;
     if(elapsedSinceStartTimeSeconds > THIS->_secondsPerMeasure) { // reset?
@@ -131,18 +128,22 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
     // Determine if a new sample should be triggered.
     // This set _sampleIsPlaying to true, but not to false.
     if(THIS->_lastPlayedBeatIndex < THIS->numBeats) {
-        THIS->_activeBeat = THIS->_beats[(int)THIS->_lastPlayedBeatIndex];
-        double beatTime = THIS->_secondsPerMeasure * THIS->_activeBeat.onset;
+
+        double beatTime = THIS->_secondsPerMeasure * THIS->beatCArray[THIS->_lastPlayedBeatIndex][0];
+
         double delta = elapsedSinceStartTimeSeconds - beatTime;
         if(delta > 0) { // A beat cannot be missed by combining this with _lastPlayedBeatIndex
-            THIS->_sampleIsPlaying = YES;
+            THIS->_sampleIsPlaying = true;
             THIS->_sampleFrameIndex = 0;
             THIS->_lastPlayedBeatIndex++;
         }
     }
     
     // Can skip writing? (buffer already has zeroes)
-    if(THIS->_sampleIsPlaying == NO) return noErr;
+    if(THIS->_sampleIsPlaying == NO ||
+       THIS->_lastPlayedBeatIndex >= THIS->numBeats) {
+        return noErr;
+    }
     
     // Sweep the audio buffer frames and fill with sample frames if appropriate.
     for(int i = 0; i < frames; i++) {
@@ -150,14 +151,14 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
         // Writes the same samples on left and right channels.
         for(int j = 0; j < audio->mNumberBuffers; j++) {
             // TODO: cant have objc calls in renderCallback()
-            ((float *)audio->mBuffers[j].mData)[i] = THIS->_activeBeat.velocity * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
+            ((float *)audio->mBuffers[j].mData)[i] = THIS->beatCArray[THIS->_lastPlayedBeatIndex][1] * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
         }
         
         // Advance sample frame.
         THIS->_sampleFrameIndex++;
         if(THIS->_sampleFrameIndex > THIS->_sampleLengthInFrames) {
             THIS->_sampleIsPlaying = NO;
-            break;
+            return noErr;
         }
     }
     
