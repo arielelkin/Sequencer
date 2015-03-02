@@ -15,7 +15,13 @@
 + (instancetype)sequencerChannelWithAudioFileAt:(NSURL *)url
                                 audioController:(AEAudioController*)audioController
                                     withPattern:(NSMutableArray*)beats // of Beat
-                                   withDuration:(int)numBeats
-                                          atBPM:(UInt64)bpm;
+                                   withDuration:(NSUInteger)numBeats
+                                          atBPM:(double)bpm;
+
++ (instancetype)sequencerChannelWithAudioFileAt:(NSURL *)url
+                                audioController:(AEAudioController*)audioController
+                                    withPattern:(NSMutableArray*)beats // of Beat
+                                          atBPM:(double)bpm;
+
 
 @end

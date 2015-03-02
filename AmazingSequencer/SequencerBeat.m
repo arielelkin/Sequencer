@@ -10,15 +10,15 @@
 
 @implementation SequencerBeat
 
-+ (instancetype)beatWithOnset:(float)onset
-                     velocity:(float)velocity {
++ (instancetype)beatWithOnset:(double)onset
+                     velocity:(double)velocity {
     SequencerBeat *beat = [[self alloc] init];
     beat.onset = onset;
     beat.velocity = velocity;
     return beat;
 }
 
-+ (instancetype)beatWithOnset:(float)onset {
++ (instancetype)beatWithOnset:(double)onset {
     return [self beatWithOnset:onset velocity:1.0];
 }
 

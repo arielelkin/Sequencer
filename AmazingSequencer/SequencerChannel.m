@@ -30,17 +30,55 @@
     UInt64 _lastPlayedBeatIndex; // Keeps track of the last time a measure/pattern started.
     UInt64 _lastMeasureStartTime; // Keeps track of the next pattern beat to play.
     UInt64 _sampleIsPlaying; // Keeps track if a sample is playing or not.
+    double **beatCArray;
+    NSUInteger numBeats;
 }
 
 + (instancetype)sequencerChannelWithAudioFileAt:(NSURL *)url
                                 audioController:(AEAudioController*)audioController
                                     withPattern:(NSMutableArray*)beats // of Beat
-                                   withDuration:(int)numBeats
-                                          atBPM:(UInt64)bpm {
+                                          atBPM:(double)bpm {
+    
+    return [self sequencerChannelWithAudioFileAt:url
+                                 audioController:audioController withPattern:beats
+                                    withDuration:4
+                                           atBPM:bpm];
+}
+
++ (instancetype)sequencerChannelWithAudioFileAt:(NSURL *)url
+                                audioController:(AEAudioController*)audioController
+                                    withPattern:(NSMutableArray*)beats // of Beat
+                                   withDuration:(NSUInteger)beatsPerMeasure
+                                          atBPM:(double)bpm {
     
     SequencerChannel *channel = [[self alloc] init];
     
     channel->_beats = beats;
+
+    channel->numBeats = beats.count;
+    NSUInteger numParametersInBeat = 2;
+
+
+    //Dynamically allocate 2-dimensional C array to represent NSMutableArray beats:
+    //beatCArray[beats.count][numParametersInBeat]
+    double **beatsCRepresentation = (double**)malloc(channel->numBeats*sizeof(double*));
+
+    for(int i=0; i < channel->numBeats; i++) {
+        beatsCRepresentation[i] = (double*)malloc(numParametersInBeat*sizeof(double));
+    }
+
+    for (int i = 0; i < channel->numBeats; i++){
+        SequencerBeat *beat = beats[i];
+
+        if (![beat isKindOfClass:[SequencerBeat class]]) {
+            NSLog(@"Cannot initialize a sequencer channel with beats array that contains objects not of type beat");
+            return nil;
+        }
+        beatsCRepresentation[i][0] = beat.onset;
+        beatsCRepresentation[i][1] = beat.velocity;
+    }
+
+    channel->beatCArray = beatsCRepresentation;
     
     // Load audio file.
     AEAudioFileLoaderOperation *operation = [[AEAudioFileLoaderOperation alloc] initWithFileURL:url targetAudioDescription:audioController.audioDescription];
@@ -66,7 +104,7 @@
     channel->_sampleRate = audioController.audioDescription.mSampleRate;
     mach_timebase_info(&channel->_timebaseInfo);
     double secondsPerBeat = 60.0f / bpm;
-    channel->_secondsPerMeasure = numBeats * secondsPerBeat; // hardcoded - assumes there are 4 beats in 1 measure
+    channel->_secondsPerMeasure = beatsPerMeasure * secondsPerBeat; // hardcoded - assumes there are 4 beats in 1 measure
     
     return channel;
 }
@@ -92,7 +130,7 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
     
     // Determine if a new sample should be triggered.
     // This set _sampleIsPlaying to true, but not to false.
-    if(THIS->_lastPlayedBeatIndex < THIS->_beats.count) {
+    if(THIS->_lastPlayedBeatIndex < THIS->numBeats) {
         THIS->_activeBeat = THIS->_beats[(int)THIS->_lastPlayedBeatIndex];
         double beatTime = THIS->_secondsPerMeasure * THIS->_activeBeat.onset;
         double delta = elapsedSinceStartTimeSeconds - beatTime;
