@@ -179,11 +179,11 @@
 				B038E2F618E36B6D00310F33 /* AppDelegate.m */,
 				B0F6197518EB21850017EA7A /* ViewController.h */,
 				B0F6197618EB21850017EA7A /* ViewController.m */,
-				B0F6197718EB21850017EA7A /* ViewController.xib */,
 				2106FA691A9F580000524383 /* SequencerChannel.h */,
 				2106FA6A1A9F580000524383 /* SequencerChannel.m */,
 				B011C58E1A9BF96D00689F00 /* SequencerBeat.h */,
 				B011C58D1A9BF96D00689F00 /* SequencerBeat.m */,
+				B0F6197718EB21850017EA7A /* ViewController.xib */,
 				B038E2F818E36B6D00310F33 /* Images.xcassets */,
 				B038E2ED18E36B6D00310F33 /* Supporting Files */,
 			);
