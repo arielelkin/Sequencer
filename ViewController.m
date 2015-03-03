@@ -21,12 +21,13 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
     [self setupAudioController];
-    [self setupSequencer];
-
+    
+//    [self setupSequencer];
 //    [self setupDumbMetronome];
 //    [self setupWithInvalidBeats];
-//    [self setupMetronome];
+    [self setupMetronome];
 }
 
 - (void)setupMetronome {
@@ -38,11 +39,10 @@
     NSMutableArray *metronomeSequence = [NSMutableArray array];
 
     //I'm being stupid and doing this:
-    [metronomeSequence addObject:[SequencerBeat beatWithOnset:0/4]];
-    [metronomeSequence addObject:[SequencerBeat beatWithOnset:1/4]];
-    [metronomeSequence addObject:[SequencerBeat beatWithOnset:2/4]];
-    [metronomeSequence addObject:[SequencerBeat beatWithOnset:3/4]];
-
+    [metronomeSequence addObject:[SequencerBeat beatWithOnset:0.0/4]];
+    [metronomeSequence addObject:[SequencerBeat beatWithOnset:1.0/4]];
+    [metronomeSequence addObject:[SequencerBeat beatWithOnset:2.0/4]];
+    [metronomeSequence addObject:[SequencerBeat beatWithOnset:3.0/4]];
     SequencerChannel *metronomeChannel = [SequencerChannel sequencerChannelWithAudioFileAt:hihatURL
                                                                            audioController:audioController
                                                                                withPattern:metronomeSequence
