@@ -21,17 +21,16 @@
     AudioBufferList *_audioSampleBufferList;
     UInt32 _sampleLengthInFrames;
     NSMutableArray* _beats;
-    int _sampleRate;
     mach_timebase_info_data_t _timebaseInfo;
-    // TODO: cant have objc calls in renderCallback()
-    SequencerBeat *_activeBeat;
-    double _secondsPerMeasure;
+    UInt64 _nanoSecondsPerCycle;
+    UInt64 _nanoSecondsPerFrame;
     UInt64 _sampleFrameIndex; // Keeps track of the next frame to read on the sample.
-    UInt64 _lastPlayedBeatIndex; // Keeps track of the last time a measure/pattern started.
-    UInt64 _lastMeasureStartTime; // Keeps track of the next pattern beat to play.
+    int _currentBeatIndex; // Keeps track of the current beat playing.
+    UInt64 _cycleStartTimeNanoSeconds;
+    UInt64 _cycleEndTimeNanoSeconds;
     UInt64 _sampleIsPlaying; // Keeps track if a sample is playing or not.
-    double **beatCArray;
-    NSUInteger numBeats;
+    double **_beatCArray;
+    int _numBeats;
 }
 
 + (instancetype)sequencerChannelWithAudioFileAt:(NSURL *)url
@@ -64,30 +63,26 @@
 
     SequencerChannel *channel = [[self alloc] init];
 
-
+    // Dynamically allocate 2-dimensional C array to represent NSMutableArray beats:
+    // beatCArray[beats.count][numParametersInBeat]
+    // (can't use Obj-c within renderCallback)
     channel->_beats = beats;
-
-    channel.sequence = beats;
-
-    channel->numBeats = beats.count;
+    channel->_numBeats = beats.count;
     NSUInteger numParametersInBeat = 2;
-
-
-    //Dynamically allocate 2-dimensional C array to represent NSMutableArray beats:
-    //beatCArray[beats.count][numParametersInBeat]
-    double **beatsCRepresentation = (double**)malloc(channel->numBeats*sizeof(double*));
-
-    for(int i=0; i < channel->numBeats; i++) {
+    double **beatsCRepresentation = (double**)malloc(channel->_numBeats*sizeof(double*));
+    for(int i=0; i < channel->_numBeats; i++) {
         beatsCRepresentation[i] = (double*)malloc(numParametersInBeat*sizeof(double));
     }
-
-    for (int i = 0; i < channel->numBeats; i++){
+    for (int i = 0; i < channel->_numBeats; i++){
         SequencerBeat *beat = beats[i];
+        if (![beat isKindOfClass:[SequencerBeat class]]) {
+            NSLog(@"Cannot initialize a sequencer channel with beats array that contains objects not of type beat");
+            return nil;
+        }
         beatsCRepresentation[i][0] = beat.onset;
         beatsCRepresentation[i][1] = beat.velocity;
     }
-
-    channel->beatCArray = beatsCRepresentation;
+    channel->_beatCArray = beatsCRepresentation;
     
     // Load audio file.
     AEAudioFileLoaderOperation *operation = [[AEAudioFileLoaderOperation alloc] initWithFileURL:url targetAudioDescription:audioController.audioDescription];
@@ -101,19 +96,16 @@
     
     // Init consistent vars.
     channel->_sampleFrameIndex = 0;
-    channel->_lastPlayedBeatIndex = 0;
-    channel->_lastMeasureStartTime = 0;
-    channel->_sampleIsPlaying = NO;
-    
-    // Translate NSMutableArray of Beats to c arrays.
-    // (used in renderCallback, which cant have Obj-c code)
-    // TODO: cant have objc calls in renderCallback()
+    channel->_currentBeatIndex = -1;
+    channel->_cycleStartTimeNanoSeconds = 0;
+    channel->_cycleEndTimeNanoSeconds = 0;
+    channel->_sampleIsPlaying = false;
     
     // Timing calculations.
-    channel->_sampleRate = audioController.audioDescription.mSampleRate;
-    mach_timebase_info(&channel->_timebaseInfo);
-    double secondsPerBeat = 60.0f / bpm;
-    channel->_secondsPerMeasure = beatsPerMeasure * secondsPerBeat; // hardcoded - assumes there are 4 beats in 1 measure
+    mach_timebase_info(&channel->_timebaseInfo); // Populates _timebaseInfo with data necessary to convert machine clock ticks to nano seconds later on.
+    double nanoSecondsPerBeat = 1000000000.0f * 60.0f / bpm;
+    channel->_nanoSecondsPerCycle = beatsPerMeasure * nanoSecondsPerBeat;
+    channel->_nanoSecondsPerFrame = 1000000000.0f / audioController.audioDescription.mSampleRate;
     
     return channel;
 }
@@ -124,49 +116,66 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
                                UInt32 frames,
                                AudioBufferList *audio) {
     
-    // Calculates the time elapsed since the last time a measure/pattern started.
-    if(THIS->_lastMeasureStartTime == 0) THIS->_lastMeasureStartTime = inTimeStamp->mHostTime;
-    uint64_t elapsedSinceStartTime = inTimeStamp->mHostTime - THIS->_lastMeasureStartTime;
 
-    double elapsedSinceStartTimeNanoSeconds = elapsedSinceStartTime * (THIS->_timebaseInfo.numer / THIS->_timebaseInfo.denom);
-    double elapsedSinceStartTimeSeconds = elapsedSinceStartTimeNanoSeconds / 1000000000;
-    if(elapsedSinceStartTimeSeconds > THIS->_secondsPerMeasure) { // reset?
-        THIS->_lastMeasureStartTime = inTimeStamp->mHostTime;
-        THIS->_lastPlayedBeatIndex = 0;
-        return noErr;
+    // Skip if channel is not playing or stopped.
+    // TODO - feature
+    
+    // Keep track of when a cycle starts and ends.
+    UInt64 k = THIS->_timebaseInfo.numer / THIS->_timebaseInfo.denom;
+    UInt64 currentTimeNanoSeconds = inTimeStamp->mHostTime * k;
+    if(THIS->_cycleStartTimeNanoSeconds == 0) {
+        THIS->_cycleStartTimeNanoSeconds = currentTimeNanoSeconds;
+        THIS->_cycleEndTimeNanoSeconds = THIS->_cycleStartTimeNanoSeconds + THIS->_nanoSecondsPerFrame * frames;
     }
     
-    // Determine if a new sample should be triggered.
-    // This set _sampleIsPlaying to true, but not to false.
-    if(THIS->_lastPlayedBeatIndex < THIS->numBeats) {
-        THIS->_activeBeat = THIS->_beats[(int)THIS->_lastPlayedBeatIndex];
-        double beatTime = THIS->_secondsPerMeasure * THIS->_activeBeat.onset;
-        double delta = elapsedSinceStartTimeSeconds - beatTime;
-        if(delta > 0) { // A beat cannot be missed by combining this with _lastPlayedBeatIndex
-            THIS->_sampleIsPlaying = true;
-            THIS->_sampleFrameIndex = 0;
-            THIS->_lastPlayedBeatIndex++;
-        }
+    // Evaluate time passed in this cycle.
+    // If a cycle has ended, values are shifted so that a new cycle begins.
+    UInt64 elapsedTimeSinceCycleStartNanoSeconds = currentTimeNanoSeconds - THIS->_cycleStartTimeNanoSeconds;
+    if(elapsedTimeSinceCycleStartNanoSeconds > THIS->_nanoSecondsPerCycle) { // reset?
+        elapsedTimeSinceCycleStartNanoSeconds = elapsedTimeSinceCycleStartNanoSeconds % THIS->_nanoSecondsPerCycle;
+        THIS->_cycleStartTimeNanoSeconds = currentTimeNanoSeconds - elapsedTimeSinceCycleStartNanoSeconds;
+        THIS->_cycleEndTimeNanoSeconds = THIS->_cycleStartTimeNanoSeconds + THIS->_nanoSecondsPerFrame * frames;
+        THIS->_currentBeatIndex = -1;
     }
     
-    // Can skip writing? (buffer already has zeroes)
-    if(THIS->_sampleIsPlaying == NO) return noErr;
+    // Quickly evaluate if there will be no audio in this renderCallback() and hence writting to buffers can be skipped entirely.
+    // TODO - optimization
     
-    // Sweep the audio buffer frames and fill with sample frames if appropriate.
+    // Sweep the audio buffer frames and fill with sample frames when appropriate.
+    UInt64 frameTimeNanoSeconds = 0;
     for(int i = 0; i < frames; i++) {
         
-        // Writes the same samples on left and right channels.
-        for(int j = 0; j < audio->mNumberBuffers; j++) {
-            // TODO: cant have objc calls in renderCallback()
-            ((float *)audio->mBuffers[j].mData)[i] = THIS->_activeBeat.velocity * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
+        // Check if the coming beat is suposed to have started by now.
+        int nextBeatIndex = THIS->_currentBeatIndex + 1 < THIS->_numBeats ? THIS->_currentBeatIndex + 1 : -1;
+        if(nextBeatIndex >= 0) {
+            double beatTimeNanoSeconds = THIS->_nanoSecondsPerCycle * THIS->_beatCArray[nextBeatIndex][0];
+            double delta = elapsedTimeSinceCycleStartNanoSeconds + frameTimeNanoSeconds - beatTimeNanoSeconds;
+            if(delta >= 0) {
+                THIS->_sampleFrameIndex = 0;
+                THIS->_sampleIsPlaying = true;
+                THIS->_currentBeatIndex = nextBeatIndex;
+            }
         }
         
-        // Advance sample frame.
-        THIS->_sampleFrameIndex++;
-        if(THIS->_sampleFrameIndex > THIS->_sampleLengthInFrames) {
-            THIS->_sampleIsPlaying = NO;
-            return noErr;
+        // Make some noise?
+        if(THIS->_sampleIsPlaying) {
+            
+            // Writes the same samples on left and right channels.
+            if(THIS->_currentBeatIndex >= 0) {
+                for(int j = 0; j < audio->mNumberBuffers; j++) {
+                    ((float *)audio->mBuffers[j].mData)[i] = THIS->_beatCArray[THIS->_currentBeatIndex][1] * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
+                }
+            }
+            
+            // Advance sample frame.
+            THIS->_sampleFrameIndex++;
+            if(THIS->_sampleFrameIndex > THIS->_sampleLengthInFrames) {
+                THIS->_sampleIsPlaying = false;
+            }
         }
+        
+        // Advance time.
+        frameTimeNanoSeconds += THIS->_nanoSecondsPerFrame;
     }
     
     return noErr;
