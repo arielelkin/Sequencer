@@ -125,6 +125,7 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
     UInt64 currentTimeNanoSeconds = inTimeStamp->mHostTime * k;
     if(THIS->_cycleStartTimeNanoSeconds == 0) {
         THIS->_cycleStartTimeNanoSeconds = currentTimeNanoSeconds;
+        // TODO: careful, this _cycleEndTimeNanoSeconds is the end of the buffer, not the cycle
         THIS->_cycleEndTimeNanoSeconds = THIS->_cycleStartTimeNanoSeconds + THIS->_nanoSecondsPerFrame * frames;
     }
     
