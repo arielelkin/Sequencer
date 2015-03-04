@@ -28,32 +28,32 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
 
-    SequencerChannelSequence *mySequence = [SequencerChannelSequence new];
-    [mySequence addBeat:[SequencerBeat beatWithOnset:0.4]];
-    [mySequence addBeat:[SequencerBeat beatWithOnset:0.1]];
-    [mySequence addBeat:[SequencerBeat beatWithOnset:0.3]];
-
-    mySequence[0].onset = 0.9;
-
-    mySequence[3] = [SequencerBeat beatWithOnset:0.5];
-
-
-    double **theSeq = [mySequence CRepresentation];
-
-
-    NSLog(@"%@", mySequence);
-    [mySequence removeBeatAtIndex:3];
-    [mySequence removeBeatAtIndex:2];
-
-    theSeq = [mySequence CRepresentation];
-    
-
-    [mySequence setOnsetOfBeatAtOnset:0.1 to:0.2];
-    [mySequence setVelocityOfBeatAtOnset:0.2 to:234];
-
-    theSeq = [mySequence CRepresentation];
-
-    NSLog(@"%@", mySequence);
+//    SequencerChannelSequence *mySequence = [SequencerChannelSequence new];
+//    [mySequence addBeat:[SequencerBeat beatWithOnset:0.4]];
+//    [mySequence addBeat:[SequencerBeat beatWithOnset:0.1]];
+//    [mySequence addBeat:[SequencerBeat beatWithOnset:0.3]];
+//
+//    mySequence[0].onset = 0.9;
+//
+//    mySequence[3] = [SequencerBeat beatWithOnset:0.5];
+//
+//
+//    double **theSeq = [mySequence CRepresentation];
+//
+//
+//    NSLog(@"%@", mySequence);
+//    [mySequence removeBeatAtIndex:3];
+//    [mySequence removeBeatAtIndex:2];
+//
+//    theSeq = [mySequence CRepresentation];
+//    
+//
+//    [mySequence setOnsetOfBeatAtOnset:0.1 to:0.2];
+//    [mySequence setVelocityOfBeatAtOnset:0.2 to:234];
+//
+//    theSeq = [mySequence CRepresentation];
+//
+//    NSLog(@"%@", mySequence);
 
 
 }
