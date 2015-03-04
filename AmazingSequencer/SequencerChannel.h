@@ -23,5 +23,6 @@
                                     withPattern:(NSMutableArray*)beats // of Beat
                                           atBPM:(double)bpm;
 
+@property (strong, nonatomic) NSMutableArray *sequence;
 
 @end

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController">
             <connections>
+                <outlet property="kickButtonFour" destination="Ixz-z5-Jc9" id="C35-QE-DBJ"/>
+                <outlet property="kickButtonOne" destination="ojU-Mc-hO6" id="xGd-PT-VhS"/>
+                <outlet property="kickButtonThree" destination="QFy-kY-eOL" id="tgw-1F-Z6C"/>
+                <outlet property="kickButtonTwo" destination="5oe-7K-zYr" id="DhG-xz-EVi"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -15,8 +20,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="09Y-lo-n7d">
-                    <rect key="frame" x="137" y="230" width="143" height="79"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <rect key="frame" x="79" y="137" width="143" height="79"/>
                     <color key="backgroundColor" red="0.059449133211678835" green="0.39530109489051096" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <state key="normal" title="Play sample">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -26,10 +30,57 @@
                         <action selector="stop" destination="-1" eventType="touchUpInside" id="Zpi-7e-Vsn"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ojU-Mc-hO6">
+                    <rect key="frame" x="8" y="313" width="64" height="53"/>
+                    <color key="backgroundColor" red="0.18813529370000001" green="0.52076256789999997" blue="0.496781733" alpha="1" colorSpace="calibratedRGB"/>
+                    <state key="normal" title="Kick">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="tappedKickButton:" destination="-1" eventType="touchUpInside" id="bqh-cO-nsp"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5oe-7K-zYr">
+                    <rect key="frame" x="90" y="313" width="64" height="53"/>
+                    <color key="backgroundColor" red="0.18813529370000001" green="0.52076256789999997" blue="0.496781733" alpha="1" colorSpace="calibratedRGB"/>
+                    <state key="normal" title="Kick">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="tappedKickButton:" destination="-1" eventType="touchUpInside" id="Uue-1N-mAb"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QFy-kY-eOL">
+                    <rect key="frame" x="169" y="313" width="64" height="53"/>
+                    <color key="backgroundColor" red="0.18813529370000001" green="0.52076256789999997" blue="0.496781733" alpha="1" colorSpace="calibratedRGB"/>
+                    <state key="normal" title="Kick">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="tappedKickButton:" destination="-1" eventType="touchUpInside" id="FUL-q0-vpF"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ixz-z5-Jc9">
+                    <rect key="frame" x="248" y="313" width="64" height="53"/>
+                    <color key="backgroundColor" red="0.18813529370000001" green="0.52076256789999997" blue="0.496781733" alpha="1" colorSpace="calibratedRGB"/>
+                    <state key="normal" title="Kick">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="tappedKickButton:" destination="-1" eventType="touchUpInside" id="7FH-D2-nSp"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
-            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </view>
     </objects>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
 </document>

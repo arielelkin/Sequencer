@@ -23,6 +23,8 @@
     NSMutableArray* _beats;
     int _sampleRate;
     mach_timebase_info_data_t _timebaseInfo;
+    // TODO: cant have objc calls in renderCallback()
+    SequencerBeat *_activeBeat;
     double _secondsPerMeasure;
     UInt64 _sampleFrameIndex; // Keeps track of the next frame to read on the sample.
     UInt64 _lastPlayedBeatIndex; // Keeps track of the last time a measure/pattern started.
@@ -48,10 +50,24 @@
                                     withPattern:(NSMutableArray*)beats // of Beat
                                    withDuration:(NSUInteger)beatsPerMeasure
                                           atBPM:(double)bpm {
-    
+
+    //Sanity checks
+    if (!url) {
+        NSLog(@"%s NSURL of audio file is nil, cannot initialize Sequencer Channel.", __PRETTY_FUNCTION__);
+        return nil;
+    }
+    if (bpm <= 0) {
+        NSLog(@"%s Cannot initialize Sequencer Channel with BPM <= 0", __PRETTY_FUNCTION__);
+        return nil;
+    }
+
+
     SequencerChannel *channel = [[self alloc] init];
-    
+
+
     channel->_beats = beats;
+
+    channel.sequence = beats;
 
     channel->numBeats = beats.count;
     NSUInteger numParametersInBeat = 2;
@@ -67,11 +83,6 @@
 
     for (int i = 0; i < channel->numBeats; i++){
         SequencerBeat *beat = beats[i];
-
-        if (![beat isKindOfClass:[SequencerBeat class]]) {
-            NSLog(@"Cannot initialize a sequencer channel with beats array that contains objects not of type beat");
-            return nil;
-        }
         beatsCRepresentation[i][0] = beat.onset;
         beatsCRepresentation[i][1] = beat.velocity;
     }
@@ -128,9 +139,8 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
     // Determine if a new sample should be triggered.
     // This set _sampleIsPlaying to true, but not to false.
     if(THIS->_lastPlayedBeatIndex < THIS->numBeats) {
-
-        double beatTime = THIS->_secondsPerMeasure * THIS->beatCArray[THIS->_lastPlayedBeatIndex][0];
-
+        THIS->_activeBeat = THIS->_beats[(int)THIS->_lastPlayedBeatIndex];
+        double beatTime = THIS->_secondsPerMeasure * THIS->_activeBeat.onset;
         double delta = elapsedSinceStartTimeSeconds - beatTime;
         if(delta > 0) { // A beat cannot be missed by combining this with _lastPlayedBeatIndex
             THIS->_sampleIsPlaying = true;
@@ -140,10 +150,7 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
     }
     
     // Can skip writing? (buffer already has zeroes)
-    if(THIS->_sampleIsPlaying == NO ||
-       THIS->_lastPlayedBeatIndex >= THIS->numBeats) {
-        return noErr;
-    }
+    if(THIS->_sampleIsPlaying == NO) return noErr;
     
     // Sweep the audio buffer frames and fill with sample frames if appropriate.
     for(int i = 0; i < frames; i++) {
@@ -151,7 +158,7 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
         // Writes the same samples on left and right channels.
         for(int j = 0; j < audio->mNumberBuffers; j++) {
             // TODO: cant have objc calls in renderCallback()
-            ((float *)audio->mBuffers[j].mData)[i] = THIS->beatCArray[THIS->_lastPlayedBeatIndex][1] * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
+            ((float *)audio->mBuffers[j].mData)[i] = THIS->_activeBeat.velocity * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
         }
         
         // Advance sample frame.

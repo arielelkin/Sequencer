@@ -11,21 +11,60 @@
 #import "AEAudioController.h"
 #import "SequencerChannel.h"
 #import "SequencerBeat.h"
+#import "SequencerChannelSequence.h"
 
 @import AVFoundation;
 
 @implementation ViewController {
     AEAudioController *audioController;
+
+    SequencerChannel *kickChannel;
+    IBOutlet UIButton *kickButtonOne;
+    IBOutlet UIButton *kickButtonTwo;
+    IBOutlet UIButton *kickButtonThree;
+    IBOutlet UIButton *kickButtonFour;
 }
 
+- (void)viewDidLoad{
+    [super viewDidLoad];
+
+    SequencerChannelSequence *mySequence = [SequencerChannelSequence new];
+    [mySequence addBeat:[SequencerBeat beatWithOnset:0.4]];
+    [mySequence addBeat:[SequencerBeat beatWithOnset:0.1]];
+    [mySequence addBeat:[SequencerBeat beatWithOnset:0.3]];
+
+    mySequence[0].onset = 0.9;
+
+    mySequence[3] = [SequencerBeat beatWithOnset:0.5];
+
+
+    double **theSeq = [mySequence CRepresentation];
+
+
+    NSLog(@"%@", mySequence);
+    [mySequence removeBeatAtIndex:3];
+    [mySequence removeBeatAtIndex:2];
+
+    theSeq = [mySequence CRepresentation];
+    
+
+    [mySequence setOnsetOfBeatAtOnset:0.1 to:0.2];
+    [mySequence setVelocityOfBeatAtOnset:0.2 to:234];
+
+    theSeq = [mySequence CRepresentation];
+
+    NSLog(@"%@", mySequence);
+
+
+}
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self setupAudioController];
-    [self setupSequencer];
+//    [self setupSequencer];
 
 //    [self setupDumbMetronome];
-//    [self setupWithInvalidBeats];
+    [self setupWithInvalidBeats];
 //    [self setupMetronome];
 }
 
@@ -48,7 +87,6 @@
                                                                                withPattern:metronomeSequence
                                                                                      atBPM:bpm];
     [audioController addChannels:@[metronomeChannel]];
-
 }
 
 - (void)setupDumbMetronome {
@@ -82,7 +120,7 @@
 
     //I'm an idiot, so please fail gracefully:
     [metronomeSequence addObject:[NSArray new]];
-    [metronomeSequence addObject:[NSNumber new]];
+    [metronomeSequence addObject:[NSPointerFunctions new]];
     [metronomeSequence addObject:[NSScanner new]];
 
     NSUInteger duration = 0;
@@ -120,7 +158,7 @@
     [kickSequence addObject:[SequencerBeat beatWithOnset:0.25 * 2 velocity:0.5  ]];
     [kickSequence addObject:[SequencerBeat beatWithOnset:0.25 * 3 velocity:0.25 ]];
 
-    SequencerChannel *kickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:kickURL
+    kickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:kickURL
                                                                       audioController:audioController
                                                                           withPattern:kickSequence
                                                                          withDuration:numBeats
@@ -161,8 +199,8 @@
     
     // Add channels to engine.
     [audioController addChannels:@[kickChannel]];
-    [audioController addChannels:@[woodblockChannel]];
-    [audioController addChannels:@[hihatChannel]];
+//    [audioController addChannels:@[woodblockChannel]];
+//    [audioController addChannels:@[hihatChannel]];
 }
 
 - (void)setupAudioController {
@@ -173,6 +211,37 @@
     [audioController start:&audioControllerStartError];
     if (audioControllerStartError) {
         NSLog(@"Audio controller start error: %@", audioControllerStartError.localizedDescription);
+    }
+}
+
+#pragma mark -
+#pragma mark UI Setup
+
+- (IBAction)tappedKickButton:(id)sender {
+
+    NSUInteger beatIndex;
+    [SequencerBeat beatWithOnset:-1 velocity:314];
+
+    for (SequencerBeat *beat in kickChannel.sequence) {
+        NSLog(@"%@", beat);
+    }
+    NSLog(@" ");
+
+    if (sender == kickButtonOne) beatIndex = 0;
+
+    else if (sender == kickButtonTwo) beatIndex = 1;
+
+    else if (sender == kickButtonThree) beatIndex = 2;
+
+    else if (sender == kickButtonFour) beatIndex = 3;
+
+    SequencerBeat *beat = kickChannel.sequence[beatIndex];
+    if (beat) {
+        [kickChannel.sequence removeObject:beat];
+    }
+    else {
+        beat = [SequencerBeat beatWithOnset:0];
+        [kickChannel.sequence insertObject:beat atIndex:beatIndex];
     }
 }
 
