@@ -10,6 +10,7 @@
 
 @implementation SequencerChannelSequence {
     NSMutableArray *sequence;
+    double **_sequenceCRepresentation;
 }
 
 - (void)addBeat:(SequencerBeat *)beat {
@@ -25,15 +26,25 @@
     [sequence sortUsingComparator:^NSComparisonResult(SequencerBeat *beat1, SequencerBeat *beat2) {
         return beat1.onset > beat2.onset;
     }];
+
+    [self updateSequenceCRepresentation];
 }
 
 - (void)removeBeatAtOnset:(double)onset {
-    
+    for (int i = 0; i < sequence.count; i++) {
+        SequencerBeat *beat = sequence[i];
+        if (beat.onset == onset) {
+            [sequence removeObject:beat];
+        }
+    }
+
+    [self updateSequenceCRepresentation];
 }
 
 - (void)removeBeatAtIndex:(NSUInteger)index{
     if (index < sequence.count) {
         [sequence removeObject:[sequence objectAtIndex:index]];
+        [self updateSequenceCRepresentation];
     }
     else {
         NSLog(@"%s index %d out of bounds, there are %d beats.", __PRETTY_FUNCTION__, index, sequence.count);
@@ -51,13 +62,24 @@
     }
 }
 
-- (SequencerBeat *)beatAtOnset:(double)oldOnset {
+- (SequencerBeat *)beatAtOnset:(double)onset {
+    
     for (SequencerBeat *beat in sequence) {
-        if (beat.onset == oldOnset) {
+        if (beat.onset == onset) {
             return beat;
         }
     }
     return nil;
+}
+
+- (NSUInteger)indexOfBeatAtOnset:(double)onset {
+    for (NSUInteger i = 0; i < sequence.count; i++) {
+        SequencerBeat *beat = sequence[i];
+        if (beat.onset == onset) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 - (void)setOnsetOfBeatAtOnset:(double)oldOnset to:(double)newOnset {
@@ -77,45 +99,35 @@
 #pragma mark -
 #pragma mark C Representation
 
-- (double **)CRepresentation {
-
+- (void)updateSequenceCRepresentation {
     NSUInteger numberOfBeats = sequence.count;
     NSUInteger numberOfParametersInBeat = 2;
 
-    double **sequenceCRepresentation = (double**)malloc(numberOfBeats * sizeof(double*));
+    _sequenceCRepresentation = (double**)malloc(numberOfBeats * sizeof(double*));
 
     for(int i=0; i < numberOfBeats; i++) {
-        sequenceCRepresentation[i] = (double*)malloc(numberOfParametersInBeat * sizeof(double));
+        _sequenceCRepresentation[i] = (double*)malloc(numberOfParametersInBeat * sizeof(double));
     }
 
     for (int i = 0; i < numberOfBeats; i++){
         SequencerBeat *beat = sequence[i];
-        sequenceCRepresentation[i][0] = beat.onset;
-        sequenceCRepresentation[i][1] = beat.velocity;
+        _sequenceCRepresentation[i][0] = beat.onset;
+        _sequenceCRepresentation[i][1] = beat.velocity;
     }
+}
 
-    return sequenceCRepresentation;
+- (double **)sequenceCRepresentation {
+    return _sequenceCRepresentation;
 }
 
 
 #pragma mark -
 #pragma mark Subscripting
 
-- (SequencerBeat *)objectAtIndexedSubscript:(NSUInteger)index {
-    return [self beatAtIndex:index];
+- (NSNumber *)objectAtIndexedSubscript:(NSUInteger)index {
+
+    return @([[self beatAtIndex:index] onset]);
 }
-
-- (void)setObject:(SequencerBeat *)beat atIndexedSubscript:(NSUInteger)index {
-
-    SequencerBeat *theBeat = [self beatAtIndex:index];
-    if (theBeat) {
-        theBeat = beat;
-    }
-    else {
-        [sequence addObject:beat];
-    }
-}
-
 
 
 #pragma mark -

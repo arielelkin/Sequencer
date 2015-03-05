@@ -9,20 +9,18 @@
 #import <Foundation/Foundation.h>
 #import "AEAudioController.h"
 #import "SequencerBeat.h"
+#import "SequencerChannelSequence.h"
 
 @interface SequencerChannel : NSObject <AEAudioPlayable>
 
 + (instancetype)sequencerChannelWithAudioFileAt:(NSURL *)url
                                 audioController:(AEAudioController*)audioController
-                                    withPattern:(NSMutableArray*)beats // of Beat
-                                   withDuration:(NSUInteger)numBeats
+                                   withSequence:(SequencerChannelSequence*)sequence
+                    numberOfFullBeatsPerMeasure:(NSUInteger)beatsPerMeasure
                                           atBPM:(double)bpm;
 
-+ (instancetype)sequencerChannelWithAudioFileAt:(NSURL *)url
-                                audioController:(AEAudioController*)audioController
-                                    withPattern:(NSMutableArray*)beats // of Beat
-                                          atBPM:(double)bpm;
+@property (nonatomic) SequencerChannelSequence *sequence;
 
-@property (strong, nonatomic) NSMutableArray *sequence;
+@property BOOL sequenceIsPlaying;
 
 @end

@@ -11,27 +11,78 @@
 
 @interface SequencerChannelSequence : NSObject
 
-//SequencerBeats will always be placed in order
-//of their onsets
+
+/*!
+ * Adds a beat to the sequence.
+ *
+ * Beats are automatically sorted by their onsets, in
+ * ascending order.
+ *
+ */
 - (void)addBeat:(SequencerBeat *)beat;
 
+/*!
+ * Removes a beat from the sequence.
+ *
+ * Returns nil if sequence does not contain a beat
+ * with specified onset.
+ *
+ */
 - (void)removeBeatAtOnset:(double)onset;
 
+/*!
+ * Removes a beat from the sequence.
+ *
+ * Returns nil if index is out of bounds of 
+ * sequence array.
+ *
+ */
+- (void)removeBeatAtIndex:(NSUInteger)index;
 
+/*!
+ * Sets the onset of a beat located at a specified onset
+ * in the sequence.
+ *
+ */
 - (void)setOnsetOfBeatAtOnset:(double)oldOnset to:(double)newOnset;
+
+/*!
+ * Sets the onset of a beat located at a specified index
+ * in the sequence.
+ *
+ */
 - (void)setVelocityOfBeatAtOnset:(double)onset to:(double)newVelocity;
 
 
 
-- (void)removeBeatAtIndex:(NSUInteger)index;
 - (SequencerBeat *)beatAtIndex:(NSUInteger)index;
-//Shortcut to access beats by index
-//e.g. SequencerBeat *thirdBeat = mySequence[2];
-- (SequencerBeat *)objectAtIndexedSubscript:(NSUInteger)index;
-- (void)setObject:(SequencerBeat *)beat atIndexedSubscript:(NSUInteger)index;
+- (SequencerBeat *)beatAtOnset:(double)index;
 
+/*!
+ * Returns the onset of the beat at a specified position 
+ * of the sequence 
+ * e.g. double onsetOfThirdBeat = mySequence[2];
+ *
+ */
+- (NSDecimalNumber *)objectAtIndexedSubscript:(NSUInteger)index;
+
+/*!
+ * Returns the number of beats present in the sequence.
+ *
+ */
 @property (nonatomic, readonly) NSUInteger count;
 
-- (double **)CRepresentation;
+/*!
+ * Returns a 2-dimensional C array representation of 
+ * the sequence. Each row is a beat, the first column
+ * is the beat's onset, the second column is the beat's
+ * velocity. 
+ *
+ * e.g. double onsetOfThirdBeat = sequenceCRepresentation[2][0]
+ *
+ * e.g. double velocityOfFirstBeat = sequenceCRepresentation[0][1]
+ *
+ */
+@property (readonly) double** sequenceCRepresentation;
 
 @end

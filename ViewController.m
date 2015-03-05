@@ -18,122 +18,46 @@
 @implementation ViewController {
     AEAudioController *audioController;
 
+    SequencerChannel *metronomeChannel;
     SequencerChannel *kickChannel;
+
     IBOutlet UIButton *kickButtonOne;
     IBOutlet UIButton *kickButtonTwo;
     IBOutlet UIButton *kickButtonThree;
     IBOutlet UIButton *kickButtonFour;
-}
 
-- (void)viewDidLoad{
-    [super viewDidLoad];
-
-//    SequencerChannelSequence *mySequence = [SequencerChannelSequence new];
-//    [mySequence addBeat:[SequencerBeat beatWithOnset:0.4]];
-//    [mySequence addBeat:[SequencerBeat beatWithOnset:0.1]];
-//    [mySequence addBeat:[SequencerBeat beatWithOnset:0.3]];
-//
-//    mySequence[0].onset = 0.9;
-//
-//    mySequence[3] = [SequencerBeat beatWithOnset:0.5];
-//
-//
-//    double **theSeq = [mySequence CRepresentation];
-//
-//
-//    NSLog(@"%@", mySequence);
-//    [mySequence removeBeatAtIndex:3];
-//    [mySequence removeBeatAtIndex:2];
-//
-//    theSeq = [mySequence CRepresentation];
-//    
-//
-//    [mySequence setOnsetOfBeatAtOnset:0.1 to:0.2];
-//    [mySequence setVelocityOfBeatAtOnset:0.2 to:234];
-//
-//    theSeq = [mySequence CRepresentation];
-//
-//    NSLog(@"%@", mySequence);
-
-
+    IBOutlet UIButton *playPauseButton;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
     [self setupAudioController];
-    
+
     [self setupSequencer];
-//    [self setupDumbMetronome];
-//    [self setupWithInvalidBeats];
+
 //    [self setupMetronome];
 }
 
 - (void)setupMetronome {
 
-    //I want to do the back-end for a metronome app:
     double bpm = 100.0;
 
     NSURL *hihatURL = [[NSBundle mainBundle] URLForResource:@"hihat" withExtension:@"caf"];
-    NSMutableArray *metronomeSequence = [NSMutableArray array];
+    SequencerChannelSequence *metronomeSequence = [SequencerChannelSequence new];
 
     //I'm being stupid and doing this:
-    [metronomeSequence addObject:[SequencerBeat beatWithOnset:0.0/4]];
-    [metronomeSequence addObject:[SequencerBeat beatWithOnset:1.0/4]];
-    [metronomeSequence addObject:[SequencerBeat beatWithOnset:2.0/4]];
-    [metronomeSequence addObject:[SequencerBeat beatWithOnset:3.0/4]];
-    SequencerChannel *metronomeChannel = [SequencerChannel sequencerChannelWithAudioFileAt:hihatURL
-                                                                           audioController:audioController
-                                                                               withPattern:metronomeSequence
-                                                                                     atBPM:bpm];
+    [metronomeSequence addBeat:[SequencerBeat beatWithOnset:0.0/4]];
+    [metronomeSequence addBeat:[SequencerBeat beatWithOnset:1.0/4]];
+    [metronomeSequence addBeat:[SequencerBeat beatWithOnset:2.0/4]];
+    [metronomeSequence addBeat:[SequencerBeat beatWithOnset:3.0/4]];
+
+    metronomeChannel = [SequencerChannel sequencerChannelWithAudioFileAt:hihatURL
+                                                         audioController:audioController
+                                                             withSequence:metronomeSequence
+                                                            numberOfFullBeatsPerMeasure:4
+                                                                   atBPM:bpm];
     [audioController addChannels:@[metronomeChannel]];
-}
-
-- (void)setupDumbMetronome {
-
-    //I want to do the back-end for a metronome app:
-    double bpm = 100.0;
-    NSUInteger numBeats = 2;
-
-    NSURL *hihatURL = [[NSBundle mainBundle] URLForResource:@"hihat" withExtension:@"caf"];
-    NSMutableArray *metronomeSequence = [NSMutableArray array];
-
-    //I'm being stupid and doing this:
-    [metronomeSequence addObject:[SequencerBeat beatWithOnset:0/4]];
-    [metronomeSequence addObject:[SequencerBeat beatWithOnset:1/4]];
-    [metronomeSequence addObject:[SequencerBeat beatWithOnset:2/4]];
-    [metronomeSequence addObject:[SequencerBeat beatWithOnset:3/4]];
-
-    SequencerChannel *metronomeChannel = [SequencerChannel sequencerChannelWithAudioFileAt:hihatURL
-                                                                       audioController:audioController
-                                                                           withPattern:metronomeSequence
-                                                                          withDuration:numBeats
-                                                                                 atBPM:bpm];
-    [audioController addChannels:@[metronomeChannel]];
-
-}
-
-- (void)setupWithInvalidBeats {
-    NSURL *hihatURL = nil;
-
-    NSMutableArray *metronomeSequence = [NSMutableArray array];
-
-    //I'm an idiot, so please fail gracefully:
-    [metronomeSequence addObject:[NSArray new]];
-    [metronomeSequence addObject:[NSPointerFunctions new]];
-    [metronomeSequence addObject:[NSScanner new]];
-
-    NSUInteger duration = 0;
-    NSUInteger bpm = 0;
-
-    SequencerChannel *metronomeChannel = [SequencerChannel sequencerChannelWithAudioFileAt:hihatURL
-                                                                           audioController:audioController
-                                                                               withPattern:metronomeSequence
-                                                                              withDuration:duration
-                                                                                     atBPM:bpm];
-    [audioController addChannels:@[metronomeChannel]];
-
-
 }
 
 - (void)setupSequencer {
@@ -144,60 +68,60 @@
 
     // KICK channel
     NSURL *kickURL = [[NSBundle mainBundle] URLForResource:@"kick" withExtension:@"caf"];
-    NSMutableArray *kickSequence = [NSMutableArray array];
-    [kickSequence addObject:[SequencerBeat beatWithOnset:0.0 / 4 velocity:0.75 ]];
-    [kickSequence addObject:[SequencerBeat beatWithOnset:1.0 / 4 velocity:0.25 ]];
-    [kickSequence addObject:[SequencerBeat beatWithOnset:2.0 / 4 velocity:0.75 ]];
-    [kickSequence addObject:[SequencerBeat beatWithOnset:3.0 / 4 velocity:0.25 ]];
-    SequencerChannel *kickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:kickURL
+    SequencerChannelSequence *kickSequence = [SequencerChannelSequence new];
+    [kickSequence addBeat:[SequencerBeat beatWithOnset:0.0 / 4 velocity:0.75 ]];
+    [kickSequence addBeat:[SequencerBeat beatWithOnset:1.0 / 4 velocity:0.25 ]];
+    [kickSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 velocity:0.75 ]];
+    [kickSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 velocity:0.25 ]];
+    kickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:kickURL
                                                                       audioController:audioController
-                                                                          withPattern:kickSequence
-                                                                         withDuration:numBeats
+                                                                          withSequence:kickSequence
+                                                          numberOfFullBeatsPerMeasure:numBeats
                                                                                 atBPM:bpm];
     [audioController addChannels:@[kickChannel]];
     
     // WOODBLOCK channel
     NSURL *woodblockURL = [[NSBundle mainBundle] URLForResource:@"woodblock" withExtension:@"caf"];
-    NSMutableArray *woodblockSequence = [NSMutableArray array];
-    [woodblockSequence addObject:[SequencerBeat beatWithOnset:1.0 / 4 + 2.0 / 16 velocity:0.25 ]];
-    [woodblockSequence addObject:[SequencerBeat beatWithOnset:2.0 / 4 + 1.0 / 16 velocity:0.5 ]];
-    [woodblockSequence addObject:[SequencerBeat beatWithOnset:2.0 / 4 + 2.0 / 16 velocity:0.125 ]];
-    [woodblockSequence addObject:[SequencerBeat beatWithOnset:2.0 / 4 + 3.0 / 16 velocity:0.5 ]];
-    [woodblockSequence addObject:[SequencerBeat beatWithOnset:3.0 / 4 + 1.0 / 8 velocity:0.5 ]];
+    SequencerChannelSequence *woodblockSequence = [SequencerChannelSequence new];
+    [woodblockSequence addBeat:[SequencerBeat beatWithOnset:1.0 / 4 + 2.0 / 16 velocity:0.25 ]];
+    [woodblockSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 + 1.0 / 16 velocity:0.5 ]];
+    [woodblockSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 + 2.0 / 16 velocity:0.125 ]];
+    [woodblockSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 + 3.0 / 16 velocity:0.5 ]];
+    [woodblockSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 + 1.0 / 8 velocity:0.5 ]];
     SequencerChannel *woodblockChannel = [SequencerChannel sequencerChannelWithAudioFileAt:woodblockURL
                                                                            audioController:audioController
-                                                                               withPattern:woodblockSequence
-                                                                              withDuration:numBeats
+                                                                              withSequence:woodblockSequence
+                                                               numberOfFullBeatsPerMeasure:numBeats
                                                                                      atBPM:bpm];
     [audioController addChannels:@[woodblockChannel]];
-    
+
     // CRICK channel
     NSURL *crickURL = [[NSBundle mainBundle] URLForResource:@"crick" withExtension:@"caf"];
-    NSMutableArray *crickSequence = [NSMutableArray array];
-    [crickSequence addObject:[SequencerBeat beatWithOnset:0.0 / 4 + 1.0 / 8 velocity:0.0625 ]];
-    [crickSequence addObject:[SequencerBeat beatWithOnset:3.0 / 4 + 3.0 / 16 velocity:0.125 ]];
+    SequencerChannelSequence *crickSequence = [SequencerChannelSequence new];
+    [crickSequence addBeat:[SequencerBeat beatWithOnset:0.0 / 4 + 1.0 / 8 velocity:0.0625 ]];
+    [crickSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 + 3.0 / 16 velocity:0.125 ]];
     SequencerChannel *crickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:crickURL
                                                                        audioController:audioController
-                                                                           withPattern:crickSequence
-                                                                          withDuration:numBeats
+                                                                          withSequence:crickSequence
+                                                           numberOfFullBeatsPerMeasure:numBeats
                                                                                  atBPM:bpm];
     [audioController addChannels:@[crickChannel]];
 
-    
+
     // HI-HAT channel
     NSURL *hihatURL = [[NSBundle mainBundle] URLForResource:@"hihat" withExtension:@"caf"];
-    NSMutableArray *hihatSequence = [NSMutableArray array];
-    [hihatSequence addObject:[SequencerBeat beatWithOnset:0.0 / 4 + 1.0 / 8 velocity:0.5 ]];
-    [hihatSequence addObject:[SequencerBeat beatWithOnset:1.0 / 4 + 1.0 / 16 velocity:0.25 ]];
-    [hihatSequence addObject:[SequencerBeat beatWithOnset:1.0 / 4 + 3.0 / 16 velocity:0.25 ]];
-    [hihatSequence addObject:[SequencerBeat beatWithOnset:2.0 / 4 + 1.0 / 8  velocity:0.5 ]];
-    [hihatSequence addObject:[SequencerBeat beatWithOnset:3.0 / 4 + 1.0 / 16 velocity:0.25 ]];
-    [hihatSequence addObject:[SequencerBeat beatWithOnset:3.0 / 4 + 2.0 / 16 velocity:0.5 ]];
-    [hihatSequence addObject:[SequencerBeat beatWithOnset:3.0 / 4 + 3.0 / 16 velocity:0.25 ]];
+    SequencerChannelSequence *hihatSequence = [SequencerChannelSequence new];
+    [hihatSequence addBeat:[SequencerBeat beatWithOnset:0.0 / 4 + 1.0 / 8 velocity:0.5 ]];
+    [hihatSequence addBeat:[SequencerBeat beatWithOnset:1.0 / 4 + 1.0 / 16 velocity:0.25 ]];
+    [hihatSequence addBeat:[SequencerBeat beatWithOnset:1.0 / 4 + 3.0 / 16 velocity:0.25 ]];
+    [hihatSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 + 1.0 / 8  velocity:0.5 ]];
+    [hihatSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 + 1.0 / 16 velocity:0.25 ]];
+    [hihatSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 + 2.0 / 16 velocity:0.5 ]];
+    [hihatSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 + 3.0 / 16 velocity:0.25 ]];
     SequencerChannel *hihatChannel = [SequencerChannel sequencerChannelWithAudioFileAt:hihatURL
                                                                        audioController:audioController
-                                                                           withPattern:hihatSequence
-                                                                          withDuration:numBeats
+                                                                          withSequence:hihatSequence
+                                                           numberOfFullBeatsPerMeasure:numBeats
                                                                                  atBPM:bpm];
     [audioController addChannels:@[hihatChannel]];
 }
@@ -213,34 +137,63 @@
     }
 }
 
+
 #pragma mark -
-#pragma mark UI Setup
+#pragma mark Playback Control
 
 - (IBAction)tappedKickButton:(id)sender {
 
-    NSUInteger beatIndex;
-    [SequencerBeat beatWithOnset:-1 velocity:314];
+    double beatOnset;
 
-    for (SequencerBeat *beat in kickChannel.sequence) {
-        NSLog(@"%@", beat);
+    if (sender == kickButtonOne) beatOnset = 0/4.0;
+
+    else if (sender == kickButtonTwo) beatOnset = 1/4.0;
+
+    else if (sender == kickButtonThree) beatOnset = 2/4.0;
+
+    else if (sender == kickButtonFour) beatOnset = 3/4.0;
+
+    SequencerChannel *channelToControl;
+    if (metronomeChannel) {
+        channelToControl = metronomeChannel;
     }
-    NSLog(@" ");
+    else if (kickChannel) {
+        channelToControl = kickChannel;
+    }
+    NSLog(@"sequence entering: %@", channelToControl.sequence);
 
-    if (sender == kickButtonOne) beatIndex = 0;
+    SequencerBeat *beat = [channelToControl.sequence beatAtOnset:beatOnset];
 
-    else if (sender == kickButtonTwo) beatIndex = 1;
-
-    else if (sender == kickButtonThree) beatIndex = 2;
-
-    else if (sender == kickButtonFour) beatIndex = 3;
-
-    SequencerBeat *beat = kickChannel.sequence[beatIndex];
     if (beat) {
-        [kickChannel.sequence removeObject:beat];
+        [channelToControl.sequence removeBeatAtOnset:beatOnset];
     }
     else {
-        beat = [SequencerBeat beatWithOnset:0];
-        [kickChannel.sequence insertObject:beat atIndex:beatIndex];
+        [channelToControl.sequence addBeat:[SequencerBeat beatWithOnset:beatOnset]];
+    }
+
+    NSLog(@"sequence leaving: %@", channelToControl.sequence);
+
+}
+
+- (IBAction)togglePlayPause {
+
+    SequencerChannel *channelToControl;
+    if (metronomeChannel) {
+        channelToControl = metronomeChannel;
+    }
+    else if (kickChannel) {
+        channelToControl = kickChannel;
+    }
+
+    channelToControl.sequenceIsPlaying = !channelToControl.sequenceIsPlaying;
+
+    if (channelToControl.sequenceIsPlaying) {
+        [playPauseButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        playPauseButton.backgroundColor = [UIColor orangeColor];
+    }
+    else {
+        playPauseButton.backgroundColor = [UIColor blackColor];
+        [playPauseButton setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
     }
 }
 
