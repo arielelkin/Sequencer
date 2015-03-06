@@ -10,5 +10,7 @@
 
 @interface ViewController : UIViewController
 @property (strong, nonatomic) IBOutlet UISlider *mainVolumeSlider;
+@property (strong, nonatomic) IBOutlet UISlider *bpmSlider;
+@property (strong, nonatomic) IBOutlet UILabel *bpmLabel;
 
 @end

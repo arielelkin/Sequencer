@@ -35,37 +35,24 @@
     [super viewDidAppear:animated];
     
     [self setupAudioController];
-
-    // Pick one.
     [self setupSequencer];
-//    [self setupMetronome];
 }
 
-- (void)setupMetronome {
-
-    double bpm = 100.0;
-
-    NSURL *hihatURL = [[NSBundle mainBundle] URLForResource:@"hihat" withExtension:@"caf"];
-    SequencerChannelSequence *metronomeSequence = [SequencerChannelSequence new];
-
-    //I'm being stupid and doing this:
-    [metronomeSequence addBeat:[SequencerBeat beatWithOnset:0.0/4]];
-    [metronomeSequence addBeat:[SequencerBeat beatWithOnset:1.0/4]];
-    [metronomeSequence addBeat:[SequencerBeat beatWithOnset:2.0/4]];
-    [metronomeSequence addBeat:[SequencerBeat beatWithOnset:3.0/4]];
-
-    SequencerChannel *metronomeChannel = [SequencerChannel sequencerChannelWithAudioFileAt:hihatURL
-                                                         audioController:audioController
-                                                             withSequence:metronomeSequence
-                                                            numberOfFullBeatsPerMeasure:4
-                                                                   atBPM:bpm];
-    [audioController addChannels:@[metronomeChannel] toChannelGroup:_mainChannelGroup];
-}
+#pragma mark -
+#pragma mark Sequencer Setup
 
 - (void)setupSequencer {
     
+    // Will hold the top layer of channels.
+    _mainChannelGroup = [audioController createChannelGroup];
+    _isPlaying = false;
+    
+    // Init UI.
+    [_mainVolumeSlider addTarget:self action:@selector(mainVolumeSliderChanged:) forControlEvents:UIControlEventValueChanged];
+    [_bpmSlider addTarget:self action:@selector(bpmSliderChanged:) forControlEvents:UIControlEventValueChanged];
+    
     // Pattern vars.
-    double bpm = 120.0;
+    double bpm = _bpmSlider.value;
     NSUInteger numBeats = 4;
 
     // KICK channel
@@ -128,9 +115,6 @@
     [audioController addChannels:@[hihatChannel] toChannelGroup:_mainChannelGroup];
 }
 
-#pragma mark -
-#pragma mark Init
-
 - (void)setupAudioController {
     
     // Init audio controller:
@@ -142,14 +126,6 @@
     if (audioControllerStartError) {
         NSLog(@"Audio controller start error: %@", audioControllerStartError.localizedDescription);
     }
-    
-    // Will hold the top layer of channels.
-    _mainChannelGroup = [audioController createChannelGroup];
-    
-    _isPlaying = false;
-    
-    // Init UI.
-    [_mainVolumeSlider addTarget:self action:@selector(mainVolumeSliderChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
 #pragma mark -
@@ -157,6 +133,20 @@
 
 - (void)mainVolumeSliderChanged:(UISlider*)sender {
     [audioController setVolume:sender.value forChannelGroup:_mainChannelGroup];
+}
+
+- (void)bpmSliderChanged:(UISlider*)sender {
+    NSLog(@"bpmSliderChanged: %f", sender.value);
+    
+    // Update label.
+    _bpmLabel.text = [NSString stringWithFormat:@"%f", sender.value];
+    
+    // Sweep all channels and apply.
+    NSArray *channels = [self sequencerChannelsInGroup:_mainChannelGroup];
+    for(int i = 0; i < channels.count; i++) {
+        SequencerChannel *channel = [channels objectAtIndex:i];
+        channel.bpm = sender.value;
+    }
 }
 
 #pragma mark -

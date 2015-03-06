@@ -22,5 +22,6 @@
 @property (nonatomic) SequencerChannelSequence *sequence;
 
 @property BOOL sequenceIsPlaying;
+@property double bpm;
 
 @end

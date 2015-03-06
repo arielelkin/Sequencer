@@ -13,6 +13,7 @@
 
 
 @implementation SequencerChannel {
+    AEAudioController *_audioController;
     AudioBufferList *_audioSampleBufferList;
     UInt32 _sampleLengthInFrames;
     mach_timebase_info_data_t _timebaseInfo;
@@ -26,6 +27,8 @@
     int _numBeats;
     SequencerChannelSequence *_sequence;
     bool _sequenceIsPlaying;
+    double _bpm;
+    NSUInteger _beatsPerMeasure;
 }
 
 #pragma mark -
@@ -52,7 +55,7 @@
     }
 
     SequencerChannel *channel = [[self alloc] init];
-
+    channel->_audioController = audioController;
 
     // Load audio file:
     AEAudioFileLoaderOperation *operation = [[AEAudioFileLoaderOperation alloc] initWithFileURL:url targetAudioDescription:audioController.audioDescription];
@@ -77,15 +80,13 @@
     channel->_patternStartTimeNanoSeconds = 0;
     channel->_sampleIsPlaying = false;
 
-    
     // Timing calculations:
-
     // Populates _timebaseInfo with data necessary to convert
     // machine clock ticks to nano seconds later on:
     mach_timebase_info(&channel->_timebaseInfo);
-    double nanoSecondsPerBeat = 1000000000.0f * 60.0f / bpm;
-    channel->_nanoSecondsPerPattern = beatsPerMeasure * nanoSecondsPerBeat;
-    channel->_nanoSecondsPerFrame = 1000000000.0f / audioController.audioDescription.mSampleRate;
+    channel->_beatsPerMeasure = beatsPerMeasure;
+    channel->_bpm = bpm;
+    [channel updateBpm];
 
     //Sequence playback control variables:
     channel->_sequenceIsPlaying = false;
@@ -130,6 +131,23 @@
     return _sequenceIsPlaying;
 }
 
+#pragma mark -
+#pragma mark BPM control
+
+- (void)setBpm:(double)bpm {
+    _bpm = bpm;
+    [self updateBpm];
+}
+
+- (double)bpm {
+    return _bpm;
+}
+
+- (void)updateBpm {
+    double nanoSecondsPerBeat = 1000000000.0f * 60.0f / _bpm;
+    _nanoSecondsPerPattern = _beatsPerMeasure * nanoSecondsPerBeat;
+    _nanoSecondsPerFrame = 1000000000.0f / _audioController.audioDescription.mSampleRate;
+}
 
 #pragma mark -
 #pragma mark Render callback
