@@ -69,7 +69,7 @@
     channel.sequence = sequence;
     channel->_numBeats = sequence.count;
     channel->_sequenceCRepresentation = sequence.sequenceCRepresentation;
-    
+
 
     // Init consistent variables:
     channel->_sampleFrameIndex = 0;
@@ -77,19 +77,18 @@
     channel->_patternStartTimeNanoSeconds = 0;
     channel->_sampleIsPlaying = false;
 
-
+    
     // Timing calculations:
 
     // Populates _timebaseInfo with data necessary to convert
-    //machine clock ticks to nano seconds later on:
+    // machine clock ticks to nano seconds later on:
     mach_timebase_info(&channel->_timebaseInfo);
     double nanoSecondsPerBeat = 1000000000.0f * 60.0f / bpm;
     channel->_nanoSecondsPerPattern = beatsPerMeasure * nanoSecondsPerBeat;
     channel->_nanoSecondsPerFrame = 1000000000.0f / audioController.audioDescription.mSampleRate;
 
-
     //Sequence playback control variables:
-    channel->_sequenceIsPlaying = true;
+    channel->_sequenceIsPlaying = false;
 
     return channel;
 }
@@ -118,6 +117,13 @@
 #pragma mark Playback control
 
 - (void)setSequenceIsPlaying:(BOOL)sequenceIsPlaying {
+    // Reset all timing values when stopped.
+    if(!sequenceIsPlaying) {
+        _currentBeatIndex = -1;
+        _patternStartTimeNanoSeconds = 0;
+        _sampleFrameIndex = 0;
+        _sampleIsPlaying = false;
+    }
     _sequenceIsPlaying = sequenceIsPlaying;
 }
 - (BOOL)sequenceIsPlaying {
@@ -134,10 +140,8 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
                                UInt32 frames,
                                AudioBufferList *audio) {
 
-    if (!THIS->_sequenceIsPlaying) return noErr;
-
     // Skip if channel is not playing or stopped.
-    // TODO - feature
+    if (!THIS->_sequenceIsPlaying) return noErr;
     
     // Keep track of when a pattern iteration starts and ends.
     UInt64 k = THIS->_timebaseInfo.numer / THIS->_timebaseInfo.denom;

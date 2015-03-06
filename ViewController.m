@@ -16,10 +16,10 @@
 @import AVFoundation;
 
 @implementation ViewController {
+    
     AEAudioController *audioController;
 
-    SequencerChannel *metronomeChannel;
-    SequencerChannel *kickChannel;
+    AEChannelGroupRef _mainChannelGroup;
 
     IBOutlet UIButton *kickButtonOne;
     IBOutlet UIButton *kickButtonTwo;
@@ -27,6 +27,8 @@
     IBOutlet UIButton *kickButtonFour;
 
     IBOutlet UIButton *playPauseButton;
+    
+    bool _isPlaying;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -34,8 +36,8 @@
     
     [self setupAudioController];
 
+    // Pick one.
     [self setupSequencer];
-
 //    [self setupMetronome];
 }
 
@@ -52,12 +54,12 @@
     [metronomeSequence addBeat:[SequencerBeat beatWithOnset:2.0/4]];
     [metronomeSequence addBeat:[SequencerBeat beatWithOnset:3.0/4]];
 
-    metronomeChannel = [SequencerChannel sequencerChannelWithAudioFileAt:hihatURL
+    SequencerChannel *metronomeChannel = [SequencerChannel sequencerChannelWithAudioFileAt:hihatURL
                                                          audioController:audioController
                                                              withSequence:metronomeSequence
                                                             numberOfFullBeatsPerMeasure:4
                                                                    atBPM:bpm];
-    [audioController addChannels:@[metronomeChannel]];
+    [audioController addChannels:@[metronomeChannel] toChannelGroup:_mainChannelGroup];
 }
 
 - (void)setupSequencer {
@@ -73,12 +75,12 @@
     [kickSequence addBeat:[SequencerBeat beatWithOnset:1.0 / 4 velocity:0.25 ]];
     [kickSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 velocity:0.75 ]];
     [kickSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 velocity:0.25 ]];
-    kickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:kickURL
+    SequencerChannel *kickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:kickURL
                                                                       audioController:audioController
                                                                           withSequence:kickSequence
                                                           numberOfFullBeatsPerMeasure:numBeats
                                                                                 atBPM:bpm];
-    [audioController addChannels:@[kickChannel]];
+    [audioController addChannels:@[kickChannel] toChannelGroup:_mainChannelGroup];
     
     // WOODBLOCK channel
     NSURL *woodblockURL = [[NSBundle mainBundle] URLForResource:@"woodblock" withExtension:@"caf"];
@@ -93,7 +95,7 @@
                                                                               withSequence:woodblockSequence
                                                                numberOfFullBeatsPerMeasure:numBeats
                                                                                      atBPM:bpm];
-    [audioController addChannels:@[woodblockChannel]];
+    [audioController addChannels:@[woodblockChannel] toChannelGroup:_mainChannelGroup];
 
     // CRICK channel
     NSURL *crickURL = [[NSBundle mainBundle] URLForResource:@"crick" withExtension:@"caf"];
@@ -105,7 +107,7 @@
                                                                           withSequence:crickSequence
                                                            numberOfFullBeatsPerMeasure:numBeats
                                                                                  atBPM:bpm];
-    [audioController addChannels:@[crickChannel]];
+    [audioController addChannels:@[crickChannel] toChannelGroup:_mainChannelGroup];
 
 
     // HI-HAT channel
@@ -123,18 +125,25 @@
                                                                           withSequence:hihatSequence
                                                            numberOfFullBeatsPerMeasure:numBeats
                                                                                  atBPM:bpm];
-    [audioController addChannels:@[hihatChannel]];
+    [audioController addChannels:@[hihatChannel] toChannelGroup:_mainChannelGroup];
 }
 
 - (void)setupAudioController {
-    //init audio controller:
+    
+    // Init audio controller:
     audioController = [[AEAudioController alloc] initWithAudioDescription:[AEAudioController nonInterleavedFloatStereoAudioDescription]];
 
+    // Start it.
     NSError *audioControllerStartError = nil;
     [audioController start:&audioControllerStartError];
     if (audioControllerStartError) {
         NSLog(@"Audio controller start error: %@", audioControllerStartError.localizedDescription);
     }
+    
+    // Will hold the top layer of channels.
+    _mainChannelGroup = [audioController createChannelGroup];
+    
+    _isPlaying = false;
 }
 
 
@@ -145,49 +154,44 @@
 
     double beatOnset;
 
+    // Select onset from pressed button.
     if (sender == kickButtonOne) beatOnset = 0/4.0;
-
     else if (sender == kickButtonTwo) beatOnset = 1/4.0;
-
     else if (sender == kickButtonThree) beatOnset = 2/4.0;
-
     else if (sender == kickButtonFour) beatOnset = 3/4.0;
 
-    SequencerChannel *channelToControl;
-    if (metronomeChannel) {
-        channelToControl = metronomeChannel;
-    }
-    else if (kickChannel) {
-        channelToControl = kickChannel;
-    }
-    NSLog(@"sequence entering: %@", channelToControl.sequence);
+    // Grab the first channel.
+    NSArray *channels = [self sequencerChannelsInGroup:_mainChannelGroup];
+    SequencerChannel *channel = [channels objectAtIndex:0];
+    NSLog(@"sequence entering: %@", channel.sequence);
 
-    SequencerBeat *beat = [channelToControl.sequence beatAtOnset:beatOnset];
-
-    if (beat) {
-        [channelToControl.sequence removeBeatAtOnset:beatOnset];
+    // Identify the beat.
+    SequencerBeat *beat = [channel.sequence beatAtOnset:beatOnset];
+    
+    // Add or remove the beat.
+    if(beat) {
+        [channel.sequence removeBeatAtOnset:beatOnset];
     }
     else {
-        [channelToControl.sequence addBeat:[SequencerBeat beatWithOnset:beatOnset]];
+        [channel.sequence addBeat:[SequencerBeat beatWithOnset:beatOnset]];
     }
 
-    NSLog(@"sequence leaving: %@", channelToControl.sequence);
-
+    NSLog(@"sequence leaving: %@", channel.sequence);
 }
 
 - (IBAction)togglePlayPause {
-
-    SequencerChannel *channelToControl;
-    if (metronomeChannel) {
-        channelToControl = metronomeChannel;
+    
+    _isPlaying = !_isPlaying;
+    
+    // Sweep all channels and apply.
+    NSArray *channels = [self sequencerChannelsInGroup:_mainChannelGroup];
+    for(int i = 0; i < channels.count; i++) {
+        SequencerChannel *channel = [channels objectAtIndex:i];
+        channel.sequenceIsPlaying = _isPlaying;
     }
-    else if (kickChannel) {
-        channelToControl = kickChannel;
-    }
 
-    channelToControl.sequenceIsPlaying = !channelToControl.sequenceIsPlaying;
-
-    if (channelToControl.sequenceIsPlaying) {
+    // Toggle button.
+    if(!_isPlaying) {
         [playPauseButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         playPauseButton.backgroundColor = [UIColor orangeColor];
     }
@@ -197,4 +201,49 @@
     }
 }
 
+#pragma mark -
+#pragma mark Utils
+
+- (NSArray*)sequencerChannelsInGroup:(AEChannelGroupRef)group {
+    
+    NSMutableArray *seqChannels = [NSMutableArray array];
+    
+    NSArray *channels = [audioController channelsInChannelGroup:group];
+    for(int i = 0; i < channels.count; i++) {
+        id channel = [channels objectAtIndex:i];
+        if([channel isKindOfClass:[SequencerChannel class]]) {
+            [seqChannels addObject:channel];
+        }
+    }
+    
+    return seqChannels;
+}
+
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
