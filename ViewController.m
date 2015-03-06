@@ -136,7 +136,7 @@
 }
 
 - (void)bpmSliderChanged:(UISlider*)sender {
-    NSLog(@"bpmSliderChanged: %f", sender.value);
+//    NSLog(@"bpmSliderChanged: %f", sender.value);
     
     // Update label.
     _bpmLabel.text = [NSString stringWithFormat:@"%f", sender.value];
