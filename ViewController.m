@@ -128,6 +128,9 @@
     [audioController addChannels:@[hihatChannel] toChannelGroup:_mainChannelGroup];
 }
 
+#pragma mark -
+#pragma mark Init
+
 - (void)setupAudioController {
     
     // Init audio controller:
@@ -144,8 +147,17 @@
     _mainChannelGroup = [audioController createChannelGroup];
     
     _isPlaying = false;
+    
+    // Init UI.
+    [_mainVolumeSlider addTarget:self action:@selector(mainVolumeSliderChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
+#pragma mark -
+#pragma mark UI Events
+
+- (void)mainVolumeSliderChanged:(UISlider*)sender {
+    [audioController setVolume:sender.value forChannelGroup:_mainChannelGroup];
+}
 
 #pragma mark -
 #pragma mark Playback Control
