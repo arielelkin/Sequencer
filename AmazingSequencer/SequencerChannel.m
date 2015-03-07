@@ -17,11 +17,11 @@
     AudioBufferList *_audioSampleBufferList;
     UInt32 _sampleLengthInFrames;
     mach_timebase_info_data_t _timebaseInfo;
-    UInt64 _nanoSecondsPerPattern;
+    UInt64 _nanoSecondsPerSequence;
     UInt64 _nanoSecondsPerFrame;
     UInt64 _sampleFrameIndex; // Keeps track of the next frame to read on the sample.
     int _currentBeatIndex; // Keeps track of the current beat playing.
-    UInt64 _patternStartTimeNanoSeconds;
+    UInt64 _sequenceStartTimeNanoSeconds;
     UInt64 _sampleIsPlaying; // Keeps track if a sample is playing or not.
     double **_sequenceCRepresentation;
     int _numBeats;
@@ -77,7 +77,7 @@
     // Init consistent variables:
     channel->_sampleFrameIndex = 0;
     channel->_currentBeatIndex = -1;
-    channel->_patternStartTimeNanoSeconds = 0;
+    channel->_sequenceStartTimeNanoSeconds = 0;
     channel->_sampleIsPlaying = false;
 
     // Timing calculations:
@@ -121,7 +121,7 @@
     // Reset all timing values when stopped.
     if(!sequenceIsPlaying) {
         _currentBeatIndex = -1;
-        _patternStartTimeNanoSeconds = 0;
+        _sequenceStartTimeNanoSeconds = 0;
         _sampleFrameIndex = 0;
         _sampleIsPlaying = false;
     }
@@ -145,7 +145,7 @@
 
 - (void)updateBpm {
     double nanoSecondsPerBeat = 1000000000.0f * 60.0f / _bpm;
-    _nanoSecondsPerPattern = _beatsPerMeasure * nanoSecondsPerBeat;
+    _nanoSecondsPerSequence = _beatsPerMeasure * nanoSecondsPerBeat;
     _nanoSecondsPerFrame = 1000000000.0f / _audioController.audioDescription.mSampleRate;
 }
 
@@ -161,19 +161,19 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
     // Skip if channel is not playing or stopped.
     if (!THIS->_sequenceIsPlaying) return noErr;
     
-    // Keep track of when a pattern iteration starts and ends.
+    // Keep track of when a sequence iteration starts and ends.
     UInt64 k = THIS->_timebaseInfo.numer / THIS->_timebaseInfo.denom;
     UInt64 currentTimeNanoSeconds = inTimeStamp->mHostTime * k;
-    if(THIS->_patternStartTimeNanoSeconds == 0) {
-        THIS->_patternStartTimeNanoSeconds = currentTimeNanoSeconds;
+    if(THIS->_sequenceStartTimeNanoSeconds == 0) {
+        THIS->_sequenceStartTimeNanoSeconds = currentTimeNanoSeconds;
     }
     
-    // Evaluate time passed in this pattern iteration.
-    // If a pattern iteration has ended, values are shifted so that a new iteration begins.
-    UInt64 elapsedTimeSinceCycleStartNanoSeconds = currentTimeNanoSeconds - THIS->_patternStartTimeNanoSeconds;
-    if(elapsedTimeSinceCycleStartNanoSeconds > THIS->_nanoSecondsPerPattern) { // reset?
-        elapsedTimeSinceCycleStartNanoSeconds = elapsedTimeSinceCycleStartNanoSeconds % THIS->_nanoSecondsPerPattern;
-        THIS->_patternStartTimeNanoSeconds = currentTimeNanoSeconds - elapsedTimeSinceCycleStartNanoSeconds;
+    // Evaluate time passed in this sequence iteration.
+    // If a sequence iteration has ended, values are shifted so that a new iteration begins.
+    UInt64 elapsedTimeSinceSequenceStartNanoSeconds = currentTimeNanoSeconds - THIS->_sequenceStartTimeNanoSeconds;
+    if(elapsedTimeSinceSequenceStartNanoSeconds > THIS->_nanoSecondsPerSequence) { // reset?
+        elapsedTimeSinceSequenceStartNanoSeconds = elapsedTimeSinceSequenceStartNanoSeconds % THIS->_nanoSecondsPerSequence;
+        THIS->_sequenceStartTimeNanoSeconds = currentTimeNanoSeconds - elapsedTimeSinceSequenceStartNanoSeconds;
         THIS->_currentBeatIndex = -1;
     }
     
@@ -187,8 +187,8 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
         // Check if the coming beat is suposed to have started by now.
         int nextBeatIndex = THIS->_currentBeatIndex + 1 < THIS->_numBeats ? THIS->_currentBeatIndex + 1 : -1;
         if(nextBeatIndex >= 0) {
-            double beatTimeNanoSeconds = THIS->_nanoSecondsPerPattern * THIS->_sequenceCRepresentation[nextBeatIndex][0];
-            double delta = elapsedTimeSinceCycleStartNanoSeconds + frameTimeNanoSeconds - beatTimeNanoSeconds;
+            double beatTimeNanoSeconds = THIS->_nanoSecondsPerSequence * THIS->_sequenceCRepresentation[nextBeatIndex][0];
+            double delta = elapsedTimeSinceSequenceStartNanoSeconds + frameTimeNanoSeconds - beatTimeNanoSeconds;
             if(delta >= 0) {
                 THIS->_sampleFrameIndex = 0;
                 THIS->_sampleIsPlaying = true;
