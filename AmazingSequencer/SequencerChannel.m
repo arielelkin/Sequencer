@@ -202,6 +202,7 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
             // Writes the same samples on left and right channels.
             if(THIS->_currentBeatIndex >= 0) {
                 for(int j = 0; j < audio->mNumberBuffers; j++) {
+                    if (THIS->_currentBeatIndex >= THIS->_numBeats) break;
                     ((float *)audio->mBuffers[j].mData)[i] = THIS->_sequenceCRepresentation[THIS->_currentBeatIndex][1] * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
                 }
             }
