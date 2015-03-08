@@ -28,7 +28,7 @@
  * with specified onset.
  *
  */
-- (void)removeBeatAtOnset:(double)onset;
+- (void)removeBeatAtOnset:(float)onset;
 
 /*!
  * Removes a beat from the sequence.
@@ -44,24 +44,24 @@
  * in the sequence.
  *
  */
-- (void)setOnsetOfBeatAtOnset:(double)oldOnset to:(double)newOnset;
+- (void)setOnsetOfBeatAtOnset:(float)oldOnset to:(float)newOnset;
 
 /*!
  * Sets the onset of a beat located at a specified index
  * in the sequence.
  *
  */
-- (void)setVelocityOfBeatAtOnset:(double)onset to:(double)newVelocity;
+- (void)setVelocityOfBeatAtOnset:(float)onset to:(float)newVelocity;
 
 
 
 - (SequencerBeat *)beatAtIndex:(NSUInteger)index;
-- (SequencerBeat *)beatAtOnset:(double)index;
+- (SequencerBeat *)beatAtOnset:(float)onset;
 
 /*!
  * Returns the onset of the beat at a specified position 
  * of the sequence 
- * e.g. double onsetOfThirdBeat = mySequence[2];
+ * e.g. float onsetOfThirdBeat = mySequence[2];
  *
  */
 - (NSDecimalNumber *)objectAtIndexedSubscript:(NSUInteger)index;
@@ -78,11 +78,11 @@
  * is the beat's onset, the second column is the beat's
  * velocity. 
  *
- * e.g. double onsetOfThirdBeat = sequenceCRepresentation[2][0]
+ * e.g. float onsetOfThirdBeat = sequenceCRepresentation[2][0]
  *
- * e.g. double velocityOfFirstBeat = sequenceCRepresentation[0][1]
+ * e.g. float velocityOfFirstBeat = sequenceCRepresentation[0][1]
  *
  */
-@property (readonly) double** sequenceCRepresentation;
+@property (readonly) float** sequenceCRepresentation;
 
 @end

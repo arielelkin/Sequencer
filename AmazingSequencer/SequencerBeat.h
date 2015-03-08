@@ -10,12 +10,12 @@
 
 @interface SequencerBeat : NSObject
 
-+ (instancetype)beatWithOnset:(double)onset
-                     velocity:(double)velocity;
++ (instancetype)beatWithOnset:(float)onset
+                     velocity:(float)velocity;
 
-+ (instancetype)beatWithOnset:(double)onset;
++ (instancetype)beatWithOnset:(float)onset;
 
-@property (nonatomic) double onset;
-@property (nonatomic) double velocity;
+@property (nonatomic) float onset;
+@property (nonatomic) float velocity;
 
 @end

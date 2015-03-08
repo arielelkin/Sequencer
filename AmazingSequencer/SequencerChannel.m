@@ -22,13 +22,13 @@
     UInt64 _sampleFrameIndex; // Keeps track of the next frame to read on the sample.
     int _currentBeatIndex; // Keeps track of the current beat playing.
     UInt64 _sequenceStartTimeNanoSeconds;
-    UInt64 _sampleIsPlaying; // Keeps track if a sample is playing or not.
-    double **_sequenceCRepresentation;
+    bool _sampleIsPlaying; // Keeps track if a sample is playing or not.
+    float **_sequenceCRepresentation;
     int _numBeats;
     SequencerChannelSequence *_sequence;
     bool _sequenceIsPlaying;
     double _bpm;
-    NSUInteger _beatsPerMeasure;
+    UInt32 _beatsPerMeasure;
 }
 
 #pragma mark -

@@ -10,7 +10,7 @@
 
 @implementation SequencerChannelSequence {
     NSMutableArray *sequence;
-    double **_sequenceCRepresentation;
+    float **_sequenceCRepresentation;
 }
 
 - (void)addBeat:(SequencerBeat *)beat {
@@ -30,7 +30,7 @@
     [self updateSequenceCRepresentation];
 }
 
-- (void)removeBeatAtOnset:(double)onset {
+- (void)removeBeatAtOnset:(float)onset {
     for (int i = 0; i < sequence.count; i++) {
         SequencerBeat *beat = sequence[i];
         if (beat.onset == onset) {
@@ -62,7 +62,7 @@
     }
 }
 
-- (SequencerBeat *)beatAtOnset:(double)onset {
+- (SequencerBeat *)beatAtOnset:(float)onset {
     
     for (SequencerBeat *beat in sequence) {
         if (beat.onset == onset) {
@@ -72,7 +72,7 @@
     return nil;
 }
 
-- (NSUInteger)indexOfBeatAtOnset:(double)onset {
+- (NSUInteger)indexOfBeatAtOnset:(float)onset {
     for (NSUInteger i = 0; i < sequence.count; i++) {
         SequencerBeat *beat = sequence[i];
         if (beat.onset == onset) {
@@ -82,12 +82,12 @@
     return -1;
 }
 
-- (void)setOnsetOfBeatAtOnset:(double)oldOnset to:(double)newOnset {
+- (void)setOnsetOfBeatAtOnset:(float)oldOnset to:(float)newOnset {
     SequencerBeat *beat = [self beatAtOnset:oldOnset];
     beat.onset = newOnset;
 }
 
-- (void)setVelocityOfBeatAtOnset:(double)onset to:(double)newVelocity {
+- (void)setVelocityOfBeatAtOnset:(float)onset to:(float)newVelocity {
     SequencerBeat *beat = [self beatAtOnset:onset];
     beat.velocity = newVelocity;
 }
@@ -103,10 +103,10 @@
     NSUInteger numberOfBeats = sequence.count;
     NSUInteger numberOfParametersInBeat = 2;
 
-    _sequenceCRepresentation = (double**)malloc(numberOfBeats * sizeof(double*));
+    _sequenceCRepresentation = (float**)malloc(numberOfBeats * sizeof(float*));
 
     for(int i=0; i < numberOfBeats; i++) {
-        _sequenceCRepresentation[i] = (double*)malloc(numberOfParametersInBeat * sizeof(double));
+        _sequenceCRepresentation[i] = (float*)malloc(numberOfParametersInBeat * sizeof(float));
     }
 
     for (int i = 0; i < numberOfBeats; i++){
@@ -116,7 +116,7 @@
     }
 }
 
-- (double **)sequenceCRepresentation {
+- (float **)sequenceCRepresentation {
     return _sequenceCRepresentation;
 }
 

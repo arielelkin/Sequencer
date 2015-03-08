@@ -10,8 +10,8 @@
 
 @implementation SequencerBeat
 
-+ (instancetype)beatWithOnset:(double)onset
-                     velocity:(double)velocity {
++ (instancetype)beatWithOnset:(float)onset
+                     velocity:(float)velocity {
 
     SequencerBeat *beat = [[self alloc] init];
     beat.onset = onset;
@@ -19,7 +19,7 @@
     return beat;
 }
 
-- (void)setOnset:(double)onset {
+- (void)setOnset:(float)onset {
     if (onset >= 0) {
         _onset = onset;
     }
@@ -29,7 +29,7 @@
     }
 }
 
-- (void)setVelocity:(double)velocity {
+- (void)setVelocity:(float)velocity {
     if(velocity >= 0 && velocity <= 1) {
         _velocity = velocity;
     }
@@ -43,7 +43,7 @@
     }
 }
 
-+ (instancetype)beatWithOnset:(double)onset {
++ (instancetype)beatWithOnset:(float)onset {
     return [self beatWithOnset:onset velocity:1.0];
 }
 
