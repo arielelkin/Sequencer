@@ -99,8 +99,8 @@
 #pragma mark Sequence access
 
 - (void)setSequence:(SequencerChannelSequence *)sequence {
-    [self updateCSequence];
     _sequence = sequence;
+    [self updateCSequence];
 }
 
 - (SequencerChannelSequence *)sequence {
