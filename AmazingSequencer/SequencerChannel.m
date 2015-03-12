@@ -33,6 +33,7 @@
     double _bpm;
     UInt32 _beatsPerMeasure;
     float _playheadPosition;
+    unsigned int _numSampleBuffers;
 }
 
 @synthesize pan = _pan, volume = _volume;
@@ -74,7 +75,8 @@
     }
     channel->_audioSampleBufferList = operation.bufferList;
     channel->_sampleLengthInFrames = operation.lengthInFrames;
-
+    channel->_numSampleBuffers = (unsigned int)operation.bufferList->mNumberBuffers;
+//    NSLog(@"Number of buffers in sample: %d", (unsigned int)operation.bufferList->mNumberBuffers);
 
     //Load sequence:
     channel.sequence = sequence;
@@ -202,6 +204,7 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
     
     // Sweep the audio buffer frames and fill with sample frames when appropriate.
     UInt64 frameTimeNanoSeconds = 0;
+    int buff = 0;
     for(int i = 0; i < frames; i++) {
         
         // Check if the coming beat is suposed to have started by now.
@@ -223,6 +226,9 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
             if(THIS->_currentBeatIndex >= 0) {
                 for(int j = 0; j < audio->mNumberBuffers; j++) {
                     if (THIS->_currentBeatIndex >= THIS->_numBeats) break;
+                    // Makes sure that the audio will not request buffers that the sample doesn't have.
+                    // i.e. if the sample is mono and audio is stereo, writes the same thing on both channels.
+                    buff = j < THIS->_numSampleBuffers ? j : buff;
                     ((float *)audio->mBuffers[j].mData)[i] = THIS->_sequenceCRepresentation[THIS->_currentBeatIndex][1] * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
                 }
             }
