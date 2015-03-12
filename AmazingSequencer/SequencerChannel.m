@@ -35,6 +35,8 @@
     float _playheadPosition;
 }
 
+@synthesize pan = _pan, volume = _volume;
+
 #pragma mark -
 #pragma mark Init
 
@@ -60,6 +62,8 @@
 
     SequencerChannel *channel = [[self alloc] init];
     channel->_audioController = audioController;
+    channel->_pan = 0.0f;
+    channel->_volume = 1.0f;
 
     // Load audio file:
     AEAudioFileLoaderOperation *operation = [[AEAudioFileLoaderOperation alloc] initWithFileURL:url targetAudioDescription:audioController.audioDescription];

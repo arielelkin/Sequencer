@@ -20,7 +20,8 @@
                                           atBPM:(double)bpm;
 
 @property (nonatomic) SequencerChannelSequence *sequence;
-
+@property (nonatomic, readwrite) float volume;
+@property (nonatomic, readwrite) float pan;                 
 @property BOOL sequenceIsPlaying;
 @property double bpm;
 @property (nonatomic, readonly) float playheadPosition;
