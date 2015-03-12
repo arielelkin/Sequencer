@@ -23,5 +23,6 @@
 
 @property BOOL sequenceIsPlaying;
 @property double bpm;
+@property (nonatomic, readonly) float playheadPosition;
 
 @end

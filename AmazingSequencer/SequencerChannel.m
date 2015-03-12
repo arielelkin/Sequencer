@@ -11,6 +11,9 @@
 
 #import <mach/mach_time.h>
 
+@interface SequencerChannel()
+@property float playheadPosition;
+@end
 
 @implementation SequencerChannel {
     AEAudioController *_audioController;
@@ -29,6 +32,7 @@
     bool _sequenceIsPlaying;
     double _bpm;
     UInt32 _beatsPerMeasure;
+    float _playheadPosition;
 }
 
 #pragma mark -
@@ -149,6 +153,14 @@
     _nanoSecondsPerFrame = 1000000000.0f / _audioController.audioDescription.mSampleRate;
 }
 
+
+#pragma mark -
+#pragma mark Playhead
+
+- (float)playheadPosition {
+    return _playheadPosition;
+}
+
 #pragma mark -
 #pragma mark Render callback
 
@@ -171,11 +183,15 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
     // Evaluate time passed in this sequence iteration.
     // If a sequence iteration has ended, values are shifted so that a new iteration begins.
     UInt64 elapsedTimeSinceSequenceStartNanoSeconds = currentTimeNanoSeconds - THIS->_sequenceStartTimeNanoSeconds;
+
     if(elapsedTimeSinceSequenceStartNanoSeconds > THIS->_nanoSecondsPerSequence) { // reset?
         elapsedTimeSinceSequenceStartNanoSeconds = elapsedTimeSinceSequenceStartNanoSeconds % THIS->_nanoSecondsPerSequence;
         THIS->_sequenceStartTimeNanoSeconds = currentTimeNanoSeconds - elapsedTimeSinceSequenceStartNanoSeconds;
         THIS->_currentBeatIndex = -1;
     }
+
+    THIS->_playheadPosition = (float)elapsedTimeSinceSequenceStartNanoSeconds / (float)THIS->_nanoSecondsPerSequence;
+
     
     // Quickly evaluate if there will be no audio in this renderCallback() and hence writting to buffers can be skipped entirely.
     // TODO - optimization
@@ -217,7 +233,7 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
         // Advance time.
         frameTimeNanoSeconds += THIS->_nanoSecondsPerFrame;
     }
-    
+
     return noErr;
 }
 

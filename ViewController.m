@@ -18,6 +18,7 @@
 @implementation ViewController {
     
     AEAudioController *audioController;
+    SequencerChannel *kickChannel;
 
     AEChannelGroupRef _mainChannelGroup;
 
@@ -36,6 +37,12 @@
     
     [self setupAudioController];
     [self setupSequencer];
+
+    [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateProgressView) userInfo:nil repeats:YES];
+}
+
+- (void) updateProgressView {
+    self.playheadPositionOfKickSequence.progress = kickChannel.playheadPosition;
 }
 
 #pragma mark -
@@ -62,13 +69,13 @@
     [kickSequence addBeat:[SequencerBeat beatWithOnset:1.0 / 4 velocity:0.25 ]];
     [kickSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 velocity:0.75 ]];
     [kickSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 velocity:0.25 ]];
-    SequencerChannel *kickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:kickURL
-                                                                      audioController:audioController
-                                                                          withSequence:kickSequence
-                                                          numberOfFullBeatsPerMeasure:numBeats
-                                                                                atBPM:bpm];
+    kickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:kickURL
+                                                    audioController:audioController
+                                                       withSequence:kickSequence
+                                        numberOfFullBeatsPerMeasure:numBeats
+                                                              atBPM:bpm];
     [audioController addChannels:@[kickChannel] toChannelGroup:_mainChannelGroup];
-    
+
     // WOODBLOCK channel
     NSURL *woodblockURL = [[NSBundle mainBundle] URLForResource:@"woodblock" withExtension:@"caf"];
     SequencerChannelSequence *woodblockSequence = [SequencerChannelSequence new];

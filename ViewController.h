@@ -12,5 +12,6 @@
 @property (strong, nonatomic) IBOutlet UISlider *mainVolumeSlider;
 @property (strong, nonatomic) IBOutlet UISlider *bpmSlider;
 @property (strong, nonatomic) IBOutlet UILabel *bpmLabel;
+@property (strong, nonatomic) IBOutlet UIProgressView *playheadPositionOfKickSequence;
 
 @end

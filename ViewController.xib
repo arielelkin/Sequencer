@@ -15,6 +15,7 @@
                 <outlet property="kickButtonTwo" destination="5oe-7K-zYr" id="DhG-xz-EVi"/>
                 <outlet property="mainVolumeSlider" destination="9PC-dm-DV2" id="Ffo-UO-dTV"/>
                 <outlet property="playPauseButton" destination="09Y-lo-n7d" id="1OC-7H-B6e"/>
+                <outlet property="playheadPositionOfKickSequence" destination="Io6-na-rSR" id="Mcc-sV-djo"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -108,6 +109,11 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Io6-na-rSR">
+                    <rect key="frame" x="8" y="22" width="304" height="2"/>
+                    <color key="progressTintColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="trackTintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </progressView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
         </view>
