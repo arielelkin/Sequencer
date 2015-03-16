@@ -12,6 +12,8 @@
 		B0042B7618E5ACFC00C3B90E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0042B7518E5ACFC00C3B90E /* Accelerate.framework */; };
 		B011C58F1A9BF96D00689F00 /* SequencerBeat.m in Sources */ = {isa = PBXBuildFile; fileRef = B011C58D1A9BF96D00689F00 /* SequencerBeat.m */; };
 		B0132CD91AA5EBF300B45668 /* SequencerChannelSequence.m in Sources */ = {isa = PBXBuildFile; fileRef = B0132CD81AA5EBF300B45668 /* SequencerChannelSequence.m */; };
+		B0212CF31AB77CFF00CFD39A /* SequencerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B0212CF21AB77CFF00CFD39A /* SequencerButton.m */; };
+		B02DB4621AB7945B00E2EF9D /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B02DB4611AB7945B00E2EF9D /* ViewController.xib */; };
 		B038E2E718E36B6D00310F33 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2E618E36B6D00310F33 /* Foundation.framework */; };
 		B038E2E918E36B6D00310F33 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2E818E36B6D00310F33 /* CoreGraphics.framework */; };
 		B038E2EB18E36B6D00310F33 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2EA18E36B6D00310F33 /* UIKit.framework */; };
@@ -29,7 +31,6 @@
 		B09234211A964A7E002EA90A /* hihat.caf in Resources */ = {isa = PBXBuildFile; fileRef = B092341D1A964A7E002EA90A /* hihat.caf */; };
 		B09234221A964A7E002EA90A /* kick.caf in Resources */ = {isa = PBXBuildFile; fileRef = B092341E1A964A7E002EA90A /* kick.caf */; };
 		B0F6197818EB21850017EA7A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0F6197618EB21850017EA7A /* ViewController.m */; };
-		B0F6197918EB21850017EA7A /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0F6197718EB21850017EA7A /* ViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,9 @@
 		B011C58E1A9BF96D00689F00 /* SequencerBeat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerBeat.h; sourceTree = "<group>"; };
 		B0132CD71AA5EBF300B45668 /* SequencerChannelSequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerChannelSequence.h; sourceTree = "<group>"; };
 		B0132CD81AA5EBF300B45668 /* SequencerChannelSequence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerChannelSequence.m; sourceTree = "<group>"; };
+		B0212CF11AB77CFF00CFD39A /* SequencerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerButton.h; sourceTree = "<group>"; };
+		B0212CF21AB77CFF00CFD39A /* SequencerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerButton.m; sourceTree = "<group>"; };
+		B02DB4611AB7945B00E2EF9D /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
 		B038E2E318E36B6D00310F33 /* AmazingSequencer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AmazingSequencer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B038E2E618E36B6D00310F33 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B038E2E818E36B6D00310F33 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -75,7 +79,6 @@
 		B092341E1A964A7E002EA90A /* kick.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = kick.caf; sourceTree = "<group>"; };
 		B0F6197518EB21850017EA7A /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = ../ViewController.h; sourceTree = "<group>"; };
 		B0F6197618EB21850017EA7A /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = ../ViewController.m; sourceTree = "<group>"; };
-		B0F6197718EB21850017EA7A /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ViewController.xib; path = ../ViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,9 +157,11 @@
 				B038E2F618E36B6D00310F33 /* AppDelegate.m */,
 				B0F6197518EB21850017EA7A /* ViewController.h */,
 				B0F6197618EB21850017EA7A /* ViewController.m */,
+				B0212CF11AB77CFF00CFD39A /* SequencerButton.h */,
+				B0212CF21AB77CFF00CFD39A /* SequencerButton.m */,
 				B0132CD71AA5EBF300B45668 /* SequencerChannelSequence.h */,
 				B0132CD81AA5EBF300B45668 /* SequencerChannelSequence.m */,
-				B0F6197718EB21850017EA7A /* ViewController.xib */,
+				B02DB4611AB7945B00E2EF9D /* ViewController.xib */,
 				2106FA691A9F580000524383 /* SequencerChannel.h */,
 				2106FA6A1A9F580000524383 /* SequencerChannel.m */,
 				B011C58E1A9BF96D00689F00 /* SequencerBeat.h */,
@@ -288,7 +293,7 @@
 				B09234211A964A7E002EA90A /* hihat.caf in Resources */,
 				B038E2F118E36B6D00310F33 /* InfoPlist.strings in Resources */,
 				B09234221A964A7E002EA90A /* kick.caf in Resources */,
-				B0F6197918EB21850017EA7A /* ViewController.xib in Resources */,
+				B02DB4621AB7945B00E2EF9D /* ViewController.xib in Resources */,
 				B038E2F918E36B6D00310F33 /* Images.xcassets in Resources */,
 				B09234201A964A7E002EA90A /* crick.caf in Resources */,
 			);
@@ -344,6 +349,7 @@
 			files = (
 				B038E2F718E36B6D00310F33 /* AppDelegate.m in Sources */,
 				B0132CD91AA5EBF300B45668 /* SequencerChannelSequence.m in Sources */,
+				B0212CF31AB77CFF00CFD39A /* SequencerButton.m in Sources */,
 				2106FA6B1A9F580000524383 /* SequencerChannel.m in Sources */,
 				B011C58F1A9BF96D00689F00 /* SequencerBeat.m in Sources */,
 				B0F6197818EB21850017EA7A /* ViewController.m in Sources */,
@@ -474,6 +480,7 @@
 				);
 				INFOPLIST_FILE = "AmazingSequencer/AmazingSequencer-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -493,6 +500,7 @@
 				);
 				INFOPLIST_FILE = "AmazingSequencer/AmazingSequencer-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

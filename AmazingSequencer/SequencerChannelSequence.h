@@ -21,6 +21,7 @@
  */
 - (void)addBeat:(SequencerBeat *)beat;
 
+
 /*!
  * Removes a beat from the sequence.
  *
@@ -30,14 +31,6 @@
  */
 - (void)removeBeatAtOnset:(float)onset;
 
-/*!
- * Removes a beat from the sequence.
- *
- * Returns nil if index is out of bounds of 
- * sequence array.
- *
- */
-- (void)removeBeatAtIndex:(NSUInteger)index;
 
 /*!
  * Sets the onset of a beat located at a specified onset
@@ -45,6 +38,7 @@
  *
  */
 - (void)setOnsetOfBeatAtOnset:(float)oldOnset to:(float)newOnset;
+
 
 /*!
  * Sets the velocity of a beat located at a specified onset
@@ -55,31 +49,18 @@
 
 
 /*!
- * Returns the beat at the specified position of the sequence.
- *
- */
-- (SequencerBeat *)beatAtIndex:(NSUInteger)index;
-
-
-/*!
  * Returns the beat with the specified onset in the sequence.
  *
  */
 - (SequencerBeat *)beatAtOnset:(float)onset;
 
-/*!
- * Returns the onset of the beat at a specified position 
- * of the sequence 
- * e.g. float onsetOfThirdBeat = mySequence[2];
- *
- */
-- (NSDecimalNumber *)objectAtIndexedSubscript:(NSUInteger)index;
 
 /*!
  * Returns the number of beats present in the sequence.
  *
  */
 @property (nonatomic, readonly) NSUInteger count;
+
 
 /*!
  * Returns a 2-dimensional C array representation of 

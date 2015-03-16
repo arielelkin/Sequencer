@@ -27,11 +27,11 @@
     UInt64 _sequenceStartTimeNanoSeconds;
     bool _sampleIsPlaying; // Keeps track if a sample is playing or not.
     float **_sequenceCRepresentation;
-    int _numBeats;
+    unsigned long _numBeats;
     SequencerChannelSequence *_sequence;
     bool _sequenceIsPlaying;
     double _bpm;
-    UInt32 _beatsPerMeasure;
+    NSUInteger _beatsPerMeasure;
     float _playheadPosition;
     unsigned int _numSampleBuffers;
 }

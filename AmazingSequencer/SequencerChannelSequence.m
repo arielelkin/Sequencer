@@ -41,27 +41,6 @@
     [self updateSequenceCRepresentation];
 }
 
-- (void)removeBeatAtIndex:(NSUInteger)index{
-    if (index < sequence.count) {
-        [sequence removeObject:[sequence objectAtIndex:index]];
-        [self updateSequenceCRepresentation];
-    }
-    else {
-        NSLog(@"%s index %d out of bounds, there are %d beats.", __PRETTY_FUNCTION__, index, sequence.count);
-    }
-}
-
-- (SequencerBeat *)beatAtIndex:(NSUInteger)index {
-
-    if (index < sequence.count) {
-        return sequence[index];
-    }
-    else {
-        NSLog(@"%s index %d out of bounds, there are %d beats, returning nil.", __PRETTY_FUNCTION__, index, sequence.count);
-        return nil;
-    }
-}
-
 - (SequencerBeat *)beatAtOnset:(float)onset {
     
     for (SequencerBeat *beat in sequence) {
@@ -118,15 +97,6 @@
 
 - (float **)sequenceCRepresentation {
     return _sequenceCRepresentation;
-}
-
-
-#pragma mark -
-#pragma mark Subscripting
-
-- (NSNumber *)objectAtIndexedSubscript:(NSUInteger)index {
-
-    return @([[self beatAtIndex:index] onset]);
 }
 
 
