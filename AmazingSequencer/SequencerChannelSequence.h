@@ -47,15 +47,24 @@
 - (void)setOnsetOfBeatAtOnset:(float)oldOnset to:(float)newOnset;
 
 /*!
- * Sets the onset of a beat located at a specified index
- * in the sequence.
+ * Sets the velocity of a beat located at a specified onset
+ * of the sequence.
  *
  */
 - (void)setVelocityOfBeatAtOnset:(float)onset to:(float)newVelocity;
 
 
-
+/*!
+ * Returns the beat at the specified position of the sequence.
+ *
+ */
 - (SequencerBeat *)beatAtIndex:(NSUInteger)index;
+
+
+/*!
+ * Returns the beat with the specified onset in the sequence.
+ *
+ */
 - (SequencerBeat *)beatAtOnset:(float)onset;
 
 /*!
