@@ -9,8 +9,7 @@
 #import "SequencerButton.h"
 
 @implementation SequencerButton {
-    NSUInteger divisions;
-    UIRotationGestureRecognizer *gestureRecognizer;
+    NSMutableSet *activeDivisions;
 }
 
 +(instancetype)buttonWithRow:(NSUInteger)row column:(NSUInteger)column {
@@ -27,51 +26,45 @@
         self.layer.borderColor = [UIColor blackColor].CGColor;
         self.layer.borderWidth = 3;
 
-        gestureRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(rotated:)];
-        [self addGestureRecognizer:gestureRecognizer];
+        activeDivisions = [NSMutableSet set];
 
         self.isActive = NO;
 
-        divisions = 4;
+        self.divisions = 4;
     }
     return self;
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-//    UITouch *touch = [touches anyObject];
-//    CGPoint p = [touch locationInView:self];
-//    NSLog(@"p is %.2f, %.2f", p.x, p.y);
+    UITouch *touch = [touches anyObject];
+    CGPoint p = [touch locationInView:self];
+    NSLog(@"p is %.2f, %.2f", p.x, p.y);
+
+    self.divisions = p.y/self.bounds.size.width * 10;
+    NSLog(@"divisions: %lud", self.divisions);
+    [self setNeedsDisplay];
+
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 
     self.isActive = !self.isActive;
 
-    if (self.isActive) {
-        self.backgroundColor = [UIColor orangeColor];
+    UITouch *touch = [touches anyObject];
+    CGPoint p = [touch locationInView:self];
+    long division = (long)p.x / ((long)self.bounds.size.width/self.divisions);
+    NSLog(@"division: %lu", division);
+
+    if ([activeDivisions containsObject:@(division)]){
+        [activeDivisions removeObject:@(division)];
     }
     else {
-        self.backgroundColor = [UIColor whiteColor];
+        [activeDivisions addObject:@(division)];
     }
 
     [self.delegate tappedButton:self];
-}
 
--(void)rotated:(UIRotationGestureRecognizer *)gesture{
-    NSLog(@"gesture: %.2f", gesture.rotation);
-//    NSLog(@"rotation: %.2f", ((gesture.rotation)/M_PI) * 20);
-    CGFloat result = gesture.rotation/M_PI * 20;
-    NSLog(@"result: %.2f", result);
-
-    divisions = (NSUInteger)round(result); //* 20.0 ;
-//
-//    divisions = divisions + rotations;
-//    NSLog(@"gesture.rotation/pi: %.2f, %.2f", gesture.rotation, gesture.rotation/M_PI);
-//    
-    NSLog(@"divisions: %lu", divisions);
-
-
-//    [self setNeedsDisplay];
+    [self setNeedsDisplay];
 }
 
 - (void)makeDivisions {
@@ -82,14 +75,21 @@
 
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
+    CGContextSetFillColorWithColor(context, [UIColor blueColor].CGColor);
 
-    for (int i = 0; i < divisions; i++) {
+    for (int i = 0; i < self.divisions; i++) {
         // Draw them with a 2.0 stroke width so they are a bit more visible.
         CGContextSetLineWidth(context, 2.0f);
 
-        CGContextMoveToPoint(context, i * self.bounds.size.width/divisions, 0.0f); //start at this point
+        CGContextMoveToPoint(context, i * self.bounds.size.width/self.divisions, 0.0f); //start at this point
 
-        CGContextAddLineToPoint(context, i * self.bounds.size.width/divisions, self.bounds.size.height); //draw to this point
+        CGContextAddLineToPoint(context, i * self.bounds.size.width/self.divisions, self.bounds.size.height); //draw to this point
+
+        if ([activeDivisions containsObject:@(i)]) {
+            CGRect rect = CGRectMake(i *self.bounds.size.width/self.divisions, 0, self.bounds.size.width/self.divisions, self.bounds.size.height);
+            CGContextFillRect(context, rect);
+            CGContextStrokeRect(context, rect);
+        }
 
         // and now draw the Path!
         CGContextStrokePath(context);

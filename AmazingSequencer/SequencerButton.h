@@ -21,5 +21,6 @@
 @property NSUInteger row;
 @property NSUInteger column;
 @property BOOL isActive;
+@property NSUInteger divisions;
 
 @end
