@@ -123,6 +123,19 @@
     _numBeats = _sequence.count;
 }
 
+- (void)invalidateSequence {
+    
+    // If the sequence's lenght change, update the beat index.
+    if(_sequence.count > _numBeats) {
+        _currentBeatIndex++;
+    }
+    else if(_sequence.count < _numBeats) {
+        if(_currentBeatIndex > 0) {
+            _currentBeatIndex--;
+        }
+    }
+    [self updateCSequence];
+}
 
 #pragma mark -
 #pragma mark Playback control

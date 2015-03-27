@@ -26,4 +26,6 @@
 @property double bpm;
 @property (nonatomic, readonly) float playheadPosition;
 
+- (void)invalidateSequence;
+
 @end
