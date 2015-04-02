@@ -25,6 +25,7 @@
 @property BOOL sequenceIsPlaying;
 @property double bpm;
 @property (nonatomic, readonly) float playheadPosition;
+@property BOOL muted;
 
 - (void)invalidateSequence;
 

@@ -36,7 +36,7 @@
     unsigned int _numSampleBuffers;
 }
 
-@synthesize pan = _pan, volume = _volume;
+@synthesize pan = _pan, volume = _volume, muted = _muted;
 
 #pragma mark -
 #pragma mark Init
@@ -103,7 +103,6 @@
 
     return channel;
 }
-
 
 #pragma mark -
 #pragma mark Sequence access
@@ -172,7 +171,6 @@
     _nanoSecondsPerFrame = 1000000000.0f / _audioController.audioDescription.mSampleRate;
 }
 
-
 #pragma mark -
 #pragma mark Playhead
 
@@ -214,6 +212,11 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
     
     // Quickly evaluate if there will be no audio in this renderCallback() and hence writting to buffers can be skipped entirely.
     // TODO - optimization
+    
+    // Bounce if muted.
+    if(THIS->_muted) {
+        return noErr;
+    }
     
     // Sweep the audio buffer frames and fill with sample frames when appropriate.
     UInt64 frameTimeNanoSeconds = 0;
