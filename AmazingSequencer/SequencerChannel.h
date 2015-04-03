@@ -22,10 +22,11 @@
 @property (nonatomic) SequencerChannelSequence *sequence;
 @property (nonatomic, readwrite) float volume;
 @property (nonatomic, readwrite) float pan;                 
-@property BOOL sequenceIsPlaying;
+@property bool sequenceIsPlaying;
 @property double bpm;
 @property (nonatomic, readonly) float playheadPosition;
-@property BOOL muted;
+@property bool muted;
+@property int soloed; // 1 = soloed, -1 = not soloed, 0 = ignore
 
 - (void)invalidateSequence;
 

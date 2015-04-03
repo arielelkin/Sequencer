@@ -36,7 +36,7 @@
     unsigned int _numSampleBuffers;
 }
 
-@synthesize pan = _pan, volume = _volume, muted = _muted;
+@synthesize pan = _pan, volume = _volume, muted = _muted, soloed = _soloed;
 
 #pragma mark -
 #pragma mark Init
@@ -65,6 +65,8 @@
     channel->_audioController = audioController;
     channel->_pan = 0.0f;
     channel->_volume = 1.0f;
+    channel->_soloed = 0;
+    channel->_muted = false;
 
     // Load audio file:
     AEAudioFileLoaderOperation *operation = [[AEAudioFileLoaderOperation alloc] initWithFileURL:url targetAudioDescription:audioController.audioDescription];
@@ -139,7 +141,7 @@
 #pragma mark -
 #pragma mark Playback control
 
-- (void)setSequenceIsPlaying:(BOOL)sequenceIsPlaying {
+- (void)setSequenceIsPlaying:(bool)sequenceIsPlaying {
     // Reset all timing values when stopped.
     if(!sequenceIsPlaying) {
         _currentBeatIndex = -1;
@@ -149,7 +151,7 @@
     }
     _sequenceIsPlaying = sequenceIsPlaying;
 }
-- (BOOL)sequenceIsPlaying {
+- (bool)sequenceIsPlaying {
     return _sequenceIsPlaying;
 }
 
@@ -213,11 +215,6 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
     // Quickly evaluate if there will be no audio in this renderCallback() and hence writting to buffers can be skipped entirely.
     // TODO - optimization
     
-    // Bounce if muted.
-    if(THIS->_muted) {
-        return noErr;
-    }
-    
     // Sweep the audio buffer frames and fill with sample frames when appropriate.
     UInt64 frameTimeNanoSeconds = 0;
     int buff = 0;
@@ -240,12 +237,19 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
             
             // Writes the same samples on left and right channels.
             if(THIS->_currentBeatIndex >= 0) {
-                for(int j = 0; j < audio->mNumberBuffers; j++) {
-                    if (THIS->_currentBeatIndex >= THIS->_numBeats) break;
-                    // Makes sure that the audio will not request buffers that the sample doesn't have.
-                    // i.e. if the sample is mono and audio is stereo, writes the same thing on both channels.
-                    buff = j < THIS->_numSampleBuffers ? j : buff;
-                    ((float *)audio->mBuffers[j].mData)[i] = THIS->_sequenceCRepresentation[THIS->_currentBeatIndex][1] * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
+                
+                bool write = true;
+                if(THIS->_soloed == -1) write = false; // don't write if some other channel is soloed
+                if(THIS->_muted && THIS->_soloed != 1) write = false; // don't write if this channel is muted and is not soloed
+                
+                if(write) {
+                    for(int j = 0; j < audio->mNumberBuffers; j++) {
+                        if (THIS->_currentBeatIndex >= THIS->_numBeats) break;
+                        // Makes sure that the audio will not request buffers that the sample doesn't have.
+                        // i.e. if the sample is mono and audio is stereo, writes the same thing on both channels.
+                        buff = j < THIS->_numSampleBuffers ? j : buff;
+                        ((float *)audio->mBuffers[j].mData)[i] = THIS->_sequenceCRepresentation[THIS->_currentBeatIndex][1] * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
+                    }
                 }
             }
             
