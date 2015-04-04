@@ -8,9 +8,10 @@
 
 #import "SequencerChannelSequence.h"
 
+
 @implementation SequencerChannelSequence {
     NSMutableArray *sequence;
-    float **_sequenceCRepresentation;
+    BEAT* _sequenceCRepresentation;
 }
 
 - (void)addBeat:(SequencerBeat *)beat {
@@ -26,6 +27,7 @@
     [sequence sortUsingComparator:^NSComparisonResult(SequencerBeat *beat1, SequencerBeat *beat2) {
         return beat1.onset > beat2.onset;
     }];
+
 
     [self updateSequenceCRepresentation];
 }
@@ -80,22 +82,23 @@
 
 - (void)updateSequenceCRepresentation {
     NSUInteger numberOfBeats = sequence.count;
-    NSUInteger numberOfParametersInBeat = 2;
 
-    _sequenceCRepresentation = (float**)malloc(numberOfBeats * sizeof(float*));
+    _sequenceCRepresentation = (BEAT *)malloc(sizeof(BEAT) * numberOfBeats);
 
     for(int i=0; i < numberOfBeats; i++) {
-        _sequenceCRepresentation[i] = (float*)malloc(numberOfParametersInBeat * sizeof(float));
-    }
 
-    for (int i = 0; i < numberOfBeats; i++){
         SequencerBeat *beat = sequence[i];
-        _sequenceCRepresentation[i][0] = beat.onset;
-        _sequenceCRepresentation[i][1] = beat.velocity;
+
+        BEAT cBeat;
+        cBeat.onset = beat.onset;
+        cBeat.velocity = beat.velocity;
+
+        _sequenceCRepresentation[i] = cBeat;
+
     }
 }
 
-- (float **)sequenceCRepresentation {
+- (BEAT *)sequenceCRepresentation {
     return _sequenceCRepresentation;
 }
 

@@ -26,7 +26,7 @@
     int _currentBeatIndex; // Keeps track of the current beat playing.
     UInt64 _sequenceStartTimeNanoSeconds;
     bool _sampleIsPlaying; // Keeps track if a sample is playing or not.
-    float **_sequenceCRepresentation;
+    BEAT *_sequenceCRepresentation;
     unsigned long _numBeats;
     SequencerChannelSequence *_sequence;
     bool _sequenceIsPlaying;
@@ -223,7 +223,8 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
         // Check if the coming beat is suposed to have started by now.
         int nextBeatIndex = THIS->_currentBeatIndex + 1 < THIS->_numBeats ? THIS->_currentBeatIndex + 1 : -1;
         if(nextBeatIndex >= 0) {
-            double beatTimeNanoSeconds = THIS->_nanoSecondsPerSequence * THIS->_sequenceCRepresentation[nextBeatIndex][0];
+            BEAT beat = THIS->_sequenceCRepresentation[nextBeatIndex];
+            double beatTimeNanoSeconds = THIS->_nanoSecondsPerSequence * beat.onset;
             double delta = elapsedTimeSinceSequenceStartNanoSeconds + frameTimeNanoSeconds - beatTimeNanoSeconds;
             if(delta >= 0) {
                 THIS->_sampleFrameIndex = 0;
@@ -248,7 +249,9 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
                         // Makes sure that the audio will not request buffers that the sample doesn't have.
                         // i.e. if the sample is mono and audio is stereo, writes the same thing on both channels.
                         buff = j < THIS->_numSampleBuffers ? j : buff;
-                        ((float *)audio->mBuffers[j].mData)[i] = THIS->_sequenceCRepresentation[THIS->_currentBeatIndex][1] * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
+
+                        BEAT beat = THIS->_sequenceCRepresentation[THIS->_currentBeatIndex];
+                        ((float *)audio->mBuffers[j].mData)[i] = beat.velocity * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
                     }
                 }
             }

@@ -61,6 +61,10 @@
  */
 @property (nonatomic, readonly) NSUInteger count;
 
+typedef struct SequencerBeatCRepresentation {
+    float onset;
+    float velocity;
+} BEAT;
 
 /*!
  * Returns a 2-dimensional C array representation of 
@@ -73,6 +77,6 @@
  * e.g. float velocityOfFirstBeat = sequenceCRepresentation[0][1]
  *
  */
-@property (readonly) float** sequenceCRepresentation;
+@property (readonly) BEAT *sequenceCRepresentation;
 
 @end
