@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @protocol SequencerButtonDelegate <NSObject>
--(void)tappedButton:(id)button;
+- (void)tappedButton:(id)button;
 @end
 
 @interface SequencerButton : UIView
