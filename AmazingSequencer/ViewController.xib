@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
@@ -26,35 +26,30 @@
                         <constraint firstAttribute="width" constant="200" id="z0A-FF-IAS"/>
                     </constraints>
                 </slider>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Global volume:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q8F-Es-ijH">
-                    <rect key="frame" x="385" y="227" width="115" height="21"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Global volume:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q8F-Es-ijH">
+                    <rect key="frame" x="385" y="227.5" width="115" height="20.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <slider opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="120" minValue="0.0" maxValue="480" translatesAutoresizingMaskIntoConstraints="NO" id="TnV-of-P3b">
-                    <rect key="frame" x="390" y="189" width="204" height="31"/>
+                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="120" minValue="0.0" maxValue="480" translatesAutoresizingMaskIntoConstraints="NO" id="TnV-of-P3b">
+                    <rect key="frame" x="390" y="189.5" width="204" height="31"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="200" id="9uD-qf-F6N"/>
                     </constraints>
                 </slider>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BPM" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xpg-KX-1y7">
-                    <rect key="frame" x="437" y="166" width="38" height="21"/>
+                    <rect key="frame" x="437" y="166" width="38" height="20.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="120" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NVT-86-dcJ">
-                    <rect key="frame" x="554" y="169" width="29" height="21"/>
+                    <rect key="frame" x="554" y="169" width="29" height="20.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="1BP-kh-42Y">
-                    <rect key="frame" x="392" y="121" width="200" height="2"/>
-                    <color key="progressTintColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <color key="trackTintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                </progressView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hxw-Pn-Pmj">
                     <rect key="frame" x="421" y="24" width="143" height="79"/>
                     <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -70,9 +65,18 @@
                         <action selector="togglePlayPause" destination="-1" eventType="touchUpInside" id="UXn-Cr-4Ef"/>
                     </connections>
                 </button>
+                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="1BP-kh-42Y">
+                    <rect key="frame" x="21" y="567" width="660" height="2"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="660" id="J1J-lU-vMb"/>
+                    </constraints>
+                    <color key="progressTintColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="trackTintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </progressView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="1BP-kh-42Y" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="21" id="340-tb-f8Z"/>
                 <constraint firstItem="NVT-86-dcJ" firstAttribute="centerY" secondItem="xpg-KX-1y7" secondAttribute="centerY" constant="6" id="4f4-iW-Wbh"/>
                 <constraint firstAttribute="trailing" secondItem="Q8F-Es-ijH" secondAttribute="trailing" constant="100" id="6cQ-tw-EGD"/>
                 <constraint firstItem="rce-Ad-cMA" firstAttribute="top" secondItem="Q8F-Es-ijH" secondAttribute="bottom" constant="9" id="9ux-PL-rmn"/>
@@ -80,6 +84,7 @@
                 <constraint firstItem="xpg-KX-1y7" firstAttribute="top" secondItem="Hxw-Pn-Pmj" secondAttribute="bottom" constant="63" id="Fe1-dC-ayi"/>
                 <constraint firstAttribute="trailing" secondItem="TnV-of-P3b" secondAttribute="trailing" constant="8" id="HZZ-9s-Z4w"/>
                 <constraint firstItem="1BP-kh-42Y" firstAttribute="leading" secondItem="rce-Ad-cMA" secondAttribute="leading" id="IcI-ab-KVR"/>
+                <constraint firstAttribute="bottom" secondItem="1BP-kh-42Y" secondAttribute="bottom" constant="31" id="O9O-tO-rSU"/>
                 <constraint firstAttribute="trailing" secondItem="Hxw-Pn-Pmj" secondAttribute="trailing" constant="36" id="Pck-3U-lvC"/>
                 <constraint firstAttribute="trailing" secondItem="NVT-86-dcJ" secondAttribute="trailing" constant="17" id="aHe-CP-IxF"/>
                 <constraint firstItem="NVT-86-dcJ" firstAttribute="top" secondItem="Hxw-Pn-Pmj" secondAttribute="bottom" constant="66" id="aZM-eT-Znw"/>
@@ -94,6 +99,9 @@
             </constraints>
             <variation key="default">
                 <mask key="constraints">
+                    <exclude reference="IcI-ab-KVR"/>
+                    <exclude reference="kXI-pc-mU6"/>
+                    <exclude reference="se4-Rg-97d"/>
                     <exclude reference="4f4-iW-Wbh"/>
                     <exclude reference="mzf-CC-TPL"/>
                     <exclude reference="wdd-sj-Lm1"/>

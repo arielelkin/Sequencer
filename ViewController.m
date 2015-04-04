@@ -79,9 +79,9 @@
 
 
     numberOfRows = 4;
-    numberOfColumns = 4;
-    buttonWidth = 150;
-    buttonHeight = 150;
+    numberOfColumns = 16;
+    buttonWidth = 35;
+    buttonHeight = 70;
 
     for( int i = 0; i < numberOfRows; i++) {
 
@@ -98,6 +98,7 @@
             [sequencerView addSubview:sequencerButton];
         }
     }
+    [self.view bringSubviewToFront:self.playheadPositionOfKickSequence];
 }
 
 
@@ -131,7 +132,6 @@
     }
 }
 
-
 - (void)tappedButton:(SequencerButton *)button {
 
     SequencerChannel *selectedChannel;
@@ -141,7 +141,7 @@
     else if (button.row == 2) selectedChannel = crickChannel;
     else if (button.row == 3) selectedChannel = hihatChannel;
 
-    double onset = button.column / 4.0;
+    double onset = (double)button.column / (double)numberOfColumns;
 
     SequencerBeat *beat = [SequencerBeat beatWithOnset:onset];
 
