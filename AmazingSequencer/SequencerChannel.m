@@ -120,12 +120,7 @@
 }
 
 -(void)updateCSequence {
-    _sequenceCRepresentation = [_sequence sequenceCRepresentation];
-    _numBeats = _sequence.count;
-}
 
-- (void)invalidateSequence {
-    
     // If the sequence's lenght change, update the beat index.
     if(_sequence.count > _numBeats) {
         _currentBeatIndex++;
@@ -135,7 +130,9 @@
             _currentBeatIndex--;
         }
     }
-    [self updateCSequence];
+
+    _sequenceCRepresentation = [_sequence sequenceCRepresentation];
+    _numBeats = _sequence.count;
 }
 
 #pragma mark -

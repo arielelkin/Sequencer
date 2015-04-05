@@ -151,7 +151,6 @@
     else {
         [selectedChannel.sequence removeBeatAtOnset:onset];
     }
-    [selectedChannel invalidateSequence];
     NSLog(@"%@", selectedChannel.sequence);
 }
 

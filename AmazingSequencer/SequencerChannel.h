@@ -28,6 +28,4 @@
 @property bool muted;
 @property int soloed; // 1 = soloed, -1 = not soloed, 0 = ignore
 
-- (void)invalidateSequence;
-
 @end
