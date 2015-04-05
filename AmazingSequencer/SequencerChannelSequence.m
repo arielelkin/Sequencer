@@ -43,26 +43,6 @@
     [self updateSequenceCRepresentation];
 }
 
-- (SequencerBeat *)beatAtOnset:(float)onset {
-    
-    for (SequencerBeat *beat in sequence) {
-        if (beat.onset == onset) {
-            return beat;
-        }
-    }
-    return nil;
-}
-
-- (NSUInteger)indexOfBeatAtOnset:(float)onset {
-    for (NSUInteger i = 0; i < sequence.count; i++) {
-        SequencerBeat *beat = sequence[i];
-        if (beat.onset == onset) {
-            return i;
-        }
-    }
-    return -1;
-}
-
 - (void)setOnsetOfBeatAtOnset:(float)oldOnset to:(float)newOnset {
     SequencerBeat *beat = [self beatAtOnset:oldOnset];
     beat.onset = newOnset;
@@ -71,6 +51,20 @@
 - (void)setVelocityOfBeatAtOnset:(float)onset to:(float)newVelocity {
     SequencerBeat *beat = [self beatAtOnset:onset];
     beat.velocity = newVelocity;
+}
+
+- (SequencerBeat *)beatAtOnset:(float)onset {
+
+    for (SequencerBeat *beat in sequence) {
+        if (beat.onset == onset) {
+            return beat;
+        }
+    }
+    return nil;
+}
+
+- (NSArray *)allBeats {
+    return [NSArray arrayWithArray:sequence];
 }
 
 - (NSUInteger)count {

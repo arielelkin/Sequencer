@@ -55,6 +55,13 @@
 - (SequencerBeat *)beatAtOnset:(float)onset;
 
 
+/* 
+ * Returns an array with all the beats in the sequence.
+ *
+ */
+- (NSArray *)allBeats;
+
+
 /*!
  * Returns the number of beats present in the sequence.
  *
