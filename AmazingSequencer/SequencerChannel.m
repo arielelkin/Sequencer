@@ -72,13 +72,13 @@
     AEAudioFileLoaderOperation *operation = [[AEAudioFileLoaderOperation alloc] initWithFileURL:url targetAudioDescription:audioController.audioDescription];
     [operation start];
     if ( operation.error ) {
-        NSLog(@"load error: %@", operation.error);
+        NSLog(@"%s Cannot load audio file: error: %@", __PRETTY_FUNCTION__, operation.error);
         return nil;
     }
     channel->_audioSampleBufferList = operation.bufferList;
     channel->_sampleLengthInFrames = operation.lengthInFrames;
     channel->_numSampleBuffers = (unsigned int)operation.bufferList->mNumberBuffers;
-//    NSLog(@"Number of buffers in sample: %d", (unsigned int)operation.bufferList->mNumberBuffers);
+    //NSLog(@"Number of buffers in sample: %d", (unsigned int)operation.bufferList->mNumberBuffers);
 
     //Load sequence:
     channel.sequence = sequence;
@@ -213,8 +213,7 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
 
     
     // Quickly evaluate if there will be no audio in this renderCallback() and hence writting to buffers can be skipped entirely.
-    // TODO - optimization
-    
+
     // Sweep the audio buffer frames and fill with sample frames when appropriate.
     UInt64 frameTimeNanoSeconds = 0;
     int buff = 0;
@@ -275,18 +274,3 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
 }
 
 @end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
