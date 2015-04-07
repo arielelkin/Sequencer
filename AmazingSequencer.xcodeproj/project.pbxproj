@@ -159,6 +159,7 @@
 		B038E2EC18E36B6D00310F33 /* AmazingSequencer */ = {
 			isa = PBXGroup;
 			children = (
+				B0EE37081AD4833800D7AB17 /* AESequencer */,
 				B038E2F518E36B6D00310F33 /* AppDelegate.h */,
 				B038E2F618E36B6D00310F33 /* AppDelegate.m */,
 				B0F6197518EB21850017EA7A /* ElaborateDemoVC.h */,
@@ -170,12 +171,6 @@
 				B0212CF11AB77CFF00CFD39A /* SequencerButton.h */,
 				B0212CF21AB77CFF00CFD39A /* SequencerButton.m */,
 				B02DB4611AB7945B00E2EF9D /* ElaborateDemoVC.xib */,
-				2106FA691A9F580000524383 /* AESequencerChannel.h */,
-				2106FA6A1A9F580000524383 /* AESequencerChannel.m */,
-				B0132CD71AA5EBF300B45668 /* AESequencerChannelSequence.h */,
-				B0132CD81AA5EBF300B45668 /* AESequencerChannelSequence.m */,
-				B011C58E1A9BF96D00689F00 /* AESequencerBeat.h */,
-				B011C58D1A9BF96D00689F00 /* AESequencerBeat.m */,
 				B038E2F818E36B6D00310F33 /* Images.xcassets */,
 				B038E2ED18E36B6D00310F33 /* Supporting Files */,
 			);
@@ -220,6 +215,19 @@
 				B092341E1A964A7E002EA90A /* kick.caf */,
 			);
 			path = Sounds;
+			sourceTree = "<group>";
+		};
+		B0EE37081AD4833800D7AB17 /* AESequencer */ = {
+			isa = PBXGroup;
+			children = (
+				2106FA691A9F580000524383 /* AESequencerChannel.h */,
+				2106FA6A1A9F580000524383 /* AESequencerChannel.m */,
+				B0132CD71AA5EBF300B45668 /* AESequencerChannelSequence.h */,
+				B0132CD81AA5EBF300B45668 /* AESequencerChannelSequence.m */,
+				B011C58E1A9BF96D00689F00 /* AESequencerBeat.h */,
+				B011C58D1A9BF96D00689F00 /* AESequencerBeat.m */,
+			);
+			name = AESequencer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
