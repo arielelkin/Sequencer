@@ -18,60 +18,6 @@
     AESequencerChannel *crickSoundChannel;
 }
 
-- (void)setupUI {
-
-    UILabel *label = [UILabel new];
-    label.text = @"The Amazing Audio Engine Sequencer - Simple Demo";
-    label.font = [UIFont systemFontOfSize:30];
-    label.textAlignment = NSTextAlignmentCenter;
-    label.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:label];
-
-    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [backButton setTitle:@"Back" forState:UIControlStateNormal];
-    backButton.titleLabel.font = [UIFont systemFontOfSize:30];
-    [backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    backButton.backgroundColor = [UIColor blueColor];
-    backButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [backButton addTarget:self action:@selector(dismissModalViewControllerAnimated:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:backButton];
-
-    NSDictionary *views = @{@"label": label, @"backButton":backButton};
-
-    NSArray *labelConstraints = [NSLayoutConstraint
-                                 constraintsWithVisualFormat:@"H:|-[label]-|"
-                                 options:0
-                                 metrics:nil
-                                 views:views];
-    [self.view addConstraints:labelConstraints];
-
-
-    labelConstraints = [NSLayoutConstraint
-                        constraintsWithVisualFormat:@"V:|-200-[label]"
-                        options:0
-                        metrics:nil
-                        views:views];
-    [self.view addConstraints:labelConstraints];
-
-
-
-    NSArray *backButtonConstraints = [NSLayoutConstraint
-                                      constraintsWithVisualFormat:@"H:|-[backButton(200)]"
-                                      options:0
-                                      metrics:nil
-                                      views:views];
-    [self.view addConstraints:backButtonConstraints];
-
-    backButtonConstraints = [NSLayoutConstraint
-                             constraintsWithVisualFormat:@"V:|-20-[backButton(100)]"
-                             options:0
-                             metrics:nil
-                             views:views];
-    [self.view addConstraints:backButtonConstraints];
-    
-    
-}
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -137,6 +83,62 @@
 
     crickSoundChannel.sequenceIsPlaying = true;
 }
+
+
+- (void)setupUI {
+
+    UILabel *label = [UILabel new];
+    label.text = @"The Amazing Audio Engine Sequencer - Simple Demo";
+    label.font = [UIFont systemFontOfSize:30];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:label];
+
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [backButton setTitle:@"Back" forState:UIControlStateNormal];
+    backButton.titleLabel.font = [UIFont systemFontOfSize:30];
+    [backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    backButton.backgroundColor = [UIColor blueColor];
+    backButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [backButton addTarget:self action:@selector(dismissModalViewControllerAnimated:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:backButton];
+
+    NSDictionary *views = @{@"label": label, @"backButton":backButton};
+
+    NSArray *labelConstraints = [NSLayoutConstraint
+                                 constraintsWithVisualFormat:@"H:|-[label]-|"
+                                 options:0
+                                 metrics:nil
+                                 views:views];
+    [self.view addConstraints:labelConstraints];
+
+
+    labelConstraints = [NSLayoutConstraint
+                        constraintsWithVisualFormat:@"V:|-200-[label]"
+                        options:0
+                        metrics:nil
+                        views:views];
+    [self.view addConstraints:labelConstraints];
+
+
+
+    NSArray *backButtonConstraints = [NSLayoutConstraint
+                                      constraintsWithVisualFormat:@"H:|-[backButton(200)]"
+                                      options:0
+                                      metrics:nil
+                                      views:views];
+    [self.view addConstraints:backButtonConstraints];
+
+    backButtonConstraints = [NSLayoutConstraint
+                             constraintsWithVisualFormat:@"V:|-20-[backButton(100)]"
+                             options:0
+                             metrics:nil
+                             views:views];
+    [self.view addConstraints:backButtonConstraints];
+    
+    
+}
+
 
 - (void)viewWillDisappear:(BOOL)animated {
     crickSoundChannel.sequenceIsPlaying = false;
