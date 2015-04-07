@@ -6,7 +6,7 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ElaborateDemoVC">
             <connections>
                 <outlet property="bpmLabel" destination="NVT-86-dcJ" id="IO8-7j-rWX"/>
                 <outlet property="bpmSlider" destination="TnV-of-P3b" id="Ema-3n-dJm"/>
@@ -74,48 +74,96 @@
                     <color key="progressTintColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <color key="trackTintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                 </progressView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mni-JK-oyc">
+                    <rect key="frame" x="378" y="435" width="187" height="78"/>
+                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="187" id="1hK-cA-vKj"/>
+                        <constraint firstAttribute="height" constant="78" id="l1C-GK-67L"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                    <state key="normal" title="Back">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="pressedBackButton" destination="-1" eventType="touchUpInside" id="M3V-Kx-eTG"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The Amazing Audio Engine" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sk0-bg-Coh">
+                    <rect key="frame" x="365" y="304" width="221" height="67"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sequencer - Elaborate Demo" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7sn-OU-jIM">
+                    <rect key="frame" x="365" y="341" width="223" height="67"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="67" id="CUs-pO-zBQ"/>
+                        <constraint firstAttribute="width" constant="223" id="lDj-aq-eWS"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="mni-JK-oyc" firstAttribute="top" secondItem="7sn-OU-jIM" secondAttribute="bottom" constant="27" id="0AC-2c-mjP"/>
                 <constraint firstItem="rce-Ad-cMA" firstAttribute="leading" secondItem="TnV-of-P3b" secondAttribute="leading" id="2DJ-pT-clM"/>
+                <constraint firstAttribute="trailing" secondItem="Sk0-bg-Coh" secondAttribute="trailing" constant="14" id="2yS-KZ-XCi"/>
                 <constraint firstItem="xpg-KX-1y7" firstAttribute="top" secondItem="Hxw-Pn-Pmj" secondAttribute="bottom" constant="63" id="3s5-vt-Iae"/>
                 <constraint firstItem="NVT-86-dcJ" firstAttribute="centerY" secondItem="xpg-KX-1y7" secondAttribute="centerY" constant="6" id="4f4-iW-Wbh"/>
+                <constraint firstItem="Sk0-bg-Coh" firstAttribute="leading" secondItem="7sn-OU-jIM" secondAttribute="leading" id="8R7-7m-SiL"/>
                 <constraint firstItem="TnV-of-P3b" firstAttribute="trailing" secondItem="rce-Ad-cMA" secondAttribute="trailing" id="GqV-18-aH1"/>
                 <constraint firstItem="Q8F-Es-ijH" firstAttribute="top" secondItem="TnV-of-P3b" secondAttribute="bottom" constant="8" symbolic="YES" id="I0y-HK-gjz"/>
                 <constraint firstItem="1BP-kh-42Y" firstAttribute="leading" secondItem="rce-Ad-cMA" secondAttribute="leading" id="IcI-ab-KVR"/>
                 <constraint firstAttribute="trailing" secondItem="1BP-kh-42Y" secondAttribute="trailing" constant="-81" id="Ja7-0d-339"/>
                 <constraint firstItem="Hxw-Pn-Pmj" firstAttribute="centerX" secondItem="TnV-of-P3b" secondAttribute="centerX" id="KGA-Zd-PwZ"/>
+                <constraint firstAttribute="trailing" secondItem="7sn-OU-jIM" secondAttribute="trailing" constant="12" id="L5O-hs-8RK"/>
                 <constraint firstItem="rce-Ad-cMA" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailingMargin" id="L5Y-fZ-KZg"/>
                 <constraint firstAttribute="trailing" secondItem="Hxw-Pn-Pmj" secondAttribute="trailing" constant="36" id="LP7-mq-Nhr"/>
                 <constraint firstAttribute="trailing" secondItem="NVT-86-dcJ" secondAttribute="trailing" constant="17" id="Lsu-LL-aI3"/>
                 <constraint firstAttribute="bottom" secondItem="1BP-kh-42Y" secondAttribute="bottom" constant="31" id="NyB-vS-jdI"/>
                 <constraint firstItem="TnV-of-P3b" firstAttribute="top" secondItem="xpg-KX-1y7" secondAttribute="bottom" constant="3" id="SEt-FI-clj"/>
+                <constraint firstItem="mni-JK-oyc" firstAttribute="top" secondItem="Sk0-bg-Coh" secondAttribute="bottom" constant="64" id="STe-yz-MzO"/>
                 <constraint firstItem="NVT-86-dcJ" firstAttribute="top" secondItem="Hxw-Pn-Pmj" secondAttribute="bottom" constant="66" id="STu-Ak-fdu"/>
                 <constraint firstItem="Hxw-Pn-Pmj" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="24" id="StD-QI-fUg"/>
+                <constraint firstAttribute="trailing" secondItem="mni-JK-oyc" secondAttribute="trailing" constant="35" id="WBB-Dk-qSF"/>
                 <constraint firstItem="rce-Ad-cMA" firstAttribute="top" secondItem="Q8F-Es-ijH" secondAttribute="bottom" constant="7" id="Y4c-gY-WAb"/>
+                <constraint firstItem="mni-JK-oyc" firstAttribute="top" secondItem="7sn-OU-jIM" secondAttribute="bottom" constant="8" symbolic="YES" id="eLV-EO-U6z"/>
+                <constraint firstItem="Sk0-bg-Coh" firstAttribute="top" secondItem="rce-Ad-cMA" secondAttribute="bottom" constant="18" id="fgf-VA-Jmk"/>
+                <constraint firstAttribute="trailing" secondItem="mni-JK-oyc" secondAttribute="trailing" constant="35" id="gph-m9-R4F"/>
                 <constraint firstItem="TnV-of-P3b" firstAttribute="top" secondItem="NVT-86-dcJ" secondAttribute="bottom" id="ixW-o5-CZO"/>
+                <constraint firstItem="1BP-kh-42Y" firstAttribute="top" secondItem="mni-JK-oyc" secondAttribute="bottom" constant="54" id="kF7-xR-Jof"/>
                 <constraint firstItem="1BP-kh-42Y" firstAttribute="top" secondItem="Hxw-Pn-Pmj" secondAttribute="bottom" constant="18" id="kXI-pc-mU6"/>
                 <constraint firstItem="1BP-kh-42Y" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="21" id="knZ-Am-GcR"/>
                 <constraint firstItem="NVT-86-dcJ" firstAttribute="trailing" secondItem="TnV-of-P3b" secondAttribute="trailing" id="mzf-CC-TPL"/>
+                <constraint firstItem="7sn-OU-jIM" firstAttribute="trailing" secondItem="NVT-86-dcJ" secondAttribute="trailing" id="pSH-Zp-PR8"/>
                 <constraint firstAttribute="trailing" secondItem="1BP-kh-42Y" secondAttribute="trailing" constant="-81" id="pa9-iD-f3n"/>
                 <constraint firstItem="1BP-kh-42Y" firstAttribute="trailing" secondItem="TnV-of-P3b" secondAttribute="trailing" id="se4-Rg-97d"/>
+                <constraint firstItem="7sn-OU-jIM" firstAttribute="top" secondItem="rce-Ad-cMA" secondAttribute="bottom" constant="55" id="vSs-OW-xZu"/>
                 <constraint firstItem="NVT-86-dcJ" firstAttribute="trailing" secondItem="rce-Ad-cMA" secondAttribute="trailing" id="wdd-sj-Lm1"/>
                 <constraint firstItem="NVT-86-dcJ" firstAttribute="leading" secondItem="xpg-KX-1y7" secondAttribute="trailing" constant="79" id="yLh-Ld-JTN"/>
                 <constraint firstAttribute="trailing" secondItem="Q8F-Es-ijH" secondAttribute="trailing" constant="100" id="yi0-3x-71B"/>
             </constraints>
             <variation key="default">
                 <mask key="constraints">
+                    <exclude reference="pSH-Zp-PR8"/>
                     <exclude reference="IcI-ab-KVR"/>
                     <exclude reference="Ja7-0d-339"/>
+                    <exclude reference="kF7-xR-Jof"/>
                     <exclude reference="kXI-pc-mU6"/>
                     <exclude reference="pa9-iD-f3n"/>
                     <exclude reference="se4-Rg-97d"/>
+                    <exclude reference="eLV-EO-U6z"/>
+                    <exclude reference="gph-m9-R4F"/>
                     <exclude reference="4f4-iW-Wbh"/>
                     <exclude reference="mzf-CC-TPL"/>
                     <exclude reference="wdd-sj-Lm1"/>
                 </mask>
             </variation>
-            <point key="canvasLocation" x="104" y="427"/>
+            <point key="canvasLocation" x="82" y="427"/>
         </view>
     </objects>
 </document>

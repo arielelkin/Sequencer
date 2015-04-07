@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "ViewController.h"
+#import "WelcomeVC.h"
 
 @implementation AppDelegate
 
@@ -17,7 +17,7 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
 
-    ViewController *vc = [ViewController new];
+    WelcomeVC *vc = [WelcomeVC new];
     [self.window setRootViewController:vc];
 
     return YES;

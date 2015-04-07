@@ -1,12 +1,12 @@
 //
-//  ViewController.m
+//  ElaborateDemoVC.m
 //  The Amazing Audio Engine
 //
 //  Created by Ariel Elkin on 01/04/2014.
 //  Copyright (c) 2014 Ariel Elkin. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "ElaborateDemoVC.h"
 
 #import "AEAudioController.h"
 #import "AESequencerChannel.h"
@@ -18,11 +18,11 @@
 
 @import AVFoundation;
 
-@interface ViewController()<SequencerButtonDelegate>
+@interface ElaborateDemoVC()<SequencerButtonDelegate>
 
 @end
 
-@implementation ViewController {
+@implementation ElaborateDemoVC {
     
     AEAudioController *audioController;
 
@@ -207,6 +207,7 @@
     [audioController addChannels:@[woodblockChannel] toChannelGroup:_mainChannelGroup];
 
 
+
     // CRICK channel
     NSURL *crickURL = [[NSBundle mainBundle] URLForResource:@"crick" withExtension:@"caf"];
     AESequencerChannelSequence *crickSequence = [AESequencerChannelSequence new];
@@ -228,76 +229,6 @@
                                                                atBPM:bpm];
     [audioController addChannels:@[hihatChannel] toChannelGroup:_mainChannelGroup];
 
-}
-
-- (void)setupSequencerWithPremadeBeat {
-
-    // Will hold the top layer of channels.
-    _mainChannelGroup = [audioController createChannelGroup];
-    sequencerIsPlaying = false;
-
-    // Pattern vars.
-    double bpm = _bpmSlider.value;
-    NSUInteger numBeats = 4;
-
-    // KICK channel
-    NSURL *kickURL = [[NSBundle mainBundle] URLForResource:@"kick" withExtension:@"caf"];
-    AESequencerChannelSequence *kickSequence = [AESequencerChannelSequence new];
-    [kickSequence addBeat:[AESequencerBeat beatWithOnset:0.0 / 4 velocity:0.75 ]];
-    [kickSequence addBeat:[AESequencerBeat beatWithOnset:1.0 / 4 velocity:0.25 ]];
-    [kickSequence addBeat:[AESequencerBeat beatWithOnset:2.0 / 4 velocity:0.75 ]];
-    [kickSequence addBeat:[AESequencerBeat beatWithOnset:3.0 / 4 velocity:0.25 ]];
-    kickChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:kickURL
-                                                    audioController:audioController
-                                                       withSequence:kickSequence
-                                        numberOfFullBeatsPerMeasure:numBeats
-                                                              atBPM:bpm];
-    [audioController addChannels:@[kickChannel] toChannelGroup:_mainChannelGroup];
-
-    // WOODBLOCK channel
-    NSURL *woodblockURL = [[NSBundle mainBundle] URLForResource:@"woodblock" withExtension:@"caf"];
-    AESequencerChannelSequence *woodblockSequence = [AESequencerChannelSequence new];
-    [woodblockSequence addBeat:[AESequencerBeat beatWithOnset:1.0 / 4 + 2.0 / 16 velocity:0.25 ]];
-    [woodblockSequence addBeat:[AESequencerBeat beatWithOnset:2.0 / 4 + 1.0 / 16 velocity:0.5 ]];
-    [woodblockSequence addBeat:[AESequencerBeat beatWithOnset:2.0 / 4 + 2.0 / 16 velocity:0.125 ]];
-    [woodblockSequence addBeat:[AESequencerBeat beatWithOnset:2.0 / 4 + 3.0 / 16 velocity:0.5 ]];
-    [woodblockSequence addBeat:[AESequencerBeat beatWithOnset:3.0 / 4 + 1.0 / 8 velocity:0.5 ]];
-    woodblockChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:woodblockURL
-                                                         audioController:audioController
-                                                            withSequence:woodblockSequence
-                                             numberOfFullBeatsPerMeasure:numBeats
-                                                                   atBPM:bpm];
-    [audioController addChannels:@[woodblockChannel] toChannelGroup:_mainChannelGroup];
-
-    // CRICK channel
-    NSURL *crickURL = [[NSBundle mainBundle] URLForResource:@"crick" withExtension:@"caf"];
-    AESequencerChannelSequence *crickSequence = [AESequencerChannelSequence new];
-    [crickSequence addBeat:[AESequencerBeat beatWithOnset:0.0 / 4 + 1.0 / 8 velocity:0.0625 ]];
-    [crickSequence addBeat:[AESequencerBeat beatWithOnset:3.0 / 4 + 3.0 / 16 velocity:0.125 ]];
-    crickChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:crickURL
-                                                     audioController:audioController
-                                                        withSequence:crickSequence
-                                         numberOfFullBeatsPerMeasure:numBeats
-                                                               atBPM:bpm];
-    [audioController addChannels:@[crickChannel] toChannelGroup:_mainChannelGroup];
-
-
-    // HI-HAT channel
-    NSURL *hihatURL = [[NSBundle mainBundle] URLForResource:@"hihat" withExtension:@"caf"];
-    AESequencerChannelSequence *hihatSequence = [AESequencerChannelSequence new];
-    [hihatSequence addBeat:[AESequencerBeat beatWithOnset:0.0 / 4 + 1.0 / 8 velocity:0.5 ]];
-    [hihatSequence addBeat:[AESequencerBeat beatWithOnset:1.0 / 4 + 1.0 / 16 velocity:0.25 ]];
-    [hihatSequence addBeat:[AESequencerBeat beatWithOnset:1.0 / 4 + 3.0 / 16 velocity:0.25 ]];
-    [hihatSequence addBeat:[AESequencerBeat beatWithOnset:2.0 / 4 + 1.0 / 8  velocity:0.5 ]];
-    [hihatSequence addBeat:[AESequencerBeat beatWithOnset:3.0 / 4 + 1.0 / 16 velocity:0.25 ]];
-    [hihatSequence addBeat:[AESequencerBeat beatWithOnset:3.0 / 4 + 2.0 / 16 velocity:0.5 ]];
-    [hihatSequence addBeat:[AESequencerBeat beatWithOnset:3.0 / 4 + 3.0 / 16 velocity:0.25 ]];
-    hihatChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:hihatURL
-                                                     audioController:audioController
-                                                        withSequence:hihatSequence
-                                         numberOfFullBeatsPerMeasure:numBeats
-                                                               atBPM:bpm];
-    [audioController addChannels:@[hihatChannel] toChannelGroup:_mainChannelGroup];
 }
 
 - (void)setupAudioController {
@@ -311,6 +242,16 @@
     if (audioControllerStartError) {
         NSLog(@"Audio controller start error: %@", audioControllerStartError.localizedDescription);
     }
+}
+
+- (IBAction)pressedBackButton{
+
+    for (AESequencerChannel *channel in [audioController channelsInChannelGroup:_mainChannelGroup]){
+        channel.sequenceIsPlaying = false;
+    }
+    [audioController stop];
+    [self dismissViewControllerAnimated:YES completion:nil];
+
 }
 
 
@@ -333,30 +274,4 @@
 }
 
 @end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

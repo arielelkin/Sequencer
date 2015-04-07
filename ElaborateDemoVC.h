@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  ElaborateDemoVC.h
 //  The Amazing Audio Engine
 //
 //  Created by Ariel Elkin on 01/04/2014.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface ElaborateDemoVC : UIViewController
 @property (strong, nonatomic) IBOutlet UISlider *mainVolumeSlider;
 @property (strong, nonatomic) IBOutlet UISlider *bpmSlider;
 @property (strong, nonatomic) IBOutlet UILabel *bpmLabel;
