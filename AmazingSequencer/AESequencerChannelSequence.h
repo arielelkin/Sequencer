@@ -1,15 +1,14 @@
 //
-//  SequencerChannelSequence.h
-//  AmazingSequencer
+//  AESequencerChannelSequence.h
+//  The Amazing Audio Engine
 //
 //  Created by Ariel Elkin on 03/03/2015.
-//  Copyright (c) 2015 Ariel Elkin. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import "SequencerBeat.h"
+#import "AESequencerBeat.h"
 
-@interface SequencerChannelSequence : NSObject
+@interface AESequencerChannelSequence : NSObject
 
 
 /*!
@@ -19,7 +18,7 @@
  * ascending order.
  *
  */
-- (void)addBeat:(SequencerBeat *)beat;
+- (void)addBeat:(AESequencerBeat *)beat;
 
 
 /*!
@@ -52,7 +51,7 @@
  * Returns the beat with the specified onset in the sequence.
  *
  */
-- (SequencerBeat *)beatAtOnset:(float)onset;
+- (AESequencerBeat *)beatAtOnset:(float)onset;
 
 
 /* 

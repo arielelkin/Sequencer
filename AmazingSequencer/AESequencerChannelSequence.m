@@ -1,20 +1,19 @@
 //
-//  SequencerChannelSequence.m
-//  AmazingSequencer
+//  AESequencerChannelSequence.m
+//  The Amazing Audio Engine
 //
 //  Created by Ariel Elkin on 03/03/2015.
-//  Copyright (c) 2015 Ariel Elkin. All rights reserved.
 //
 
-#import "SequencerChannelSequence.h"
+#import "AESequencerChannelSequence.h"
 
 
-@implementation SequencerChannelSequence {
+@implementation AESequencerChannelSequence {
     NSMutableArray *sequence;
     BEAT* _sequenceCRepresentation;
 }
 
-- (void)addBeat:(SequencerBeat *)beat {
+- (void)addBeat:(AESequencerBeat *)beat {
 
     if (!beat) return;
 
@@ -24,7 +23,7 @@
 
     [sequence addObject:beat];
 
-    [sequence sortUsingComparator:^NSComparisonResult(SequencerBeat *beat1, SequencerBeat *beat2) {
+    [sequence sortUsingComparator:^NSComparisonResult(AESequencerBeat *beat1, AESequencerBeat *beat2) {
         return beat1.onset > beat2.onset;
     }];
 
@@ -34,7 +33,7 @@
 
 - (void)removeBeatAtOnset:(float)onset {
     for (int i = 0; i < sequence.count; i++) {
-        SequencerBeat *beat = sequence[i];
+        AESequencerBeat *beat = sequence[i];
         if (beat.onset == onset) {
             [sequence removeObject:beat];
         }
@@ -44,18 +43,18 @@
 }
 
 - (void)setOnsetOfBeatAtOnset:(float)oldOnset to:(float)newOnset {
-    SequencerBeat *beat = [self beatAtOnset:oldOnset];
+    AESequencerBeat *beat = [self beatAtOnset:oldOnset];
     beat.onset = newOnset;
 }
 
 - (void)setVelocityOfBeatAtOnset:(float)onset to:(float)newVelocity {
-    SequencerBeat *beat = [self beatAtOnset:onset];
+    AESequencerBeat *beat = [self beatAtOnset:onset];
     beat.velocity = newVelocity;
 }
 
-- (SequencerBeat *)beatAtOnset:(float)onset {
+- (AESequencerBeat *)beatAtOnset:(float)onset {
 
-    for (SequencerBeat *beat in sequence) {
+    for (AESequencerBeat *beat in sequence) {
         if (beat.onset == onset) {
             return beat;
         }
@@ -81,7 +80,7 @@
 
     for(int i=0; i < numberOfBeats; i++) {
 
-        SequencerBeat *beat = sequence[i];
+        AESequencerBeat *beat = sequence[i];
 
         BEAT cBeat;
         cBeat.onset = beat.onset;
@@ -103,7 +102,7 @@
 - (NSString *)description {
     NSMutableString *description = @"Sequence Description:\n".mutableCopy;
 
-    for (SequencerBeat *beat in sequence) {
+    for (AESequencerBeat *beat in sequence) {
         [description appendFormat:@"%@\n", beat.description];
     }
     return description;

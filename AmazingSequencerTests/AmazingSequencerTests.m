@@ -1,6 +1,6 @@
 //
-//  AmazingSequencerTests.m
-//  AmazingSequencerTests
+//  The Amazing Audio EngineTests.m
+//  The Amazing Audio EngineTests
 //
 //  Created by Ariel Elkin on 26/03/2014.
 //  Copyright (c) 2014 Ariel Elkin. All rights reserved.

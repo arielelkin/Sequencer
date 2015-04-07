@@ -1,21 +1,20 @@
 //
-//  SequencerChannel3.m
-//  AmazingSequencer
+//  AESequencerChannel.m
+//  The Amazing Audio Engine
 //
 //  Created by Alejandro Santander on 26/02/2015.
-//  Copyright (c) 2015 Ariel Elkin. All rights reserved.
 //
 
-#import "SequencerChannel.h"
+#import "AESequencerChannel.h"
 #import "AEAudioFileLoaderOperation.h"
 
 #import <mach/mach_time.h>
 
-@interface SequencerChannel()
+@interface AESequencerChannel()
 @property float playheadPosition;
 @end
 
-@implementation SequencerChannel {
+@implementation AESequencerChannel {
     AEAudioController *_audioController;
     AudioBufferList *_audioSampleBufferList;
     UInt32 _sampleLengthInFrames;
@@ -28,7 +27,7 @@
     bool _sampleIsPlaying; // Keeps track if a sample is playing or not.
     BEAT *_sequenceCRepresentation;
     unsigned long _numBeats;
-    SequencerChannelSequence *_sequence;
+    AESequencerChannelSequence *_sequence;
     bool _sequenceIsPlaying;
     double _bpm;
     NSUInteger _beatsPerMeasure;
@@ -43,7 +42,7 @@
 
 + (instancetype)sequencerChannelWithAudioFileAt:(NSURL *)url
                                 audioController:(AEAudioController*)audioController
-                                   withSequence:(SequencerChannelSequence*)sequence
+                                   withSequence:(AESequencerChannelSequence*)sequence
                                    numberOfFullBeatsPerMeasure:(NSUInteger)beatsPerMeasure
                                           atBPM:(double)bpm {
 
@@ -61,7 +60,7 @@
         return nil;
     }
 
-    SequencerChannel *channel = [[self alloc] init];
+    AESequencerChannel *channel = [[self alloc] init];
     channel->_audioController = audioController;
     channel->_pan = 0.0f;
     channel->_volume = 1.0f;
@@ -109,12 +108,12 @@
 #pragma mark -
 #pragma mark Sequence access
 
-- (void)setSequence:(SequencerChannelSequence *)sequence {
+- (void)setSequence:(AESequencerChannelSequence *)sequence {
     _sequence = sequence;
     [self updateCSequence];
 }
 
-- (SequencerChannelSequence *)sequence {
+- (AESequencerChannelSequence *)sequence {
     [self updateCSequence];
     return _sequence;
 }
@@ -180,7 +179,7 @@
 #pragma mark -
 #pragma mark Render callback
 
-static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
+static OSStatus renderCallback(__unsafe_unretained AESequencerChannel *THIS,
                                __unsafe_unretained AEAudioController *audioController,
                                const AudioTimeStamp *inTimeStamp,
                                UInt32 frames,

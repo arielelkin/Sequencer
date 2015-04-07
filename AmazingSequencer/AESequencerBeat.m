@@ -1,19 +1,18 @@
 //
-//  Beat.m
-//  AmazingSequencer
+//  AESequencerBeat.m
+//  The Amazing Audio Engine
 //
 //  Created by Ariel Elkin on 24/02/2015.
-//  Copyright (c) 2015 Ariel Elkin. All rights reserved.
 //
 
-#import "SequencerBeat.h"
+#import "AESequencerBeat.h"
 
-@implementation SequencerBeat
+@implementation AESequencerBeat
 
 + (instancetype)beatWithOnset:(float)onset
                      velocity:(float)velocity {
 
-    SequencerBeat *beat = [[self alloc] init];
+    AESequencerBeat *beat = [[self alloc] init];
     beat.onset = onset;
     beat.velocity = velocity;
     return beat;

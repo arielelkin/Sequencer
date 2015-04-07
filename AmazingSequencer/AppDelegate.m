@@ -1,6 +1,6 @@
 //
 //  AppDelegate.m
-//  AmazingSequencer
+//  The Amazing Audio Engine
 //
 //  Created by Ariel Elkin on 26/03/2014.
 //  Copyright (c) 2014 Ariel Elkin. All rights reserved.

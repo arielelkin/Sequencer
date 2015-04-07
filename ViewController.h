@@ -1,6 +1,6 @@
 //
 //  ViewController.h
-//  AmazingSequencer
+//  The Amazing Audio Engine
 //
 //  Created by Ariel Elkin on 01/04/2014.
 //  Copyright (c) 2014 Ariel Elkin. All rights reserved.

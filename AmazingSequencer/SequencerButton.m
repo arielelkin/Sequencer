@@ -1,9 +1,8 @@
 //
 //  SequencerButton.m
-//  AmazingSequencer
+//  The Amazing Audio Engine
 //
 //  Created by Ariel Elkin on 16/03/2015.
-//  Copyright (c) 2015 Ariel Elkin. All rights reserved.
 //
 
 #import "SequencerButton.h"

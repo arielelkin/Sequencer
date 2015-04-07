@@ -1,14 +1,13 @@
 //
-//  Beat.h
-//  AmazingSequencer
+//  AESequencerBeat.h
+//  The Amazing Audio Engine
 //
 //  Created by Ariel Elkin on 24/02/2015.
-//  Copyright (c) 2015 Ariel Elkin. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-@interface SequencerBeat : NSObject
+@interface AESequencerBeat : NSObject
 
 /*!
  * Initializes and returns an individual SequencerBeat

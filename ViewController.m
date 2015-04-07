@@ -1,6 +1,6 @@
 //
 //  ViewController.m
-//  AmazingSequencer
+//  The Amazing Audio Engine
 //
 //  Created by Ariel Elkin on 01/04/2014.
 //  Copyright (c) 2014 Ariel Elkin. All rights reserved.
@@ -9,9 +9,9 @@
 #import "ViewController.h"
 
 #import "AEAudioController.h"
-#import "SequencerChannel.h"
-#import "SequencerBeat.h"
-#import "SequencerChannelSequence.h"
+#import "AESequencerChannel.h"
+#import "AESequencerBeat.h"
+#import "AESequencerChannelSequence.h"
 
 #import "SequencerButton.h"
 
@@ -26,10 +26,10 @@
     
     AEAudioController *audioController;
 
-    SequencerChannel *kickChannel;
-    SequencerChannel *woodblockChannel;
-    SequencerChannel *crickChannel;
-    SequencerChannel *hihatChannel;
+    AESequencerChannel *kickChannel;
+    AESequencerChannel *woodblockChannel;
+    AESequencerChannel *crickChannel;
+    AESequencerChannel *hihatChannel;
 
     AEChannelGroupRef _mainChannelGroup;
 
@@ -117,7 +117,7 @@
     // Sweep all channels and apply.
     NSArray *channels = [self sequencerChannelsInGroup:_mainChannelGroup];
     for(int i = 0; i < channels.count; i++) {
-        SequencerChannel *channel = [channels objectAtIndex:i];
+        AESequencerChannel *channel = [channels objectAtIndex:i];
         channel.sequenceIsPlaying = sequencerIsPlaying;
     }
 
@@ -134,7 +134,7 @@
 
 - (void)tappedButton:(SequencerButton *)button {
 
-    SequencerChannel *selectedChannel;
+    AESequencerChannel *selectedChannel;
 
     if (button.row == 0) selectedChannel = kickChannel;
     else if (button.row == 1) selectedChannel = woodblockChannel;
@@ -143,7 +143,7 @@
 
     double onset = (double)button.column / (double)numberOfColumns;
 
-    SequencerBeat *beat = [SequencerBeat beatWithOnset:onset];
+    AESequencerBeat *beat = [AESequencerBeat beatWithOnset:onset];
 
     if (button.isActive) {
         [selectedChannel.sequence addBeat:beat];
@@ -167,7 +167,7 @@
     // Sweep all channels and apply.
     NSArray *channels = [self sequencerChannelsInGroup:_mainChannelGroup];
     for(int i = 0; i < channels.count; i++) {
-        SequencerChannel *channel = [channels objectAtIndex:i];
+        AESequencerChannel *channel = [channels objectAtIndex:i];
         channel.bpm = sender.value;
     }
 }
@@ -187,8 +187,8 @@
 
     // KICK channel
     NSURL *kickURL = [[NSBundle mainBundle] URLForResource:@"kick" withExtension:@"caf"];
-    SequencerChannelSequence *kickSequence = [SequencerChannelSequence new];
-    kickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:kickURL
+    AESequencerChannelSequence *kickSequence = [AESequencerChannelSequence new];
+    kickChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:kickURL
                                                     audioController:audioController
                                                        withSequence:kickSequence
                                         numberOfFullBeatsPerMeasure:numBeats
@@ -198,8 +198,8 @@
 
     // WOODBLOCK channel
     NSURL *woodblockURL = [[NSBundle mainBundle] URLForResource:@"woodblock" withExtension:@"caf"];
-    SequencerChannelSequence *woodblockSequence = [SequencerChannelSequence new];
-    woodblockChannel = [SequencerChannel sequencerChannelWithAudioFileAt:woodblockURL
+    AESequencerChannelSequence *woodblockSequence = [AESequencerChannelSequence new];
+    woodblockChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:woodblockURL
                                                          audioController:audioController
                                                             withSequence:woodblockSequence
                                              numberOfFullBeatsPerMeasure:numBeats
@@ -209,8 +209,8 @@
 
     // CRICK channel
     NSURL *crickURL = [[NSBundle mainBundle] URLForResource:@"crick" withExtension:@"caf"];
-    SequencerChannelSequence *crickSequence = [SequencerChannelSequence new];
-    crickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:crickURL
+    AESequencerChannelSequence *crickSequence = [AESequencerChannelSequence new];
+    crickChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:crickURL
                                                      audioController:audioController
                                                         withSequence:crickSequence
                                          numberOfFullBeatsPerMeasure:numBeats
@@ -220,8 +220,8 @@
 
     // HI-HAT channel
     NSURL *hihatURL = [[NSBundle mainBundle] URLForResource:@"hihat" withExtension:@"caf"];
-    SequencerChannelSequence *hihatSequence = [SequencerChannelSequence new];
-    hihatChannel = [SequencerChannel sequencerChannelWithAudioFileAt:hihatURL
+    AESequencerChannelSequence *hihatSequence = [AESequencerChannelSequence new];
+    hihatChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:hihatURL
                                                      audioController:audioController
                                                         withSequence:hihatSequence
                                          numberOfFullBeatsPerMeasure:numBeats
@@ -242,12 +242,12 @@
 
     // KICK channel
     NSURL *kickURL = [[NSBundle mainBundle] URLForResource:@"kick" withExtension:@"caf"];
-    SequencerChannelSequence *kickSequence = [SequencerChannelSequence new];
-    [kickSequence addBeat:[SequencerBeat beatWithOnset:0.0 / 4 velocity:0.75 ]];
-    [kickSequence addBeat:[SequencerBeat beatWithOnset:1.0 / 4 velocity:0.25 ]];
-    [kickSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 velocity:0.75 ]];
-    [kickSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 velocity:0.25 ]];
-    kickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:kickURL
+    AESequencerChannelSequence *kickSequence = [AESequencerChannelSequence new];
+    [kickSequence addBeat:[AESequencerBeat beatWithOnset:0.0 / 4 velocity:0.75 ]];
+    [kickSequence addBeat:[AESequencerBeat beatWithOnset:1.0 / 4 velocity:0.25 ]];
+    [kickSequence addBeat:[AESequencerBeat beatWithOnset:2.0 / 4 velocity:0.75 ]];
+    [kickSequence addBeat:[AESequencerBeat beatWithOnset:3.0 / 4 velocity:0.25 ]];
+    kickChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:kickURL
                                                     audioController:audioController
                                                        withSequence:kickSequence
                                         numberOfFullBeatsPerMeasure:numBeats
@@ -256,13 +256,13 @@
 
     // WOODBLOCK channel
     NSURL *woodblockURL = [[NSBundle mainBundle] URLForResource:@"woodblock" withExtension:@"caf"];
-    SequencerChannelSequence *woodblockSequence = [SequencerChannelSequence new];
-    [woodblockSequence addBeat:[SequencerBeat beatWithOnset:1.0 / 4 + 2.0 / 16 velocity:0.25 ]];
-    [woodblockSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 + 1.0 / 16 velocity:0.5 ]];
-    [woodblockSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 + 2.0 / 16 velocity:0.125 ]];
-    [woodblockSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 + 3.0 / 16 velocity:0.5 ]];
-    [woodblockSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 + 1.0 / 8 velocity:0.5 ]];
-    woodblockChannel = [SequencerChannel sequencerChannelWithAudioFileAt:woodblockURL
+    AESequencerChannelSequence *woodblockSequence = [AESequencerChannelSequence new];
+    [woodblockSequence addBeat:[AESequencerBeat beatWithOnset:1.0 / 4 + 2.0 / 16 velocity:0.25 ]];
+    [woodblockSequence addBeat:[AESequencerBeat beatWithOnset:2.0 / 4 + 1.0 / 16 velocity:0.5 ]];
+    [woodblockSequence addBeat:[AESequencerBeat beatWithOnset:2.0 / 4 + 2.0 / 16 velocity:0.125 ]];
+    [woodblockSequence addBeat:[AESequencerBeat beatWithOnset:2.0 / 4 + 3.0 / 16 velocity:0.5 ]];
+    [woodblockSequence addBeat:[AESequencerBeat beatWithOnset:3.0 / 4 + 1.0 / 8 velocity:0.5 ]];
+    woodblockChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:woodblockURL
                                                          audioController:audioController
                                                             withSequence:woodblockSequence
                                              numberOfFullBeatsPerMeasure:numBeats
@@ -271,10 +271,10 @@
 
     // CRICK channel
     NSURL *crickURL = [[NSBundle mainBundle] URLForResource:@"crick" withExtension:@"caf"];
-    SequencerChannelSequence *crickSequence = [SequencerChannelSequence new];
-    [crickSequence addBeat:[SequencerBeat beatWithOnset:0.0 / 4 + 1.0 / 8 velocity:0.0625 ]];
-    [crickSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 + 3.0 / 16 velocity:0.125 ]];
-    crickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:crickURL
+    AESequencerChannelSequence *crickSequence = [AESequencerChannelSequence new];
+    [crickSequence addBeat:[AESequencerBeat beatWithOnset:0.0 / 4 + 1.0 / 8 velocity:0.0625 ]];
+    [crickSequence addBeat:[AESequencerBeat beatWithOnset:3.0 / 4 + 3.0 / 16 velocity:0.125 ]];
+    crickChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:crickURL
                                                      audioController:audioController
                                                         withSequence:crickSequence
                                          numberOfFullBeatsPerMeasure:numBeats
@@ -284,15 +284,15 @@
 
     // HI-HAT channel
     NSURL *hihatURL = [[NSBundle mainBundle] URLForResource:@"hihat" withExtension:@"caf"];
-    SequencerChannelSequence *hihatSequence = [SequencerChannelSequence new];
-    [hihatSequence addBeat:[SequencerBeat beatWithOnset:0.0 / 4 + 1.0 / 8 velocity:0.5 ]];
-    [hihatSequence addBeat:[SequencerBeat beatWithOnset:1.0 / 4 + 1.0 / 16 velocity:0.25 ]];
-    [hihatSequence addBeat:[SequencerBeat beatWithOnset:1.0 / 4 + 3.0 / 16 velocity:0.25 ]];
-    [hihatSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 + 1.0 / 8  velocity:0.5 ]];
-    [hihatSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 + 1.0 / 16 velocity:0.25 ]];
-    [hihatSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 + 2.0 / 16 velocity:0.5 ]];
-    [hihatSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 + 3.0 / 16 velocity:0.25 ]];
-    hihatChannel = [SequencerChannel sequencerChannelWithAudioFileAt:hihatURL
+    AESequencerChannelSequence *hihatSequence = [AESequencerChannelSequence new];
+    [hihatSequence addBeat:[AESequencerBeat beatWithOnset:0.0 / 4 + 1.0 / 8 velocity:0.5 ]];
+    [hihatSequence addBeat:[AESequencerBeat beatWithOnset:1.0 / 4 + 1.0 / 16 velocity:0.25 ]];
+    [hihatSequence addBeat:[AESequencerBeat beatWithOnset:1.0 / 4 + 3.0 / 16 velocity:0.25 ]];
+    [hihatSequence addBeat:[AESequencerBeat beatWithOnset:2.0 / 4 + 1.0 / 8  velocity:0.5 ]];
+    [hihatSequence addBeat:[AESequencerBeat beatWithOnset:3.0 / 4 + 1.0 / 16 velocity:0.25 ]];
+    [hihatSequence addBeat:[AESequencerBeat beatWithOnset:3.0 / 4 + 2.0 / 16 velocity:0.5 ]];
+    [hihatSequence addBeat:[AESequencerBeat beatWithOnset:3.0 / 4 + 3.0 / 16 velocity:0.25 ]];
+    hihatChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:hihatURL
                                                      audioController:audioController
                                                         withSequence:hihatSequence
                                          numberOfFullBeatsPerMeasure:numBeats
@@ -324,7 +324,7 @@
     NSArray *channels = [audioController channelsInChannelGroup:group];
     for(int i = 0; i < channels.count; i++) {
         id channel = [channels objectAtIndex:i];
-        if([channel isKindOfClass:[SequencerChannel class]]) {
+        if([channel isKindOfClass:[AESequencerChannel class]]) {
             [seqChannels addObject:channel];
         }
     }

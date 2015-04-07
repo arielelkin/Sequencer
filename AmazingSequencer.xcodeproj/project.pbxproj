@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2106FA6B1A9F580000524383 /* SequencerChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2106FA6A1A9F580000524383 /* SequencerChannel.m */; };
+		2106FA6B1A9F580000524383 /* AESequencerChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2106FA6A1A9F580000524383 /* AESequencerChannel.m */; };
 		7F01CB29EC865BEB024DE7C8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A55AF71D618F3855EAB7733A /* libPods.a */; };
 		B0042B7618E5ACFC00C3B90E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0042B7518E5ACFC00C3B90E /* Accelerate.framework */; };
-		B011C58F1A9BF96D00689F00 /* SequencerBeat.m in Sources */ = {isa = PBXBuildFile; fileRef = B011C58D1A9BF96D00689F00 /* SequencerBeat.m */; };
-		B0132CD91AA5EBF300B45668 /* SequencerChannelSequence.m in Sources */ = {isa = PBXBuildFile; fileRef = B0132CD81AA5EBF300B45668 /* SequencerChannelSequence.m */; };
+		B011C58F1A9BF96D00689F00 /* AESequencerBeat.m in Sources */ = {isa = PBXBuildFile; fileRef = B011C58D1A9BF96D00689F00 /* AESequencerBeat.m */; };
+		B0132CD91AA5EBF300B45668 /* AESequencerChannelSequence.m in Sources */ = {isa = PBXBuildFile; fileRef = B0132CD81AA5EBF300B45668 /* AESequencerChannelSequence.m */; };
 		B0212CF31AB77CFF00CFD39A /* SequencerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B0212CF21AB77CFF00CFD39A /* SequencerButton.m */; };
 		B02DB4621AB7945B00E2EF9D /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B02DB4611AB7945B00E2EF9D /* ViewController.xib */; };
 		B038E2E718E36B6D00310F33 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B038E2E618E36B6D00310F33 /* Foundation.framework */; };
@@ -45,15 +45,15 @@
 
 /* Begin PBXFileReference section */
 		11ADFAB611885F2034D9CDF3 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		2106FA691A9F580000524383 /* SequencerChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerChannel.h; sourceTree = "<group>"; };
-		2106FA6A1A9F580000524383 /* SequencerChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerChannel.m; sourceTree = "<group>"; };
+		2106FA691A9F580000524383 /* AESequencerChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AESequencerChannel.h; sourceTree = "<group>"; };
+		2106FA6A1A9F580000524383 /* AESequencerChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AESequencerChannel.m; sourceTree = "<group>"; };
 		5DAD5A568E1A7BD466D3C332 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		A55AF71D618F3855EAB7733A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0042B7518E5ACFC00C3B90E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
-		B011C58D1A9BF96D00689F00 /* SequencerBeat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerBeat.m; sourceTree = "<group>"; };
-		B011C58E1A9BF96D00689F00 /* SequencerBeat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerBeat.h; sourceTree = "<group>"; };
-		B0132CD71AA5EBF300B45668 /* SequencerChannelSequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerChannelSequence.h; sourceTree = "<group>"; };
-		B0132CD81AA5EBF300B45668 /* SequencerChannelSequence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerChannelSequence.m; sourceTree = "<group>"; };
+		B011C58D1A9BF96D00689F00 /* AESequencerBeat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AESequencerBeat.m; sourceTree = "<group>"; };
+		B011C58E1A9BF96D00689F00 /* AESequencerBeat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AESequencerBeat.h; sourceTree = "<group>"; };
+		B0132CD71AA5EBF300B45668 /* AESequencerChannelSequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AESequencerChannelSequence.h; sourceTree = "<group>"; };
+		B0132CD81AA5EBF300B45668 /* AESequencerChannelSequence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AESequencerChannelSequence.m; sourceTree = "<group>"; };
 		B0212CF11AB77CFF00CFD39A /* SequencerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequencerButton.h; sourceTree = "<group>"; };
 		B0212CF21AB77CFF00CFD39A /* SequencerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequencerButton.m; sourceTree = "<group>"; };
 		B02DB4611AB7945B00E2EF9D /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
@@ -159,13 +159,13 @@
 				B0F6197618EB21850017EA7A /* ViewController.m */,
 				B0212CF11AB77CFF00CFD39A /* SequencerButton.h */,
 				B0212CF21AB77CFF00CFD39A /* SequencerButton.m */,
-				B0132CD71AA5EBF300B45668 /* SequencerChannelSequence.h */,
-				B0132CD81AA5EBF300B45668 /* SequencerChannelSequence.m */,
 				B02DB4611AB7945B00E2EF9D /* ViewController.xib */,
-				2106FA691A9F580000524383 /* SequencerChannel.h */,
-				2106FA6A1A9F580000524383 /* SequencerChannel.m */,
-				B011C58E1A9BF96D00689F00 /* SequencerBeat.h */,
-				B011C58D1A9BF96D00689F00 /* SequencerBeat.m */,
+				2106FA691A9F580000524383 /* AESequencerChannel.h */,
+				2106FA6A1A9F580000524383 /* AESequencerChannel.m */,
+				B0132CD71AA5EBF300B45668 /* AESequencerChannelSequence.h */,
+				B0132CD81AA5EBF300B45668 /* AESequencerChannelSequence.m */,
+				B011C58E1A9BF96D00689F00 /* AESequencerBeat.h */,
+				B011C58D1A9BF96D00689F00 /* AESequencerBeat.m */,
 				B038E2F818E36B6D00310F33 /* Images.xcassets */,
 				B038E2ED18E36B6D00310F33 /* Supporting Files */,
 			);
@@ -348,10 +348,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B038E2F718E36B6D00310F33 /* AppDelegate.m in Sources */,
-				B0132CD91AA5EBF300B45668 /* SequencerChannelSequence.m in Sources */,
+				B0132CD91AA5EBF300B45668 /* AESequencerChannelSequence.m in Sources */,
 				B0212CF31AB77CFF00CFD39A /* SequencerButton.m in Sources */,
-				2106FA6B1A9F580000524383 /* SequencerChannel.m in Sources */,
-				B011C58F1A9BF96D00689F00 /* SequencerBeat.m in Sources */,
+				2106FA6B1A9F580000524383 /* AESequencerChannel.m in Sources */,
+				B011C58F1A9BF96D00689F00 /* AESequencerBeat.m in Sources */,
 				B0F6197818EB21850017EA7A /* ViewController.m in Sources */,
 				B038E2F318E36B6D00310F33 /* main.m in Sources */,
 			);
