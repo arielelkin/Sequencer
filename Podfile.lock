@@ -5,6 +5,6 @@ DEPENDENCIES:
   - TheAmazingAudioEngine
 
 SPEC CHECKSUMS:
-  TheAmazingAudioEngine: d4c027506d6b8b025c5947fb401a972ccf7574f3
+  TheAmazingAudioEngine: 014e942f20456feaf5ccb48f440402306350abf8
 
 COCOAPODS: 0.35.0

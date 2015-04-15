@@ -1,35 +1,35 @@
 //
-//  ViewController.m
-//  AmazingSequencer
+//  ElaborateDemoVC.m
+//  The Amazing Audio Engine
 //
 //  Created by Ariel Elkin on 01/04/2014.
 //  Copyright (c) 2014 Ariel Elkin. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "ElaborateDemoVC.h"
 
 #import "AEAudioController.h"
-#import "SequencerChannel.h"
-#import "SequencerBeat.h"
-#import "SequencerChannelSequence.h"
+#import "AESequencerChannel.h"
+#import "AESequencerBeat.h"
+#import "AESequencerChannelSequence.h"
 
 #import "SequencerButton.h"
 
 
 @import AVFoundation;
 
-@interface ViewController()<SequencerButtonDelegate>
+@interface ElaborateDemoVC()<SequencerButtonDelegate>
 
 @end
 
-@implementation ViewController {
+@implementation ElaborateDemoVC {
     
     AEAudioController *audioController;
 
-    SequencerChannel *kickChannel;
-    SequencerChannel *woodblockChannel;
-    SequencerChannel *crickChannel;
-    SequencerChannel *hihatChannel;
+    AESequencerChannel *kickChannel;
+    AESequencerChannel *woodblockChannel;
+    AESequencerChannel *crickChannel;
+    AESequencerChannel *hihatChannel;
 
     AEChannelGroupRef _mainChannelGroup;
 
@@ -79,9 +79,9 @@
 
 
     numberOfRows = 4;
-    numberOfColumns = 4;
-    buttonWidth = 150;
-    buttonHeight = 150;
+    numberOfColumns = 16;
+    buttonWidth = 35;
+    buttonHeight = 70;
 
     for( int i = 0; i < numberOfRows; i++) {
 
@@ -98,6 +98,7 @@
             [sequencerView addSubview:sequencerButton];
         }
     }
+    [self.view bringSubviewToFront:self.playheadPositionOfKickSequence];
 }
 
 
@@ -116,7 +117,7 @@
     // Sweep all channels and apply.
     NSArray *channels = [self sequencerChannelsInGroup:_mainChannelGroup];
     for(int i = 0; i < channels.count; i++) {
-        SequencerChannel *channel = [channels objectAtIndex:i];
+        AESequencerChannel *channel = [channels objectAtIndex:i];
         channel.sequenceIsPlaying = sequencerIsPlaying;
     }
 
@@ -131,19 +132,18 @@
     }
 }
 
-
 - (void)tappedButton:(SequencerButton *)button {
 
-    SequencerChannel *selectedChannel;
+    AESequencerChannel *selectedChannel;
 
     if (button.row == 0) selectedChannel = kickChannel;
     else if (button.row == 1) selectedChannel = woodblockChannel;
     else if (button.row == 2) selectedChannel = crickChannel;
     else if (button.row == 3) selectedChannel = hihatChannel;
 
-    double onset = button.column / 4.0;
+    double onset = (double)button.column / (double)numberOfColumns;
 
-    SequencerBeat *beat = [SequencerBeat beatWithOnset:onset];
+    AESequencerBeat *beat = [AESequencerBeat beatWithOnset:onset];
 
     if (button.isActive) {
         [selectedChannel.sequence addBeat:beat];
@@ -151,7 +151,6 @@
     else {
         [selectedChannel.sequence removeBeatAtOnset:onset];
     }
-    [selectedChannel invalidateSequence];
     NSLog(@"%@", selectedChannel.sequence);
 }
 
@@ -168,7 +167,7 @@
     // Sweep all channels and apply.
     NSArray *channels = [self sequencerChannelsInGroup:_mainChannelGroup];
     for(int i = 0; i < channels.count; i++) {
-        SequencerChannel *channel = [channels objectAtIndex:i];
+        AESequencerChannel *channel = [channels objectAtIndex:i];
         channel.bpm = sender.value;
     }
 }
@@ -188,8 +187,8 @@
 
     // KICK channel
     NSURL *kickURL = [[NSBundle mainBundle] URLForResource:@"kick" withExtension:@"caf"];
-    SequencerChannelSequence *kickSequence = [SequencerChannelSequence new];
-    kickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:kickURL
+    AESequencerChannelSequence *kickSequence = [AESequencerChannelSequence new];
+    kickChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:kickURL
                                                     audioController:audioController
                                                        withSequence:kickSequence
                                         numberOfFullBeatsPerMeasure:numBeats
@@ -199,8 +198,8 @@
 
     // WOODBLOCK channel
     NSURL *woodblockURL = [[NSBundle mainBundle] URLForResource:@"woodblock" withExtension:@"caf"];
-    SequencerChannelSequence *woodblockSequence = [SequencerChannelSequence new];
-    woodblockChannel = [SequencerChannel sequencerChannelWithAudioFileAt:woodblockURL
+    AESequencerChannelSequence *woodblockSequence = [AESequencerChannelSequence new];
+    woodblockChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:woodblockURL
                                                          audioController:audioController
                                                             withSequence:woodblockSequence
                                              numberOfFullBeatsPerMeasure:numBeats
@@ -208,10 +207,11 @@
     [audioController addChannels:@[woodblockChannel] toChannelGroup:_mainChannelGroup];
 
 
+
     // CRICK channel
     NSURL *crickURL = [[NSBundle mainBundle] URLForResource:@"crick" withExtension:@"caf"];
-    SequencerChannelSequence *crickSequence = [SequencerChannelSequence new];
-    crickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:crickURL
+    AESequencerChannelSequence *crickSequence = [AESequencerChannelSequence new];
+    crickChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:crickURL
                                                      audioController:audioController
                                                         withSequence:crickSequence
                                          numberOfFullBeatsPerMeasure:numBeats
@@ -221,84 +221,14 @@
 
     // HI-HAT channel
     NSURL *hihatURL = [[NSBundle mainBundle] URLForResource:@"hihat" withExtension:@"caf"];
-    SequencerChannelSequence *hihatSequence = [SequencerChannelSequence new];
-    hihatChannel = [SequencerChannel sequencerChannelWithAudioFileAt:hihatURL
+    AESequencerChannelSequence *hihatSequence = [AESequencerChannelSequence new];
+    hihatChannel = [AESequencerChannel sequencerChannelWithAudioFileAt:hihatURL
                                                      audioController:audioController
                                                         withSequence:hihatSequence
                                          numberOfFullBeatsPerMeasure:numBeats
                                                                atBPM:bpm];
     [audioController addChannels:@[hihatChannel] toChannelGroup:_mainChannelGroup];
 
-}
-
-- (void)setupSequencerWithPremadeBeat {
-
-    // Will hold the top layer of channels.
-    _mainChannelGroup = [audioController createChannelGroup];
-    sequencerIsPlaying = false;
-
-    // Pattern vars.
-    double bpm = _bpmSlider.value;
-    NSUInteger numBeats = 4;
-
-    // KICK channel
-    NSURL *kickURL = [[NSBundle mainBundle] URLForResource:@"kick" withExtension:@"caf"];
-    SequencerChannelSequence *kickSequence = [SequencerChannelSequence new];
-    [kickSequence addBeat:[SequencerBeat beatWithOnset:0.0 / 4 velocity:0.75 ]];
-    [kickSequence addBeat:[SequencerBeat beatWithOnset:1.0 / 4 velocity:0.25 ]];
-    [kickSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 velocity:0.75 ]];
-    [kickSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 velocity:0.25 ]];
-    kickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:kickURL
-                                                    audioController:audioController
-                                                       withSequence:kickSequence
-                                        numberOfFullBeatsPerMeasure:numBeats
-                                                              atBPM:bpm];
-    [audioController addChannels:@[kickChannel] toChannelGroup:_mainChannelGroup];
-
-    // WOODBLOCK channel
-    NSURL *woodblockURL = [[NSBundle mainBundle] URLForResource:@"woodblock" withExtension:@"caf"];
-    SequencerChannelSequence *woodblockSequence = [SequencerChannelSequence new];
-    [woodblockSequence addBeat:[SequencerBeat beatWithOnset:1.0 / 4 + 2.0 / 16 velocity:0.25 ]];
-    [woodblockSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 + 1.0 / 16 velocity:0.5 ]];
-    [woodblockSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 + 2.0 / 16 velocity:0.125 ]];
-    [woodblockSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 + 3.0 / 16 velocity:0.5 ]];
-    [woodblockSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 + 1.0 / 8 velocity:0.5 ]];
-    woodblockChannel = [SequencerChannel sequencerChannelWithAudioFileAt:woodblockURL
-                                                         audioController:audioController
-                                                            withSequence:woodblockSequence
-                                             numberOfFullBeatsPerMeasure:numBeats
-                                                                   atBPM:bpm];
-    [audioController addChannels:@[woodblockChannel] toChannelGroup:_mainChannelGroup];
-
-    // CRICK channel
-    NSURL *crickURL = [[NSBundle mainBundle] URLForResource:@"crick" withExtension:@"caf"];
-    SequencerChannelSequence *crickSequence = [SequencerChannelSequence new];
-    [crickSequence addBeat:[SequencerBeat beatWithOnset:0.0 / 4 + 1.0 / 8 velocity:0.0625 ]];
-    [crickSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 + 3.0 / 16 velocity:0.125 ]];
-    crickChannel = [SequencerChannel sequencerChannelWithAudioFileAt:crickURL
-                                                     audioController:audioController
-                                                        withSequence:crickSequence
-                                         numberOfFullBeatsPerMeasure:numBeats
-                                                               atBPM:bpm];
-    [audioController addChannels:@[crickChannel] toChannelGroup:_mainChannelGroup];
-
-
-    // HI-HAT channel
-    NSURL *hihatURL = [[NSBundle mainBundle] URLForResource:@"hihat" withExtension:@"caf"];
-    SequencerChannelSequence *hihatSequence = [SequencerChannelSequence new];
-    [hihatSequence addBeat:[SequencerBeat beatWithOnset:0.0 / 4 + 1.0 / 8 velocity:0.5 ]];
-    [hihatSequence addBeat:[SequencerBeat beatWithOnset:1.0 / 4 + 1.0 / 16 velocity:0.25 ]];
-    [hihatSequence addBeat:[SequencerBeat beatWithOnset:1.0 / 4 + 3.0 / 16 velocity:0.25 ]];
-    [hihatSequence addBeat:[SequencerBeat beatWithOnset:2.0 / 4 + 1.0 / 8  velocity:0.5 ]];
-    [hihatSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 + 1.0 / 16 velocity:0.25 ]];
-    [hihatSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 + 2.0 / 16 velocity:0.5 ]];
-    [hihatSequence addBeat:[SequencerBeat beatWithOnset:3.0 / 4 + 3.0 / 16 velocity:0.25 ]];
-    hihatChannel = [SequencerChannel sequencerChannelWithAudioFileAt:hihatURL
-                                                     audioController:audioController
-                                                        withSequence:hihatSequence
-                                         numberOfFullBeatsPerMeasure:numBeats
-                                                               atBPM:bpm];
-    [audioController addChannels:@[hihatChannel] toChannelGroup:_mainChannelGroup];
 }
 
 - (void)setupAudioController {
@@ -314,6 +244,16 @@
     }
 }
 
+- (IBAction)pressedBackButton{
+
+    for (AESequencerChannel *channel in [audioController channelsInChannelGroup:_mainChannelGroup]){
+        channel.sequenceIsPlaying = false;
+    }
+    [audioController stop];
+    [self dismissViewControllerAnimated:YES completion:nil];
+
+}
+
 
 #pragma mark -
 #pragma mark Utils
@@ -325,7 +265,7 @@
     NSArray *channels = [audioController channelsInChannelGroup:group];
     for(int i = 0; i < channels.count; i++) {
         id channel = [channels objectAtIndex:i];
-        if([channel isKindOfClass:[SequencerChannel class]]) {
+        if([channel isKindOfClass:[AESequencerChannel class]]) {
             [seqChannels addObject:channel];
         }
     }
@@ -334,30 +274,4 @@
 }
 
 @end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

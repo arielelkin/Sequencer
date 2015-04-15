@@ -1,21 +1,20 @@
 //
-//  SequencerChannel3.m
-//  AmazingSequencer
+//  AESequencerChannel.m
+//  The Amazing Audio Engine
 //
 //  Created by Alejandro Santander on 26/02/2015.
-//  Copyright (c) 2015 Ariel Elkin. All rights reserved.
 //
 
-#import "SequencerChannel.h"
+#import "AESequencerChannel.h"
 #import "AEAudioFileLoaderOperation.h"
 
 #import <mach/mach_time.h>
 
-@interface SequencerChannel()
+@interface AESequencerChannel()
 @property float playheadPosition;
 @end
 
-@implementation SequencerChannel {
+@implementation AESequencerChannel {
     AEAudioController *_audioController;
     AudioBufferList *_audioSampleBufferList;
     UInt32 _sampleLengthInFrames;
@@ -26,9 +25,9 @@
     int _currentBeatIndex; // Keeps track of the current beat playing.
     UInt64 _sequenceStartTimeNanoSeconds;
     bool _sampleIsPlaying; // Keeps track if a sample is playing or not.
-    float **_sequenceCRepresentation;
+    BEAT *_sequenceCRepresentation;
     unsigned long _numBeats;
-    SequencerChannelSequence *_sequence;
+    AESequencerChannelSequence *_sequence;
     bool _sequenceIsPlaying;
     double _bpm;
     NSUInteger _beatsPerMeasure;
@@ -44,7 +43,7 @@
 
 + (instancetype)sequencerChannelWithAudioFileAt:(NSURL *)url
                                 audioController:(AEAudioController*)audioController
-                                   withSequence:(SequencerChannelSequence*)sequence
+                                   withSequence:(AESequencerChannelSequence*)sequence
                                    numberOfFullBeatsPerMeasure:(NSUInteger)beatsPerMeasure
                                           atBPM:(double)bpm {
 
@@ -62,7 +61,7 @@
         return nil;
     }
 
-    SequencerChannel *channel = [[self alloc] init];
+    AESequencerChannel *channel = [[self alloc] init];
     channel->_audioController = audioController;
     channel->_pan = 0.0f;
     channel->_volume = 1.0f;
@@ -74,13 +73,13 @@
     AEAudioFileLoaderOperation *operation = [[AEAudioFileLoaderOperation alloc] initWithFileURL:url targetAudioDescription:audioController.audioDescription];
     [operation start];
     if ( operation.error ) {
-        NSLog(@"load error: %@", operation.error);
+        NSLog(@"%s Cannot load audio file: error: %@", __PRETTY_FUNCTION__, operation.error);
         return nil;
     }
     channel->_audioSampleBufferList = operation.bufferList;
     channel->_sampleLengthInFrames = operation.lengthInFrames;
     channel->_numSampleBuffers = (unsigned int)operation.bufferList->mNumberBuffers;
-//    NSLog(@"Number of buffers in sample: %d", (unsigned int)operation.bufferList->mNumberBuffers);
+    //NSLog(@"Number of buffers in sample: %d", (unsigned int)operation.bufferList->mNumberBuffers);
 
     //Load sequence:
     channel.sequence = sequence;
@@ -111,23 +110,18 @@
 #pragma mark -
 #pragma mark Sequence access
 
-- (void)setSequence:(SequencerChannelSequence *)sequence {
+- (void)setSequence:(AESequencerChannelSequence *)sequence {
     _sequence = sequence;
     [self updateCSequence];
 }
 
-- (SequencerChannelSequence *)sequence {
+- (AESequencerChannelSequence *)sequence {
     [self updateCSequence];
     return _sequence;
 }
 
 -(void)updateCSequence {
-    _sequenceCRepresentation = [_sequence sequenceCRepresentation];
-    _numBeats = _sequence.count;
-}
 
-- (void)invalidateSequence {
-    
     // If the sequence's lenght change, update the beat index.
     if(_sequence.count > _numBeats) {
         _currentBeatIndex++;
@@ -137,7 +131,9 @@
             _currentBeatIndex--;
         }
     }
-    [self updateCSequence];
+
+    _sequenceCRepresentation = [_sequence sequenceCRepresentation];
+    _numBeats = _sequence.count;
 }
 
 #pragma mark -
@@ -192,7 +188,7 @@
 #pragma mark -
 #pragma mark Render callback
 
-static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
+static OSStatus renderCallback(__unsafe_unretained AESequencerChannel *THIS,
                                __unsafe_unretained AEAudioController *audioController,
                                const AudioTimeStamp *inTimeStamp,
                                UInt32 frames,
@@ -223,8 +219,7 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
 
     
     // Quickly evaluate if there will be no audio in this renderCallback() and hence writting to buffers can be skipped entirely.
-    // TODO - optimization
-    
+
     // Sweep the audio buffer frames and fill with sample frames when appropriate.
     UInt64 frameTimeNanoSeconds = 0;
     int buff = 0;
@@ -234,7 +229,8 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
         if(THIS->_sequenceIsPlaying) {
             int nextBeatIndex = THIS->_currentBeatIndex + 1 < THIS->_numBeats ? THIS->_currentBeatIndex + 1 : -1;
             if(nextBeatIndex >= 0) {
-                double beatTimeNanoSeconds = THIS->_nanoSecondsPerSequence * THIS->_sequenceCRepresentation[nextBeatIndex][0];
+                BEAT beat = THIS->_sequenceCRepresentation[nextBeatIndex];
+                double beatTimeNanoSeconds = THIS->_nanoSecondsPerSequence * beat.onset;
                 double delta = elapsedTimeSinceSequenceStartNanoSeconds + frameTimeNanoSeconds - beatTimeNanoSeconds;
                 if(delta >= 0) {
                     THIS->_sampleFrameIndex = 0;
@@ -260,7 +256,9 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
                         // Makes sure that the audio will not request buffers that the sample doesn't have.
                         // i.e. if the sample is mono and audio is stereo, writes the same thing on both channels.
                         buff = j < THIS->_numSampleBuffers ? j : buff;
-                        ((float *)audio->mBuffers[j].mData)[i] = THIS->_sequenceCRepresentation[THIS->_currentBeatIndex][1] * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
+
+                        BEAT beat = THIS->_sequenceCRepresentation[THIS->_currentBeatIndex];
+                        ((float *)audio->mBuffers[j].mData)[i] = beat.velocity * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
                     }
                 }
             }
@@ -271,7 +269,6 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
                 THIS->_sampleIsPlaying = false;
                 if(THIS->_pendingTimingReset) {
                     // Reset.
-                    NSLog(@">>>>>RESET");
                     THIS->_currentBeatIndex = -1;
                     THIS->_sequenceStartTimeNanoSeconds = 0;
                     THIS->_sampleFrameIndex = 0;
@@ -292,18 +289,3 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
 }
 
 @end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

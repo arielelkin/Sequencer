@@ -1,25 +1,24 @@
 //
-//  SequencerChannel3.m
-//  AmazingSequencer
+//  AESequencerChannel.h
+//  The Amazing Audio Engine
 //
 //  Created by Alejandro Santander on 26/02/2015.
-//  Copyright (c) 2015 Ariel Elkin. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import "AEAudioController.h"
-#import "SequencerBeat.h"
-#import "SequencerChannelSequence.h"
+#import "AESequencerBeat.h"
+#import "AESequencerChannelSequence.h"
 
-@interface SequencerChannel : NSObject <AEAudioPlayable>
+@interface AESequencerChannel : NSObject <AEAudioPlayable>
 
 + (instancetype)sequencerChannelWithAudioFileAt:(NSURL *)url
                                 audioController:(AEAudioController*)audioController
-                                   withSequence:(SequencerChannelSequence*)sequence
+                                   withSequence:(AESequencerChannelSequence*)sequence
                     numberOfFullBeatsPerMeasure:(NSUInteger)beatsPerMeasure
                                           atBPM:(double)bpm;
 
-@property (nonatomic) SequencerChannelSequence *sequence;
+@property (nonatomic) AESequencerChannelSequence *sequence;
 @property (nonatomic, readwrite) float volume;
 @property (nonatomic, readwrite) float pan;                 
 @property bool sequenceIsPlaying;
@@ -27,7 +26,5 @@
 @property (nonatomic, readonly) float playheadPosition;
 @property bool muted;
 @property int soloed; // 1 = soloed, -1 = not soloed, 0 = ignore
-
-- (void)invalidateSequence;
 
 @end

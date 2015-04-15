@@ -1,13 +1,13 @@
 //
 //  AppDelegate.m
-//  AmazingSequencer
+//  The Amazing Audio Engine
 //
 //  Created by Ariel Elkin on 26/03/2014.
 //  Copyright (c) 2014 Ariel Elkin. All rights reserved.
 //
 
 #import "AppDelegate.h"
-#import "ViewController.h"
+#import "WelcomeVC.h"
 
 @implementation AppDelegate
 
@@ -17,7 +17,7 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
 
-    ViewController *vc = [ViewController new];
+    WelcomeVC *vc = [WelcomeVC new];
     [self.window setRootViewController:vc];
 
     return YES;
