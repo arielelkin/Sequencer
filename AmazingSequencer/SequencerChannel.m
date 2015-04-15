@@ -34,6 +34,7 @@
     NSUInteger _beatsPerMeasure;
     float _playheadPosition;
     unsigned int _numSampleBuffers;
+    bool _pendingTimingReset;
 }
 
 @synthesize pan = _pan, volume = _volume, muted = _muted, soloed = _soloed;
@@ -67,6 +68,7 @@
     channel->_volume = 1.0f;
     channel->_soloed = 0;
     channel->_muted = false;
+    channel->_pendingTimingReset = false;
 
     // Load audio file:
     AEAudioFileLoaderOperation *operation = [[AEAudioFileLoaderOperation alloc] initWithFileURL:url targetAudioDescription:audioController.audioDescription];
@@ -142,12 +144,19 @@
 #pragma mark Playback control
 
 - (void)setSequenceIsPlaying:(bool)sequenceIsPlaying {
-    // Reset all timing values when stopped.
+    
+    // Reset all timing values.
+    // If stopped, let the sounds ring.
     if(!sequenceIsPlaying) {
+        _pendingTimingReset = true;
+    }
+    // If starting to play, reset now.
+    else {
         _currentBeatIndex = -1;
         _sequenceStartTimeNanoSeconds = 0;
         _sampleFrameIndex = 0;
         _sampleIsPlaying = false;
+        _pendingTimingReset = false;
     }
     _sequenceIsPlaying = sequenceIsPlaying;
 }
@@ -190,7 +199,8 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
                                AudioBufferList *audio) {
 
     // Skip if channel is not playing or stopped.
-    if (!THIS->_sequenceIsPlaying) return noErr;
+    // Note that it will continue playing until the current sample finished playing.
+    if (!THIS->_sequenceIsPlaying && !THIS->_sampleIsPlaying) return noErr;
     
     // Keep track of when a sequence iteration starts and ends.
     UInt64 k = THIS->_timebaseInfo.numer / THIS->_timebaseInfo.denom;
@@ -221,14 +231,16 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
     for(int i = 0; i < frames; i++) {
         
         // Check if the coming beat is suposed to have started by now.
-        int nextBeatIndex = THIS->_currentBeatIndex + 1 < THIS->_numBeats ? THIS->_currentBeatIndex + 1 : -1;
-        if(nextBeatIndex >= 0) {
-            double beatTimeNanoSeconds = THIS->_nanoSecondsPerSequence * THIS->_sequenceCRepresentation[nextBeatIndex][0];
-            double delta = elapsedTimeSinceSequenceStartNanoSeconds + frameTimeNanoSeconds - beatTimeNanoSeconds;
-            if(delta >= 0) {
-                THIS->_sampleFrameIndex = 0;
-                THIS->_sampleIsPlaying = true;
-                THIS->_currentBeatIndex = nextBeatIndex;
+        if(THIS->_sequenceIsPlaying) {
+            int nextBeatIndex = THIS->_currentBeatIndex + 1 < THIS->_numBeats ? THIS->_currentBeatIndex + 1 : -1;
+            if(nextBeatIndex >= 0) {
+                double beatTimeNanoSeconds = THIS->_nanoSecondsPerSequence * THIS->_sequenceCRepresentation[nextBeatIndex][0];
+                double delta = elapsedTimeSinceSequenceStartNanoSeconds + frameTimeNanoSeconds - beatTimeNanoSeconds;
+                if(delta >= 0) {
+                    THIS->_sampleFrameIndex = 0;
+                    THIS->_sampleIsPlaying = true;
+                    THIS->_currentBeatIndex = nextBeatIndex;
+                }
             }
         }
         
@@ -257,6 +269,14 @@ static OSStatus renderCallback(__unsafe_unretained SequencerChannel *THIS,
             THIS->_sampleFrameIndex++;
             if(THIS->_sampleFrameIndex > THIS->_sampleLengthInFrames) {
                 THIS->_sampleIsPlaying = false;
+                if(THIS->_pendingTimingReset) {
+                    // Reset.
+                    NSLog(@">>>>>RESET");
+                    THIS->_currentBeatIndex = -1;
+                    THIS->_sequenceStartTimeNanoSeconds = 0;
+                    THIS->_sampleFrameIndex = 0;
+                    THIS->_pendingTimingReset = false;
+                }
             }
         }
         
