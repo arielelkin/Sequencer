@@ -149,6 +149,7 @@
     // If stopped, let the sounds ring.
     if(!sequenceIsPlaying) {
         _pendingTimingReset = true;
+        _playheadPosition = 0;
     }
     // If starting to play, reset now.
     else {
@@ -242,6 +243,11 @@ static OSStatus renderCallback(__unsafe_unretained AESequencerChannel *THIS,
     }
     
     // Quickly evaluate if there will be no audio in this renderCallback() and hence writting to buffers can be skipped entirely
+    // todo
+    
+    // Update playhead tacking.
+    UInt64 elapsedTimeSinceSequenceStartNanoSeconds = currentTimeNanoSeconds - THIS->_sequenceStartTimeNanoSeconds;
+    THIS->_playheadPosition = (float)elapsedTimeSinceSequenceStartNanoSeconds / (float)THIS->_nanoSecondsPerSequence;
     
     // Sweep the audio buffer frames and fill with sample frames when appropriate.
     UInt64 frameTimeNanoSeconds = 0;
@@ -250,14 +256,13 @@ static OSStatus renderCallback(__unsafe_unretained AESequencerChannel *THIS,
         
         // Evaluate time passed in this sequence iteration.
         // If a sequence iteration has ended, values are shifted so that a new iteration begins.
-        UInt64 elapsedTimeSinceSequenceStartNanoSeconds = currentTimeNanoSeconds + frameTimeNanoSeconds - THIS->_sequenceStartTimeNanoSeconds;
+        elapsedTimeSinceSequenceStartNanoSeconds = currentTimeNanoSeconds + frameTimeNanoSeconds - THIS->_sequenceStartTimeNanoSeconds;
         if(elapsedTimeSinceSequenceStartNanoSeconds > THIS->_nanoSecondsPerSequence) { // reset?
             elapsedTimeSinceSequenceStartNanoSeconds = elapsedTimeSinceSequenceStartNanoSeconds % THIS->_nanoSecondsPerSequence;
             THIS->_sequenceStartTimeNanoSeconds = currentTimeNanoSeconds - elapsedTimeSinceSequenceStartNanoSeconds;
             THIS->_currentBeatIndex = -1;
 //            NSLog(@"------ LOOP restart ------");
         }
-        THIS->_playheadPosition = (float)elapsedTimeSinceSequenceStartNanoSeconds / (float)THIS->_nanoSecondsPerSequence;
         
         // Check if the coming beat is suposed to have started by now.
         if(THIS->_sequenceIsPlaying) {
