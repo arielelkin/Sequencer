@@ -78,6 +78,8 @@
 
     _sequenceCRepresentation = (BEAT *)malloc(sizeof(BEAT) * numberOfBeats);
 
+//    NSLog(@"sequence: ");
+    
     for(int i=0; i < numberOfBeats; i++) {
 
         AESequencerBeat *beat = sequence[i];
@@ -85,6 +87,7 @@
         BEAT cBeat;
         cBeat.onset = beat.onset;
         cBeat.velocity = beat.velocity;
+//        NSLog(@"  beat: %d of %d, %f", i, numberOfBeats, beat.onset);
 
         _sequenceCRepresentation[i] = cBeat;
 

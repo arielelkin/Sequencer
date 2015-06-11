@@ -34,6 +34,7 @@
     float _playheadPosition;
     unsigned int _numSampleBuffers;
     bool _pendingTimingReset;
+    NSURL *_url;
 }
 
 @synthesize pan = _pan, volume = _volume, muted = _muted, soloed = _soloed;
@@ -62,6 +63,7 @@
     }
 
     AESequencerChannel *channel = [[self alloc] init];
+    channel->_url = url;
     channel->_audioController = audioController;
     channel->_pan = 0.0f;
     channel->_volume = 1.0f;
@@ -85,7 +87,6 @@
     channel.sequence = sequence;
     channel->_numBeats = sequence.count;
     channel->_sequenceCRepresentation = sequence.sequenceCRepresentation;
-
 
     // Init consistent variables:
     channel->_sampleFrameIndex = 0;
@@ -111,6 +112,7 @@
 #pragma mark Sequence access
 
 - (void)setSequence:(AESequencerChannelSequence *)sequence {
+//    NSLog(@"setSequence() - sequence: %@", _sequence);
     _sequence = sequence;
     [self updateCSequence];
 }
@@ -122,6 +124,8 @@
 
 -(void)updateCSequence {
 
+//    NSLog(@"updateCSequence()");
+    
     // If the sequence's lenght change, update the beat index.
     if(_sequence.count > _numBeats) {
         _currentBeatIndex++;
@@ -148,6 +152,7 @@
     }
     // If starting to play, reset now.
     else {
+        _playheadPosition = 0;
         _currentBeatIndex = -1;
         _sequenceStartTimeNanoSeconds = 0;
         _sampleFrameIndex = 0;
@@ -164,8 +169,10 @@
 #pragma mark BPM control
 
 - (void)setBpm:(double)bpm {
+    BOOL isLower = bpm < _bpm;
     _bpm = bpm;
     [self updateBpm];
+    if(isLower) [self findCurrentBeatIndex];
 }
 
 - (double)bpm {
@@ -176,6 +183,30 @@
     double nanoSecondsPerBeat = 1000000000.0f * 60.0f / _bpm;
     _nanoSecondsPerSequence = _beatsPerMeasure * nanoSecondsPerBeat;
     _nanoSecondsPerFrame = 1000000000.0f / _audioController.audioDescription.mSampleRate;
+}
+
+- (void)findCurrentBeatIndex {
+    
+    // Eval time.
+    UInt64 k = _timebaseInfo.numer / _timebaseInfo.denom;
+    UInt64 currentTimeNanoSeconds = mach_absolute_time() * k;
+    UInt64 elapsedTimeSinceSequenceStartNanoSeconds = currentTimeNanoSeconds - _sequenceStartTimeNanoSeconds;
+    if(elapsedTimeSinceSequenceStartNanoSeconds > _nanoSecondsPerSequence) { // reset?
+        elapsedTimeSinceSequenceStartNanoSeconds = elapsedTimeSinceSequenceStartNanoSeconds % _nanoSecondsPerSequence;
+        _sequenceStartTimeNanoSeconds = currentTimeNanoSeconds - elapsedTimeSinceSequenceStartNanoSeconds;
+        _currentBeatIndex = -1;
+    }
+    
+    // Find best beat.
+    for(int i = 0; i < _numBeats; i++) {
+        BEAT beat = _sequenceCRepresentation[i];
+        double beatTimeNanoSeconds = _nanoSecondsPerSequence * beat.onset;
+        double delta = elapsedTimeSinceSequenceStartNanoSeconds - beatTimeNanoSeconds;
+        if(delta >= 0) {
+            _currentBeatIndex = i;
+            return;
+        }
+    }
 }
 
 #pragma mark -
@@ -194,36 +225,39 @@ static OSStatus renderCallback(__unsafe_unretained AESequencerChannel *THIS,
                                UInt32 frames,
                                AudioBufferList *audio) {
 
+//    NSLog(@"renderCallback()");
+//    NSLog(@"  numBeats: %lu", THIS->_numBeats);
+    
     // Skip if channel is not playing or stopped.
     // Note that it will continue playing until the current sample finished playing.
     if (!THIS->_sequenceIsPlaying && !THIS->_sampleIsPlaying) return noErr;
+    if (THIS->_numBeats == 0) return noErr;
     
     // Keep track of when a sequence iteration starts and ends.
     UInt64 k = THIS->_timebaseInfo.numer / THIS->_timebaseInfo.denom;
     UInt64 currentTimeNanoSeconds = inTimeStamp->mHostTime * k;
     if(THIS->_sequenceStartTimeNanoSeconds == 0) {
         THIS->_sequenceStartTimeNanoSeconds = currentTimeNanoSeconds;
-    }
-    
-    // Evaluate time passed in this sequence iteration.
-    // If a sequence iteration has ended, values are shifted so that a new iteration begins.
-    UInt64 elapsedTimeSinceSequenceStartNanoSeconds = currentTimeNanoSeconds - THIS->_sequenceStartTimeNanoSeconds;
-
-    if(elapsedTimeSinceSequenceStartNanoSeconds > THIS->_nanoSecondsPerSequence) { // reset?
-        elapsedTimeSinceSequenceStartNanoSeconds = elapsedTimeSinceSequenceStartNanoSeconds % THIS->_nanoSecondsPerSequence;
-        THIS->_sequenceStartTimeNanoSeconds = currentTimeNanoSeconds - elapsedTimeSinceSequenceStartNanoSeconds;
         THIS->_currentBeatIndex = -1;
     }
-
-    THIS->_playheadPosition = (float)elapsedTimeSinceSequenceStartNanoSeconds / (float)THIS->_nanoSecondsPerSequence;
-
     
-    // Quickly evaluate if there will be no audio in this renderCallback() and hence writting to buffers can be skipped entirely.
-
+    // Quickly evaluate if there will be no audio in this renderCallback() and hence writting to buffers can be skipped entirely
+    
     // Sweep the audio buffer frames and fill with sample frames when appropriate.
     UInt64 frameTimeNanoSeconds = 0;
     int buff = 0;
     for(int i = 0; i < frames; i++) {
+        
+        // Evaluate time passed in this sequence iteration.
+        // If a sequence iteration has ended, values are shifted so that a new iteration begins.
+        UInt64 elapsedTimeSinceSequenceStartNanoSeconds = currentTimeNanoSeconds + frameTimeNanoSeconds - THIS->_sequenceStartTimeNanoSeconds;
+        if(elapsedTimeSinceSequenceStartNanoSeconds > THIS->_nanoSecondsPerSequence) { // reset?
+            elapsedTimeSinceSequenceStartNanoSeconds = elapsedTimeSinceSequenceStartNanoSeconds % THIS->_nanoSecondsPerSequence;
+            THIS->_sequenceStartTimeNanoSeconds = currentTimeNanoSeconds - elapsedTimeSinceSequenceStartNanoSeconds;
+            THIS->_currentBeatIndex = -1;
+//            NSLog(@"------ LOOP restart ------");
+        }
+        THIS->_playheadPosition = (float)elapsedTimeSinceSequenceStartNanoSeconds / (float)THIS->_nanoSecondsPerSequence;
         
         // Check if the coming beat is suposed to have started by now.
         if(THIS->_sequenceIsPlaying) {
@@ -231,11 +265,13 @@ static OSStatus renderCallback(__unsafe_unretained AESequencerChannel *THIS,
             if(nextBeatIndex >= 0) {
                 BEAT beat = THIS->_sequenceCRepresentation[nextBeatIndex];
                 double beatTimeNanoSeconds = THIS->_nanoSecondsPerSequence * beat.onset;
-                double delta = elapsedTimeSinceSequenceStartNanoSeconds + frameTimeNanoSeconds - beatTimeNanoSeconds;
+                double delta = elapsedTimeSinceSequenceStartNanoSeconds - beatTimeNanoSeconds;
                 if(delta >= 0) {
                     THIS->_sampleFrameIndex = 0;
                     THIS->_sampleIsPlaying = true;
                     THIS->_currentBeatIndex = nextBeatIndex;
+//                    NSLog(@"sample start: %d of %lu", THIS->_currentBeatIndex, THIS->_numBeats - 1);
+//                    NSLog(@"delta: %f", delta);
                 }
             }
         }
@@ -244,20 +280,17 @@ static OSStatus renderCallback(__unsafe_unretained AESequencerChannel *THIS,
         if(THIS->_sampleIsPlaying) {
             
             // Writes the same samples on left and right channels.
+            bool write = true;
+            if(THIS->_soloed == -1) write = false; // don't write if some other channel is soloed
+            if(THIS->_muted && THIS->_soloed != 1) write = false; // don't write if this channel is muted and is not soloed
             if(THIS->_currentBeatIndex >= 0) {
-                
-                bool write = true;
-                if(THIS->_soloed == -1) write = false; // don't write if some other channel is soloed
-                if(THIS->_muted && THIS->_soloed != 1) write = false; // don't write if this channel is muted and is not soloed
-                
+                BEAT beat = THIS->_sequenceCRepresentation[THIS->_currentBeatIndex];
                 if(write) {
                     for(int j = 0; j < audio->mNumberBuffers; j++) {
-                        if (THIS->_currentBeatIndex >= THIS->_numBeats) break;
+                        
                         // Makes sure that the audio will not request buffers that the sample doesn't have.
                         // i.e. if the sample is mono and audio is stereo, writes the same thing on both channels.
                         buff = j < THIS->_numSampleBuffers ? j : buff;
-
-                        BEAT beat = THIS->_sequenceCRepresentation[THIS->_currentBeatIndex];
                         ((float *)audio->mBuffers[j].mData)[i] = beat.velocity * ((float *)THIS->_audioSampleBufferList->mBuffers[j].mData)[THIS->_sampleFrameIndex];
                     }
                 }
@@ -273,6 +306,7 @@ static OSStatus renderCallback(__unsafe_unretained AESequencerChannel *THIS,
                     THIS->_sequenceStartTimeNanoSeconds = 0;
                     THIS->_sampleFrameIndex = 0;
                     THIS->_pendingTimingReset = false;
+                    THIS->_playheadPosition = 0;
                 }
             }
         }
