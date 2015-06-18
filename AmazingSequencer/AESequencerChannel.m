@@ -24,6 +24,8 @@
     UInt64 _sampleFrameIndex; // Keeps track of the next frame to read on the sample.
     int _currentBeatIndex; // Keeps track of the current beat playing.
     UInt64 _sequenceStartTimeNanoSeconds;
+    UInt64 _currentTimeNanoSeconds;
+    UInt64 _elapsedTimeSinceSequenceStartNanoSeconds;
     bool _sampleIsPlaying; // Keeps track if a sample is playing or not.
     BEAT *_sequenceCRepresentation;
     unsigned long _numBeats;
@@ -92,6 +94,8 @@
     channel->_sampleFrameIndex = 0;
     channel->_currentBeatIndex = -1;
     channel->_sequenceStartTimeNanoSeconds = 0;
+    channel->_currentTimeNanoSeconds = 0;
+    channel->_elapsedTimeSinceSequenceStartNanoSeconds = 0;
     channel->_sampleIsPlaying = false;
 
     // Timing calculations:
@@ -170,10 +174,14 @@
 #pragma mark BPM control
 
 - (void)setBpm:(double)bpm {
-    BOOL isLower = bpm < _bpm;
+    
+    float changeFactor = _bpm / bpm;
+    
     _bpm = bpm;
     [self updateBpm];
-    if(isLower) [self findCurrentBeatIndex];
+    
+    // Correct time.
+    _sequenceStartTimeNanoSeconds -= _elapsedTimeSinceSequenceStartNanoSeconds * changeFactor - _elapsedTimeSinceSequenceStartNanoSeconds;
 }
 
 - (double)bpm {
@@ -184,30 +192,6 @@
     double nanoSecondsPerBeat = 1000000000.0f * 60.0f / _bpm;
     _nanoSecondsPerSequence = _beatsPerMeasure * nanoSecondsPerBeat;
     _nanoSecondsPerFrame = 1000000000.0f / _audioController.audioDescription.mSampleRate;
-}
-
-- (void)findCurrentBeatIndex {
-    
-    // Eval time.
-    UInt64 k = _timebaseInfo.numer / _timebaseInfo.denom;
-    UInt64 currentTimeNanoSeconds = mach_absolute_time() * k;
-    UInt64 elapsedTimeSinceSequenceStartNanoSeconds = currentTimeNanoSeconds - _sequenceStartTimeNanoSeconds;
-    if(elapsedTimeSinceSequenceStartNanoSeconds > _nanoSecondsPerSequence) { // reset?
-        elapsedTimeSinceSequenceStartNanoSeconds = elapsedTimeSinceSequenceStartNanoSeconds % _nanoSecondsPerSequence;
-        _sequenceStartTimeNanoSeconds = currentTimeNanoSeconds - elapsedTimeSinceSequenceStartNanoSeconds;
-        _currentBeatIndex = -1;
-    }
-    
-    // Find best beat.
-    for(int i = 0; i < _numBeats; i++) {
-        BEAT beat = _sequenceCRepresentation[i];
-        double beatTimeNanoSeconds = _nanoSecondsPerSequence * beat.onset;
-        double delta = elapsedTimeSinceSequenceStartNanoSeconds - beatTimeNanoSeconds;
-        if(delta >= 0) {
-            _currentBeatIndex = i;
-            return;
-        }
-    }
 }
 
 #pragma mark -
@@ -236,9 +220,9 @@ static OSStatus renderCallback(__unsafe_unretained AESequencerChannel *THIS,
     
     // Keep track of when a sequence iteration starts and ends.
     UInt64 k = THIS->_timebaseInfo.numer / THIS->_timebaseInfo.denom;
-    UInt64 currentTimeNanoSeconds = inTimeStamp->mHostTime * k;
+    THIS->_currentTimeNanoSeconds = inTimeStamp->mHostTime * k;
     if(THIS->_sequenceStartTimeNanoSeconds == 0) {
-        THIS->_sequenceStartTimeNanoSeconds = currentTimeNanoSeconds;
+        THIS->_sequenceStartTimeNanoSeconds = THIS->_currentTimeNanoSeconds;
         THIS->_currentBeatIndex = -1;
     }
     
@@ -246,8 +230,8 @@ static OSStatus renderCallback(__unsafe_unretained AESequencerChannel *THIS,
     // todo
     
     // Update playhead tacking.
-    UInt64 elapsedTimeSinceSequenceStartNanoSeconds = currentTimeNanoSeconds - THIS->_sequenceStartTimeNanoSeconds;
-    THIS->_playheadPosition = (float)elapsedTimeSinceSequenceStartNanoSeconds / (float)THIS->_nanoSecondsPerSequence;
+    THIS->_elapsedTimeSinceSequenceStartNanoSeconds = THIS->_currentTimeNanoSeconds - THIS->_sequenceStartTimeNanoSeconds;
+    THIS->_playheadPosition = (float)THIS->_elapsedTimeSinceSequenceStartNanoSeconds / (float)THIS->_nanoSecondsPerSequence;
     
     // Sweep the audio buffer frames and fill with sample frames when appropriate.
     UInt64 frameTimeNanoSeconds = 0;
@@ -256,10 +240,10 @@ static OSStatus renderCallback(__unsafe_unretained AESequencerChannel *THIS,
         
         // Evaluate time passed in this sequence iteration.
         // If a sequence iteration has ended, values are shifted so that a new iteration begins.
-        elapsedTimeSinceSequenceStartNanoSeconds = currentTimeNanoSeconds + frameTimeNanoSeconds - THIS->_sequenceStartTimeNanoSeconds;
-        if(elapsedTimeSinceSequenceStartNanoSeconds > THIS->_nanoSecondsPerSequence) { // reset?
-            elapsedTimeSinceSequenceStartNanoSeconds = elapsedTimeSinceSequenceStartNanoSeconds % THIS->_nanoSecondsPerSequence;
-            THIS->_sequenceStartTimeNanoSeconds = currentTimeNanoSeconds - elapsedTimeSinceSequenceStartNanoSeconds;
+        THIS->_elapsedTimeSinceSequenceStartNanoSeconds = THIS->_currentTimeNanoSeconds + frameTimeNanoSeconds - THIS->_sequenceStartTimeNanoSeconds;
+        if(THIS->_elapsedTimeSinceSequenceStartNanoSeconds > THIS->_nanoSecondsPerSequence) { // reset?
+            THIS->_elapsedTimeSinceSequenceStartNanoSeconds = THIS->_elapsedTimeSinceSequenceStartNanoSeconds % THIS->_nanoSecondsPerSequence;
+            THIS->_sequenceStartTimeNanoSeconds = THIS->_currentTimeNanoSeconds - THIS->_elapsedTimeSinceSequenceStartNanoSeconds;
             THIS->_currentBeatIndex = -1;
 //            NSLog(@"------ LOOP restart ------");
         }
@@ -270,7 +254,7 @@ static OSStatus renderCallback(__unsafe_unretained AESequencerChannel *THIS,
             if(nextBeatIndex >= 0) {
                 BEAT beat = THIS->_sequenceCRepresentation[nextBeatIndex];
                 double beatTimeNanoSeconds = THIS->_nanoSecondsPerSequence * beat.onset;
-                double delta = elapsedTimeSinceSequenceStartNanoSeconds - beatTimeNanoSeconds;
+                double delta = THIS->_elapsedTimeSinceSequenceStartNanoSeconds - beatTimeNanoSeconds;
                 if(delta >= 0) {
                     THIS->_sampleFrameIndex = 0;
                     THIS->_sampleIsPlaying = true;
