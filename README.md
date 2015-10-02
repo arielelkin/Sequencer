@@ -1,6 +1,8 @@
 # Sequencer
 Example use of the sequencer plugin for [The Amazing Audio Engine](https://github.com/TheAmazingAudioEngine/TheAmazingAudioEngine).
 
+See [SwiftySequencer](https://github.com/arielelkin/SwiftySequencer) for a Swift implementation. 
+
 ##Use
 Clone this repository, add `pod 'TheAmazingAudioEngine'` to your pod file or [manually add The Amazing Audio Engine](http://theamazingaudioengine.com/doc/_getting-_started.html).
 
